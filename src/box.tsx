@@ -11,7 +11,7 @@ import {
 } from "./stub";
 import { BufferGeometry } from "three";
 import { debounce, some } from "lodash";
-import "./App.css";
+import "./box.css";
 import { BindingTargetDropdown } from "./stub_components";
 
 const ASSETS = "/3D/";
