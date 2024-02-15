@@ -3,10 +3,10 @@ import { Canvas } from "@react-three/fiber";
 import {
   CameraControls, Extrude, PerspectiveCamera, Plane, Sky, Stats,
 } from "@react-three/drei";
-import { DoubleSide, MeshPhongMaterial, Path, Shape, Vector3 } from "three";
+import { DoubleSide, MeshPhongMaterial, Path, Shape } from "three";
 
-const length = 1200;
-const width = 800;
+const length = 2900;
+const width = 1400;
 const thickness = 30;
 
 const soil = (Type: typeof Path | typeof Shape): Path | Shape => {
@@ -40,20 +40,18 @@ interface GardenBedModelProps {
 
 }
 
-const Model = () => <group dispose={null}
-  rotation={[0, 0, Math.PI / 2]}>
+const Model = () => <group dispose={null}>
   <Stats />
   <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
   <CameraControls />
   <PerspectiveCamera makeDefault={true} name={"camera"}
     fov={40} near={0.1} far={100000}
-    position={[2000, -800, 2000]}
-    lookAt={() => new Vector3(0, 0, 0)}
-    rotation={[Math.PI / 6, Math.PI / 6, Math.PI / 6]} />
-  <pointLight intensity={1} position={[0, 0, 10000]} rotation={[0, 0, 0]}
-    distance={0} decay={0} />
+    position={[0, -3000, 1500]}
+    rotation={[0, 0, 0]} />
+  <pointLight intensity={1} distance={0} decay={0}
+    position={[0, 0, 10000]} />
   <directionalLight intensity={1}
-    position={[0, 0, 100]} rotation={[0, 0, 0]} />
+    position={[0, 0, 1000]} />
   <ambientLight intensity={1} />
   <Plane name={"ground"}
     material-color={"lightgray"}
@@ -65,12 +63,12 @@ const Model = () => <group dispose={null}
     material={new MeshPhongMaterial}
     material-side={DoubleSide}
     args={[bedStructure2D(), { steps: 1, depth: 300, bevelEnabled: false }]}
-    position={[0, 0, 0]} />
+    position={[-length / 2, -width / 2, 0]} />
   <Extrude name={"soil"}
     material-color={"#572e21"}
     material={new MeshPhongMaterial}
     args={[soil(Shape) as Shape, { steps: 1, depth: 250, bevelEnabled: false }]}
-    position={[0, 0, 0]} />
+    position={[-length / 2, -width / 2, 0]} />
 </group>;
 
 export const GardenBedModel = (props: GardenBedModelProps) => {
