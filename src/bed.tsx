@@ -1,13 +1,16 @@
 // import React from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-  CameraControls, Extrude, PerspectiveCamera, Plane, Sky, Stats,
+  Extrude, OrbitControls, PerspectiveCamera, Plane, Sky, Stats,
 } from "@react-three/drei";
 import { DoubleSide, MeshPhongMaterial, Path, Shape } from "three";
 
 const length = 2900;
 const width = 1400;
 const thickness = 30;
+
+const bedHeight = 300;
+const groundOffset = -50;
 
 const soil = (Type: typeof Path | typeof Shape): Path | Shape => {
   const hole = new Type();
@@ -43,11 +46,14 @@ interface GardenBedModelProps {
 const Model = () => <group dispose={null}>
   <Stats />
   <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
-  <CameraControls />
   <PerspectiveCamera makeDefault={true} name={"camera"}
     fov={40} near={0.1} far={100000}
     position={[0, -3000, 1500]}
-    rotation={[0, 0, 0]} />
+    rotation={[0, 0, 0]}
+    up={[0, 0, 1]} />
+  <OrbitControls maxPolarAngle={Math.PI / 2}
+    enableZoom={true} enablePan={false} dampingFactor={0.1} />
+  <axesHelper args={[5000]} />
   <pointLight intensity={1} distance={0} decay={0}
     position={[0, 0, 10000]} />
   <directionalLight intensity={1}
@@ -57,18 +63,18 @@ const Model = () => <group dispose={null}>
     material-color={"lightgray"}
     material={new MeshPhongMaterial}
     args={[10000, 10000]}
-    position={[0, 0, 0]} />
+    position={[0, 0, groundOffset]} />
   <Extrude name={"bed"}
     material-color={"tan"}
     material={new MeshPhongMaterial}
     material-side={DoubleSide}
-    args={[bedStructure2D(), { steps: 1, depth: 300, bevelEnabled: false }]}
-    position={[-length / 2, -width / 2, 0]} />
+    args={[bedStructure2D(), { steps: 1, depth: bedHeight, bevelEnabled: false }]}
+    position={[-length / 2, -width / 2, groundOffset]} />
   <Extrude name={"soil"}
     material-color={"#572e21"}
     material={new MeshPhongMaterial}
     args={[soil(Shape) as Shape, { steps: 1, depth: 250, bevelEnabled: false }]}
-    position={[-length / 2, -width / 2, 0]} />
+    position={[-length / 2, -width / 2, groundOffset]} />
 </group>;
 
 export const GardenBedModel = (props: GardenBedModelProps) => {
