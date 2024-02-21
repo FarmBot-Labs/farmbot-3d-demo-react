@@ -54,32 +54,34 @@ const Model = () => <group dispose={null}>
   <OrbitControls maxPolarAngle={Math.PI / 2}
     enableZoom={true} enablePan={false} dampingFactor={0.1} />
   <axesHelper args={[5000]} />
-  <pointLight intensity={1} distance={0} decay={0}
-    position={[0, 0, 10000]} />
-  <directionalLight intensity={1}
-    position={[0, 0, 1000]} />
-  <ambientLight intensity={1} />
+  <pointLight intensity={2} distance={100000} decay={0} castShadow={true}
+    position={[1000, 0, 3000]} />
+  <ambientLight intensity={1.5} />
   <Plane name={"ground"}
     material-color={"lightgray"}
     material={new MeshPhongMaterial}
+    receiveShadow={true}
     args={[10000, 10000]}
     position={[0, 0, groundOffset]} />
   <Extrude name={"bed"}
     material-color={"tan"}
     material={new MeshPhongMaterial}
+    castShadow={true}
+    receiveShadow={true}
     material-side={DoubleSide}
     args={[bedStructure2D(), { steps: 1, depth: bedHeight, bevelEnabled: false }]}
     position={[-length / 2, -width / 2, groundOffset]} />
   <Extrude name={"soil"}
     material-color={"#572e21"}
     material={new MeshPhongMaterial}
+    receiveShadow={true}
     args={[soil(Shape) as Shape, { steps: 1, depth: 250, bevelEnabled: false }]}
     position={[-length / 2, -width / 2, groundOffset]} />
 </group>;
 
 export const GardenBedModel = (props: GardenBedModelProps) => {
   return <div className={"garden-bed-3d-model"}>
-    <Canvas>
+    <Canvas shadows={true}>
       <Model {...props} />
     </Canvas>
   </div>;
