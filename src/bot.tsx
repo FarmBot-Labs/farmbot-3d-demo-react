@@ -7,7 +7,6 @@ const extrusionWidth = 20;
 const extrusionWallThickness = 3;
 const utmRadius = 35;
 const utmHeight = 35;
-const gantryBeamLength = 1500;
 
 const extrusion = (factor: number) => {
   const shape = new Shape();
@@ -38,10 +37,11 @@ interface FarmbotModelProps {
   position: Record<"x" | "y" | "z", number>;
   botSize: Record<"x" | "y", number>;
   mapOriginZ: number;
+  beamLength: number;
 }
 
 export const Bot = (props: FarmbotModelProps) => {
-  const { position, botSize, mapOriginZ } = props;
+  const { position, botSize, mapOriginZ, beamLength } = props;
   const { x, y, z } = position;
   const mapOriginX = -botSize.x / 2;
   const mapOriginY = -botSize.y / 2;
@@ -92,11 +92,11 @@ export const Bot = (props: FarmbotModelProps) => {
       castShadow={true}
       args={[
         extrusion(3),
-        { steps: 1, depth: gantryBeamLength, bevelEnabled: false },
+        { steps: 1, depth: beamLength, bevelEnabled: false },
       ]}
       position={[
         mapOriginX + x + extrusionWidth,
-        gantryBeamLength / 2,
+        beamLength / 2,
         mapOriginZ + columnLength,
       ]}
       rotation={[Math.PI / 2, 0, Math.PI / 2]} />
