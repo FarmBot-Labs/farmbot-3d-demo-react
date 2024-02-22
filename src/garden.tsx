@@ -4,12 +4,18 @@ import {
   GizmoViewcube,
   OrbitControls, PerspectiveCamera, Plane, Sky, Stats,
 } from "@react-three/drei";
-import { MeshPhongMaterial } from "three";
+import { MeshPhongMaterial, TextureLoader, RepeatWrapping } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { useControls } from "leva";
 
 const groundOffset = -50;
+
+const grassTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/grass_texture_AdobeStock_249687268.jpg?v=1708639920', (texture) => {
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.repeat.set(1, 4);
+});
 
 interface GardenProps {
 
@@ -50,7 +56,7 @@ const Model = () => {
     <ambientLight intensity={1.5} />
     <Plane name={"ground"}
       material-color={"lightgray"}
-      material={new MeshPhongMaterial}
+      material={new MeshPhongMaterial({ map: grassTexture, shininess: 5 })}
       receiveShadow={true}
       args={[10000, 10000]}
       position={[0, 0, groundOffset]} />
