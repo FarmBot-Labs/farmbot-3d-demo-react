@@ -1,7 +1,8 @@
 import { Box, Extrude } from "@react-three/drei";
-import { DoubleSide, MeshPhongMaterial, Path, Shape } from "three";
+import { DoubleSide, MeshPhongMaterial, Path, Shape, TextureLoader, RepeatWrapping } from "three";
+import "./bed.css";
 
-const thickness = 30;
+const thickness = 40;
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -41,6 +42,18 @@ interface BedProps {
   legSize: number;
 }
 
+const woodTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/wood_texture_AdobeStock_416222339.jpg?v=1708640029', (texture) => {
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.repeat.set(.0003, .0006);
+});
+
+const soilTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/soil_texture_AdobeStock_51322016.jpg?v=1708639919', (texture) => {
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.repeat.set(.0003, .0005);
+});
+
 export const Bed = (props: BedProps) => {
   const { botSize, bedHeight, groundOffset, bedZOffset, legSize } = props;
   const bedLength = botSize.x + 2 * thickness;
@@ -50,7 +63,7 @@ export const Bed = (props: BedProps) => {
   return <group>
     <Extrude name={"bed"}
       material-color={"tan"}
-      material={new MeshPhongMaterial}
+      material={new MeshPhongMaterial({ map: woodTexture, shininess: 100 })}
       castShadow={true}
       receiveShadow={true}
       material-side={DoubleSide}
@@ -65,7 +78,7 @@ export const Bed = (props: BedProps) => {
       ]} />
     <Extrude name={"soil"}
       material-color={"#572e21"}
-      material={new MeshPhongMaterial}
+      material={new MeshPhongMaterial({ map: soilTexture, shininess: 5 })}
       castShadow={true}
       receiveShadow={true}
       args={[
