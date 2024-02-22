@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ElectronicsBoxModel } from './box'
-import { GardenBedModel } from './bed'
+import { Garden } from './garden'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GardenBedModel />
+    <Garden />
     <ElectronicsBoxModel
       isEditing={false}
       dispatch={() => { }}
