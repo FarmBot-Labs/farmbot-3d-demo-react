@@ -90,7 +90,7 @@ export const Bed = (props: BedProps) => {
         -bedWidth / 2,
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={woodTexture} color={"tan"}
+      <meshPhongMaterial map={woodTexture} color={"#aaa"}
         shininess={100} side={DoubleSide} />
     </Extrude>
     <Extrude name={"soil"}
@@ -105,7 +105,7 @@ export const Bed = (props: BedProps) => {
         -bedWidth / 2,
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={soilTexture} color={"#572e21"}
+      <meshPhongMaterial map={soilTexture} color={"#aaa"}
         shininess={5} />
     </Extrude>
     {[
@@ -129,7 +129,7 @@ export const Bed = (props: BedProps) => {
                 position.y * side,
                 -bedZOffset / 2 - (legsFlush ? bedHeight / 2 : bedHeight),
               ]}>
-              <meshPhongMaterial map={legWoodTexture} color={"tan"}
+              <meshPhongMaterial map={legWoodTexture} color={"#aaa"}
                 shininess={100} />
             </Box>)}
         </group>

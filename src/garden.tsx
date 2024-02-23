@@ -45,7 +45,7 @@ const Model = () => {
     beamLength: { value: 1500, min: 0, max: 3000, step: 1 },
     bedZOffset: { value: 0, min: 0, max: 1000, step: 1 },
     bedHeight: { value: 300, min: 0, max: 1000, step: 1 },
-    legSize: { value: 150, min: 0, max: 1000, step: 1 },
+    legSize: { value: 100, min: 0, max: 200, step: 1 },
     legsFlush: { value: true },
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
   });
@@ -54,24 +54,25 @@ const Model = () => {
     <Stats />
     <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
     <PerspectiveCamera makeDefault={true} name={"camera"}
-      fov={40} near={0.1} far={100000}
+      fov={40} near={10} far={18000}
       position={[0, -3000, 1500]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
-      enableZoom={true} enablePan={false} dampingFactor={0.1} />
+      enableZoom={true} enablePan={false} dampingFactor={0.1}
+      minDistance={50} maxDistance={10000} />
     <axesHelper args={[5000]} />
     <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>
-    <pointLight intensity={2} distance={100000} decay={0} castShadow={true}
+    <pointLight intensity={5} distance={10000} decay={0} castShadow={true}
       position={[1000, 0, 3000]} />
     <ambientLight intensity={1.5} />
     <Plane name={"ground"}
       receiveShadow={true}
       args={[10000, 10000]}
       position={[0, 0, -groundZ]}>
-      <meshPhongMaterial map={grassTexture} color={"lightgray"} shininess={5} />
+      <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={5} />
     </Plane>
     <Bed config={config} />
     <Bot config={config} />
