@@ -33,6 +33,8 @@ export interface Config {
   legSize: number;
   legsFlush: boolean;
   extraLegsX: number;
+  bedBrightness: number;
+  soilBrightness: number;
 }
 
 const Model = () => {
@@ -49,6 +51,7 @@ const Model = () => {
     legsFlush: { value: true },
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
     bedBrightness: { value: 8, min: 1, max: 12, step: 1 },
+    soilBrightness: { value: 6, min: 1, max: 12, step: 1 },
   });
   const groundZ = config.bedZOffset + config.bedHeight;
   return <group dispose={null}>

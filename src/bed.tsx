@@ -62,8 +62,8 @@ const soilTexture = new TextureLoader()
       texture.repeat.set(.0003, .0005);
     });
 
-const getColorFromBrightness = (value) => {
-  const colorMap = {
+const getColorFromBrightness = (value: number) => {
+  const colorMap: { [key: number]: string } = {
     1: "#444",
     2: "#555",
     3: "#666",
@@ -87,7 +87,7 @@ interface BedProps {
 export const Bed = (props: BedProps) => {
   const {
     botSizeX, botSizeY, bedHeight, bedZOffset, legSize, legsFlush,
-    extraLegsX, bedBrightness,
+    extraLegsX, bedBrightness, soilBrightness,
   } = props.config;
   const botSize = { x: botSizeX, y: botSizeY };
   const bedLength = botSize.x + 2 * thickness;
@@ -96,6 +96,7 @@ export const Bed = (props: BedProps) => {
   const legY = (bedWidth - legSize) / 2 - thickness;
   const bedStartZ = bedHeight;
   const bedColor = getColorFromBrightness(bedBrightness);
+  const soilColor = getColorFromBrightness(soilBrightness);
   return <group>
     <Extrude name={"bed"}
       castShadow={true}
@@ -124,7 +125,7 @@ export const Bed = (props: BedProps) => {
         -bedWidth / 2,
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={soilTexture} color={"#aaa"}
+      <meshPhongMaterial map={soilTexture} color={soilColor}
         shininess={5} />
     </Extrude>
     {[
