@@ -62,6 +62,24 @@ const soilTexture = new TextureLoader()
       texture.repeat.set(.0003, .0005);
     });
 
+const getColorFromBrightness = (value: number) => {
+  const colorMap: { [key: number]: string } = {
+    1: "#444",
+    2: "#555",
+    3: "#666",
+    4: "#777",
+    5: "#888",
+    6: "#999",
+    7: "#aaa",
+    8: "#bbb",
+    9: "#ccc",
+    10: "#ddd",
+    11: "#eee",
+    12: "#fff",
+  };
+  return colorMap[value];
+};
+
 interface BedProps {
   config: Config;
 }
@@ -69,7 +87,7 @@ interface BedProps {
 export const Bed = (props: BedProps) => {
   const {
     botSizeX, botSizeY, bedHeight, bedZOffset, legSize, legsFlush,
-    extraLegsX,
+    extraLegsX, bedBrightness, soilBrightness,
   } = props.config;
   const botSize = { x: botSizeX, y: botSizeY };
   const bedLength = botSize.x + 2 * thickness;
@@ -77,6 +95,8 @@ export const Bed = (props: BedProps) => {
   const legX = (bedLength - legSize) / 2 - thickness;
   const legY = (bedWidth - legSize) / 2 - thickness;
   const bedStartZ = bedHeight;
+  const bedColor = getColorFromBrightness(bedBrightness);
+  const soilColor = getColorFromBrightness(soilBrightness);
   return <group>
     <Extrude name={"bed"}
       castShadow={true}
@@ -90,7 +110,7 @@ export const Bed = (props: BedProps) => {
         -bedWidth / 2,
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={woodTexture} color={"tan"}
+      <meshPhongMaterial map={woodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Extrude>
     <Extrude name={"soil"}
@@ -105,7 +125,7 @@ export const Bed = (props: BedProps) => {
         -bedWidth / 2,
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={soilTexture} color={"#572e21"}
+      <meshPhongMaterial map={soilTexture} color={soilColor}
         shininess={5} />
     </Extrude>
     {[
@@ -129,7 +149,7 @@ export const Bed = (props: BedProps) => {
                 position.y * side,
                 -bedZOffset / 2 - (legsFlush ? bedHeight / 2 : bedHeight),
               ]}>
-              <meshPhongMaterial map={legWoodTexture} color={"tan"}
+              <meshPhongMaterial map={legWoodTexture} color={bedColor}
                 shininess={100} />
             </Box>)}
         </group>
