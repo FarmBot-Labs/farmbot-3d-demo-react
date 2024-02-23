@@ -1,5 +1,6 @@
 import { Cylinder, Extrude } from "@react-three/drei";
-import { MeshPhongMaterial, Path, Shape } from "three";
+import { DoubleSide, Path, Shape } from "three";
+import { Config } from "./garden";
 
 const columnLength = 500;
 const zAxisLength = 1000;
@@ -34,22 +35,16 @@ const extrusion = (factor: number) => {
 }
 
 interface FarmbotModelProps {
-  position: Record<"x" | "y" | "z", number>;
-  botSize: Record<"x" | "y", number>;
-  mapOriginZ: number;
-  beamLength: number;
+  config: Config;
 }
 
 export const Bot = (props: FarmbotModelProps) => {
-  const { position, botSize, mapOriginZ, beamLength } = props;
-  const { x, y, z } = position;
-  const mapOriginX = -botSize.x / 2;
-  const mapOriginY = -botSize.y / 2;
+  const { x, y, z, botSizeX, botSizeY, beamLength } = props.config;
+  const mapOriginX = -botSizeX / 2;
+  const mapOriginY = -botSizeY / 2;
   return <group name={"bot"}>
     {[-mapOriginY, mapOriginY].map(yPos =>
       <Extrude name={"columns"}
-        material-color={"silver"}
-        material={new MeshPhongMaterial}
         castShadow={true}
         args={[
           extrusion(3),
@@ -58,12 +53,12 @@ export const Bot = (props: FarmbotModelProps) => {
         position={[
           mapOriginX + x + extrusionWidth,
           yPos - extrusionWidth / 2,
-          mapOriginZ,
+          0,
         ]}
-        rotation={[0, 0, 0]} />)}
+        rotation={[0, 0, 0]}>
+        <meshPhongMaterial color={"silver"} side={DoubleSide} />
+      </Extrude>)}
     <Extrude name={"z-axis"}
-      material-color={"silver"}
-      material={new MeshPhongMaterial}
       castShadow={true}
       args={[
         extrusion(1),
@@ -72,23 +67,23 @@ export const Bot = (props: FarmbotModelProps) => {
       position={[
         mapOriginX + x - extrusionWidth,
         mapOriginY + y + utmRadius,
-        mapOriginZ + z,
+        z,
       ]}
-      rotation={[0, 0, 0]} />
+      rotation={[0, 0, 0]}>
+      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+    </Extrude>
     <Cylinder name={"UTM"}
-      material-color={"silver"}
-      material={new MeshPhongMaterial}
       castShadow={true}
       args={[utmRadius, utmRadius, utmHeight]}
       position={[
         mapOriginX + x,
         mapOriginY + y,
-        mapOriginZ + z + utmHeight / 2,
+        z + utmHeight / 2,
       ]}
-      rotation={[Math.PI / 2, 0, 0]} />
+      rotation={[Math.PI / 2, 0, 0]}>
+      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+    </Cylinder>
     <Extrude name={"gantry-beam"}
-      material-color={"silver"}
-      material={new MeshPhongMaterial}
       castShadow={true}
       args={[
         extrusion(3),
@@ -97,8 +92,10 @@ export const Bot = (props: FarmbotModelProps) => {
       position={[
         mapOriginX + x + extrusionWidth,
         beamLength / 2,
-        mapOriginZ + columnLength,
+        columnLength,
       ]}
-      rotation={[Math.PI / 2, 0, Math.PI / 2]} />
+      rotation={[Math.PI / 2, 0, Math.PI / 2]}>
+      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+    </Extrude>
   </group>;
 };

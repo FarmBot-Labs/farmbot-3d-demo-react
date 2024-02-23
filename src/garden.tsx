@@ -4,39 +4,52 @@ import {
   GizmoViewcube,
   OrbitControls, PerspectiveCamera, Plane, Sky, Stats,
 } from "@react-three/drei";
-import { MeshPhongMaterial, TextureLoader, RepeatWrapping } from "three";
+import { TextureLoader, RepeatWrapping } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { useControls } from "leva";
 
-const groundOffset = -50;
-
-const grassTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/grass_texture_AdobeStock_249687268.jpg?v=1708639920', (texture) => {
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(1, 4);
-});
+const grassTexture = new TextureLoader()
+  .load("/3D/textures/grass.jpg",
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(1, 4);
+    });
 
 interface GardenProps {
 
 }
 
+export interface Config {
+  x: number;
+  y: number;
+  z: number;
+  botSizeX: number;
+  botSizeY: number;
+  beamLength: number;
+  bedZOffset: number;
+  bedHeight: number;
+  legSize: number;
+  legsFlush: boolean;
+  extraLegsX: number;
+}
+
 const Model = () => {
-  const {
-    x, y, z, length, width, bedZOffset, bedHeight, legSize, beamLength,
-  } = useControls({
+  const config = useControls({
     x: { value: 1450, min: 0, max: 6000, step: 1 },
     y: { value: 700, min: 0, max: 3000, step: 1 },
     z: { value: 200, min: 0, max: 1000, step: 1 },
-    length: { value: 2900, min: 0, max: 6000, step: 1 },
-    width: { value: 1400, min: 0, max: 3000, step: 1 },
+    botSizeX: { value: 2900, min: 0, max: 6000, step: 1 },
+    botSizeY: { value: 1400, min: 0, max: 3000, step: 1 },
     beamLength: { value: 1500, min: 0, max: 3000, step: 1 },
     bedZOffset: { value: 0, min: 0, max: 1000, step: 1 },
     bedHeight: { value: 300, min: 0, max: 1000, step: 1 },
     legSize: { value: 150, min: 0, max: 1000, step: 1 },
+    legsFlush: { value: true },
+    extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
   });
-  const mapOriginZ = groundOffset + bedZOffset + bedHeight;
-  const botSize = { x: length, y: width };
+  const groundZ = config.bedZOffset + config.bedHeight;
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
@@ -55,22 +68,13 @@ const Model = () => {
       position={[1000, 0, 3000]} />
     <ambientLight intensity={1.5} />
     <Plane name={"ground"}
-      material-color={"lightgray"}
-      material={new MeshPhongMaterial({ map: grassTexture, shininess: 5 })}
       receiveShadow={true}
       args={[10000, 10000]}
-      position={[0, 0, groundOffset]} />
-    <Bed
-      botSize={botSize}
-      groundOffset={groundOffset}
-      bedHeight={bedHeight}
-      bedZOffset={bedZOffset}
-      legSize={legSize} />
-    <Bot
-      position={{ x, y, z }}
-      botSize={botSize}
-      mapOriginZ={mapOriginZ}
-      beamLength={beamLength} />
+      position={[0, 0, -groundZ]}>
+      <meshPhongMaterial map={grassTexture} color={"lightgray"} shininess={5} />
+    </Plane>
+    <Bed config={config} />
+    <Bot config={config} />
   </group>;
 };
 

@@ -1,6 +1,10 @@
 import { Box, Extrude } from "@react-three/drei";
-import { DoubleSide, MeshPhongMaterial, Path, Shape, TextureLoader, RepeatWrapping } from "three";
+import {
+  DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
+} from "three";
 import "./bed.css";
+import { Config } from "./garden";
+import { range } from "lodash";
 
 const thickness = 40;
 
@@ -34,39 +38,49 @@ const bedStructure2D = (botSize: Record<"x" | "y", number>) => {
   return shape;
 }
 
+const woodTexture = new TextureLoader()
+  .load("/3D/textures/wood.jpg",
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(.0003, .0006);
+    });
+
+const legWoodTexture = new TextureLoader()
+  .load("/3D/textures/wood.jpg",
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(.02, .05);
+    });
+
+const soilTexture = new TextureLoader()
+  .load("/3D/textures/soil.jpg",
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(.0003, .0005);
+    });
+
 interface BedProps {
-  botSize: Record<"x" | "y", number>;
-  bedHeight: number;
-  groundOffset: number;
-  bedZOffset: number;
-  legSize: number;
+  config: Config;
 }
 
-const woodTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/wood_texture_AdobeStock_416222339.jpg?v=1708640029', (texture) => {
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(.0003, .0006);
-});
-
-const soilTexture = new TextureLoader().load('https://cdn.shopify.com/s/files/1/2040/0289/files/soil_texture_AdobeStock_51322016.jpg?v=1708639919', (texture) => {
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(.0003, .0005);
-});
-
 export const Bed = (props: BedProps) => {
-  const { botSize, bedHeight, groundOffset, bedZOffset, legSize } = props;
+  const {
+    botSizeX, botSizeY, bedHeight, bedZOffset, legSize, legsFlush,
+    extraLegsX,
+  } = props.config;
+  const botSize = { x: botSizeX, y: botSizeY };
   const bedLength = botSize.x + 2 * thickness;
   const bedWidth = botSize.y + 2 * thickness;
-  const legX = (bedLength - legSize) / 2;
-  const legY = (bedWidth - legSize) / 2;
+  const legX = (bedLength - legSize) / 2 - thickness;
+  const legY = (bedWidth - legSize) / 2 - thickness;
+  const bedStartZ = bedHeight;
   return <group>
     <Extrude name={"bed"}
-      material-color={"tan"}
-      material={new MeshPhongMaterial({ map: woodTexture, shininess: 100 })}
       castShadow={true}
       receiveShadow={true}
-      material-side={DoubleSide}
       args={[
         bedStructure2D(botSize),
         { steps: 1, depth: bedHeight, bevelEnabled: false },
@@ -74,11 +88,12 @@ export const Bed = (props: BedProps) => {
       position={[
         -bedLength / 2,
         -bedWidth / 2,
-        groundOffset + bedZOffset,
-      ]} />
+        -bedStartZ,
+      ]}>
+      <meshPhongMaterial map={woodTexture} color={"tan"}
+        shininess={100} side={DoubleSide} />
+    </Extrude>
     <Extrude name={"soil"}
-      material-color={"#572e21"}
-      material={new MeshPhongMaterial({ map: soilTexture, shininess: 5 })}
       castShadow={true}
       receiveShadow={true}
       args={[
@@ -88,24 +103,36 @@ export const Bed = (props: BedProps) => {
       position={[
         -bedLength / 2,
         -bedWidth / 2,
-        groundOffset + bedZOffset,
-      ]} />
+        -bedStartZ,
+      ]}>
+      <meshPhongMaterial map={soilTexture} color={"#572e21"}
+        shininess={5} />
+    </Extrude>
     {[
-      { x: -legX, y: -legY },
-      { x: legX, y: -legY },
-      { x: legX, y: legY },
       { x: -legX, y: legY },
-    ].map(position =>
-      <Box name={"bed-leg"}
-        material-color={"tan"}
-        material={new MeshPhongMaterial}
-        castShadow={true}
-        receiveShadow={true}
-        args={[legSize, legSize, bedZOffset]}
-        position={[
-          position.x,
-          position.y,
-          groundOffset + bedZOffset / 2,
-        ]} />)}
+      { x: legX, y: legY },
+    ]
+      .concat(extraLegsX
+        ? range(0, botSizeX, botSizeX / (extraLegsX + 1))
+          .map(n => ({ x: n - botSizeX / 2, y: legY }))
+          .slice(1)
+        : [])
+      .map(position =>
+        <group>
+          {[-1, 1].map(side =>
+            <Box name={"bed-leg"}
+              castShadow={true}
+              receiveShadow={true}
+              args={[legSize, legSize, bedZOffset + (legsFlush ? bedHeight : 0)]}
+              position={[
+                position.x,
+                position.y * side,
+                -bedZOffset / 2 - (legsFlush ? bedHeight / 2 : bedHeight),
+              ]}>
+              <meshPhongMaterial map={legWoodTexture} color={"tan"}
+                shininess={100} />
+            </Box>)}
+        </group>
+      )}
   </group>;
 };
