@@ -48,6 +48,7 @@ const Model = () => {
     legSize: { value: 100, min: 0, max: 200, step: 1 },
     legsFlush: { value: true },
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
+    bedBrightness: { value: 8, min: 1, max: 12, step: 1 },
   });
   const groundZ = config.bedZOffset + config.bedHeight;
   return <group dispose={null}>
@@ -66,7 +67,7 @@ const Model = () => {
       <GizmoViewcube />
     </GizmoHelper>
     <pointLight intensity={5} distance={10000} decay={0} castShadow={true}
-      position={[1000, 0, 3000]} />
+      position={[2000, -2000, 3000]} />
     <ambientLight intensity={1.5} />
     <Plane name={"ground"}
       receiveShadow={true}
