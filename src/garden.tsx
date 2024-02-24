@@ -106,7 +106,7 @@ const Model = () => {
       const plant = plantChoices[Math.floor(Math.random() * plantChoices.length)];
       const randomPosition = [
         (Math.floor(Math.random() * config.botSizeX)) - (config.botSizeX / 2),
-        Math.floor(Math.random() * config.botSizeY) - (config.botSizeY / 2),
+        (Math.floor(Math.random() * config.botSizeY)) - (config.botSizeY / 2),
         0
       ];
 
