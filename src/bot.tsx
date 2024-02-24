@@ -1,6 +1,7 @@
-import { Cylinder, Extrude } from "@react-three/drei";
+import { Cylinder, Extrude, Trail } from "@react-three/drei";
 import { DoubleSide, Path, Shape } from "three";
 import { Config } from "./garden";
+import { useRef } from "react";
 
 const columnLength = 500;
 const zAxisLength = 1000;
@@ -39,6 +40,7 @@ interface FarmbotModelProps {
 }
 
 export const Bot = (props: FarmbotModelProps) => {
+  const utmRef = useRef();
   const { x, y, z, botSizeX, botSizeY, beamLength } = props.config;
   const mapOriginX = -botSizeX / 2;
   const mapOriginY = -botSizeY / 2;
@@ -72,7 +74,7 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[0, 0, 0]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
-    <Cylinder name={"UTM"}
+    <Cylinder ref={utmRef} name={"UTM"}
       castShadow={true}
       args={[utmRadius, utmRadius, utmHeight]}
       position={[
@@ -83,6 +85,16 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[Math.PI / 2, 0, 0]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Cylinder>
+    <Trail
+      width={500}
+      color={"red"}
+      length={100}
+      decay={0.5}
+      local={false}
+      stride={0}
+      interval={1}
+      target={utmRef}
+    ></Trail>
     <Extrude name={"gantry-beam"}
       castShadow={true}
       args={[
