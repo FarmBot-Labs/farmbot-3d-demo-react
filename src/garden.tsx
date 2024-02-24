@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper,
   GizmoViewcube,
-  OrbitControls, PerspectiveCamera, Plane, Sky, Stats,
+  OrbitControls, PerspectiveCamera, Plane, Sky, Stats, Grid, Billboard, Text, Svg
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping } from "three";
 import { Bot } from "./bot";
@@ -39,7 +39,7 @@ export interface Config {
 
 const Model = () => {
   const config = useControls({
-    x: { value: 1450, min: 0, max: 6000, step: 1 },
+    x: { value: 300, min: 0, max: 6000, step: 1 },
     y: { value: 700, min: 0, max: 3000, step: 1 },
     z: { value: 200, min: 0, max: 1000, step: 1 },
     botSizeX: { value: 2900, min: 0, max: 6000, step: 1 },
@@ -52,8 +52,16 @@ const Model = () => {
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
     bedBrightness: { value: 8, min: 1, max: 12, step: 1 },
     soilBrightness: { value: 6, min: 1, max: 12, step: 1 },
+    plants: { value: 10, min: 0, max: 300, step: 1 },
   });
+
   const groundZ = config.bedZOffset + config.bedHeight;
+
+  const plantChoices = [
+    { label: "Swiss Chard", icon: "/3D/icons/swiss_chard.svg", scale: 0.2 },
+    { label: "Thai Basil", icon: "/3D/icons/thai_basil.svg", scale: 0.4 },
+    { label: "Bok Choy", icon: "/3D/icons/bok_choy.svg", scale: 0.4 }
+  ];
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
@@ -78,8 +86,47 @@ const Model = () => {
       position={[0, 0, -groundZ]}>
       <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={5} />
     </Plane>
+    <Grid
+      name={"ground-grid"}
+      position={[0, 0, -groundZ + 5]}
+      rotation={[Math.PI / 2, 0, 0]}
+      cellSize={100}
+      cellThickness={1.5}
+      cellColor={"#eee"}
+      sectionSize={1000}
+      sectionThickness={3}
+      sectionColor={"#333"}
+      infiniteGrid={true}
+      fadeDistance={10000}
+      fadeStrength={1} />
     <Bed config={config} />
     <Bot config={config} />
+
+    {Array.from({ length: config.plants }).map((_, index) => {
+      const plant = plantChoices[Math.floor(Math.random() * plantChoices.length)];
+      const randomPosition = [
+        (Math.floor(Math.random() * config.botSizeX)) - (config.botSizeX / 2),
+        Math.floor(Math.random() * config.botSizeY) - (config.botSizeY / 2),
+        0
+      ];
+
+      return (
+        <Billboard key={index} follow={true} position={randomPosition}>
+          <Svg src={plant.icon} scale={plant.scale} position={[-100, 150, 0]} />
+          <Text fontSize={40} position={[0, 200, 0]}>{plant.label}</Text>
+        </Billboard>
+      );
+    })}
+
+    <Text fontSize={200}
+      color={"white"}
+      strokeColor={"black"}
+      fontWeight={"bold"}
+      strokeWidth={7}
+      position={[0, -config.botSizeY / 2 -200, -groundZ + 150]}
+      rotation={[Math.PI / 4, 0, 0]} >
+        FarmBot Genesis v1.7
+    </Text>
   </group>;
 };
 
