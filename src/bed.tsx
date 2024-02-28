@@ -146,9 +146,9 @@ export const Bed = (props: BedProps) => {
         shininess={5} />
     </Extrude>
     {legXPositions.map((x, index) =>
-      <group>
+      <group key={index}>
         {legYPositions(index).map(y =>
-          <Box name={"bed-leg"}
+          <Box name={"bed-leg"} key={y}
             castShadow={true}
             receiveShadow={true}
             args={[legSize, legSize, bedZOffset + (legsFlush ? bedHeight : 0)]}

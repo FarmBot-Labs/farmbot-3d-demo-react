@@ -41,7 +41,7 @@ interface FarmbotModelProps {
 export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail,
-    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter,
+    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks,
   } = props.config;
   const columnLength = botSizeZ + 200;
   const boundsDrawZ = 0;
@@ -55,20 +55,36 @@ export const Bot = (props: FarmbotModelProps) => {
   };
   return <group name={"bot"}>
     {[0 + extrusionWidth / 2, bedWidthOuter - extrusionWidth / 2].map(y =>
-      <Extrude name={"columns"}
-        castShadow={true}
-        args={[
-          extrusion(3),
-          { steps: 1, depth: columnLength, bevelEnabled: false },
-        ]}
-        position={[
-          threeSpace(x + extrusionWidth, bedLengthOuter),
-          threeSpace(y, bedWidthOuter),
-          0,
-        ]}
-        rotation={[0, 0, 0]}>
-        <meshPhongMaterial color={"silver"} side={DoubleSide} />
-      </Extrude>)}
+      <group key={y}>
+        <Extrude name={"columns"}
+          castShadow={true}
+          args={[
+            extrusion(3),
+            { steps: 1, depth: columnLength, bevelEnabled: false },
+          ]}
+          position={[
+            threeSpace(x + extrusionWidth, bedLengthOuter) + bedXOffset,
+            threeSpace(y, bedWidthOuter),
+            0,
+          ]}
+          rotation={[0, 0, 0]}>
+          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+        </Extrude>
+        <Extrude name={"tracks"} visible={tracks}
+          castShadow={true}
+          args={[
+            extrusion(1),
+            { steps: 1, depth: botSizeX, bevelEnabled: false },
+          ]}
+          position={[
+            threeSpace(0, bedLengthOuter) + bedXOffset,
+            threeSpace(y, bedWidthOuter),
+            extrusionWidth,
+          ]}
+          rotation={[0, Math.PI / 2, 0]}>
+          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+        </Extrude>
+      </group>)}
     <Extrude name={"z-axis"}
       castShadow={true}
       args={[
@@ -76,8 +92,8 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: zAxisLength, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - extrusionWidth, bedLengthOuter),
-        threeSpace(y + utmRadius, bedWidthOuter),
+        threeSpace(x - extrusionWidth, bedLengthOuter) + bedXOffset,
+        threeSpace(y + utmRadius, bedWidthOuter) + bedYOffset,
         z,
       ]}
       rotation={[0, 0, 0]}>
@@ -95,8 +111,8 @@ export const Bot = (props: FarmbotModelProps) => {
         castShadow={true}
         args={[utmRadius, utmRadius, utmHeight]}
         position={[
-          threeSpace(x, bedLengthOuter),
-          threeSpace(y, bedWidthOuter),
+          threeSpace(x, bedLengthOuter) + bedXOffset,
+          threeSpace(y, bedWidthOuter) + bedYOffset,
           z + utmHeight / 2,
         ]}
         rotation={[Math.PI / 2, 0, 0]}>
@@ -110,7 +126,7 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: beamLength, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x + extrusionWidth, bedLengthOuter),
+        threeSpace(x + extrusionWidth, bedLengthOuter) + bedXOffset,
         threeSpace(beamLength, beamLength),
         columnLength,
       ]}

@@ -30,15 +30,12 @@ interface GardenProps {
 
 }
 
-interface SizeConfig {
+export interface Config {
   botSizeX: number;
   botSizeY: number;
   botSizeZ: number;
   bedWallThickness: number;
   bedHeight: number;
-}
-
-export interface Config extends SizeConfig {
   x: number;
   y: number;
   z: number;
@@ -60,28 +57,32 @@ export interface Config extends SizeConfig {
   grid: boolean;
   axes: boolean;
   trail: boolean;
+  tracks: boolean;
 }
 
 const Model = () => {
-  const sizeConfig = useControls({
+  const sizeConfig0 = useControls({
     botSizeX: { value: 2900, min: 0, max: 6000, step: 1 },
-    botSizeY: { value: 1400, min: 0, max: 3000, step: 1 },
+    botSizeY: { value: 1400, min: 0, max: 4000, step: 1 },
     botSizeZ: { value: 400, min: 0, max: 1000, step: 1 },
     bedWallThickness: { value: 40, min: 0, max: 200, step: 1 },
     bedHeight: { value: 300, min: 0, max: 1000, step: 1 },
   });
-  const min = sizeConfig.bedWallThickness * 2;
-  const maxSoilHeight = sizeConfig.botSizeZ + sizeConfig.bedHeight;
+  const bedMin = sizeConfig0.bedWallThickness * 2;
+  const sizeConfig1 = useControls({
+    bedWidthOuter: { value: 1480, min: bedMin, max: 3100, step: 1 },
+    bedLengthOuter: { value: 2980, min: bedMin, max: 6100, step: 1 },
+  });
+  const maxSoilHeight = sizeConfig0.botSizeZ + sizeConfig0.bedHeight;
+  const beamLengthMin = Math.max(sizeConfig0.botSizeY, sizeConfig1.bedWidthOuter);
   const otherConfig = useControls({
-    x: { value: 300, min: 0, max: sizeConfig.botSizeX, step: 1 },
-    y: { value: 700, min: 0, max: sizeConfig.botSizeY, step: 1 },
-    z: { value: 200, min: 0, max: sizeConfig.botSizeZ + 150, step: 1 },
-    beamLength: { value: 1500, min: sizeConfig.botSizeY, max: 3000, step: 1 },
+    x: { value: 300, min: 0, max: sizeConfig0.botSizeX, step: 1 },
+    y: { value: 700, min: 0, max: sizeConfig0.botSizeY, step: 1 },
+    z: { value: 200, min: 0, max: sizeConfig0.botSizeZ + 150, step: 1 },
+    beamLength: { value: 1500, min: beamLengthMin, max: 4000, step: 1 },
     bedXOffset: { value: 50, min: -500, max: 500, step: 1 },
     bedYOffset: { value: -50, min: -500, max: 500, step: 1 },
     bedZOffset: { value: 0, min: 0, max: 1000, step: 1 },
-    bedWidthOuter: { value: 1480, min: min, max: 3100, step: 1 },
-    bedLengthOuter: { value: 2980, min: min, max: 6100, step: 1 },
     legSize: { value: 100, min: 0, max: 200, step: 1 },
     legsFlush: { value: true },
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
@@ -94,8 +95,9 @@ const Model = () => {
     grid: { value: true },
     axes: { value: true },
     trail: { value: true },
-  }, [sizeConfig]);
-  const config: Config = { ...sizeConfig, ...otherConfig };
+    tracks: { value: true },
+  }, [sizeConfig0, sizeConfig1]);
+  const config: Config = { ...sizeConfig0, ...sizeConfig1, ...otherConfig };
   const groundZ = config.bedZOffset + config.bedHeight;
   return <group dispose={null}>
     <Stats />
