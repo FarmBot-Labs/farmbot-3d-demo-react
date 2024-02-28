@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper,
   GizmoViewcube,
-  OrbitControls, PerspectiveCamera, Plane, Sky, Stats, Grid, Billboard, Text, Svg
+  OrbitControls, PerspectiveCamera, Plane, Sky, Stats, Grid, Billboard, Text, Image
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping } from "three";
 import { Bot } from "./bot";
@@ -52,15 +52,15 @@ const Model = () => {
     extraLegsX: { value: 1, min: 0, max: 10, step: 1 },
     bedBrightness: { value: 8, min: 1, max: 12, step: 1 },
     soilBrightness: { value: 6, min: 1, max: 12, step: 1 },
-    plants: { value: 10, min: 0, max: 300, step: 1 },
+    plants: { value: 20, min: 0, max: 3000, step: 1 },
   });
 
   const groundZ = config.bedZOffset + config.bedHeight;
 
   const plantChoices = [
-    { label: "Swiss Chard", icon: "/3D/icons/swiss_chard.svg", scale: 0.2 },
-    { label: "Thai Basil", icon: "/3D/icons/thai_basil.svg", scale: 0.4 },
-    { label: "Bok Choy", icon: "/3D/icons/bok_choy.svg", scale: 0.4 }
+    { label: "Swiss Chard", icon: "/3D/icons/swiss_chard.avif" },
+    { label: "Thai Basil", icon: "/3D/icons/thai_basil.avif" },
+    { label: "Bok Choy", icon: "/3D/icons/bok_choy.avif" }
   ];
   return <group dispose={null}>
     <Stats />
@@ -112,8 +112,8 @@ const Model = () => {
 
       return (
         <Billboard key={index} follow={true} position={randomPosition}>
-          <Svg src={plant.icon} scale={plant.scale} position={[-100, 150, 0]} />
-          <Text fontSize={40} position={[0, 200, 0]}>{plant.label}</Text>
+          <Image url={plant.icon} scale={200} position={[0, 100, 0]} transparent={true} />
+          <Text fontSize={40} position={[0, 225, 0]}>{plant.label}</Text>
         </Billboard>
       );
     })}
