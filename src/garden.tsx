@@ -60,27 +60,20 @@ export interface Config {
 }
 
 const Model = () => {
-  const sizeConfig0 = useControls("sizeConfig0", {
+  const botSizeConfig0 = useControls("Bot Dimensions", {
     botSizeX: { value: 2900, min: 0, max: 6000, step: 1 },
     botSizeY: { value: 1400, min: 0, max: 4000, step: 1 },
     botSizeZ: { value: 400, min: 0, max: 1000, step: 1 },
+  });
+  const bedDimensions0 = useControls("Bed Properties", {
     bedWallThickness: { value: 40, min: 0, max: 200, step: 1 },
     bedHeight: { value: 300, min: 0, max: 1000, step: 1 },
   });
-  const bedMin = sizeConfig0.bedWallThickness * 2;
-  const sizeConfig1 = useControls("Bed Dimensions", {
+  const bedMin = bedDimensions0.bedWallThickness * 2;
+  const maxSoilHeight = botSizeConfig0.botSizeZ + bedDimensions0.bedHeight;
+  const bedDimensions1 = useControls("Bed Properties", {
     bedWidthOuter: { value: 1480, min: bedMin, max: 3100, step: 1 },
     bedLengthOuter: { value: 2980, min: bedMin, max: 6100, step: 1 },
-  });
-  const maxSoilHeight = sizeConfig0.botSizeZ + sizeConfig0.bedHeight;
-  const beamLengthMin = Math.max(sizeConfig0.botSizeY, sizeConfig1.bedWidthOuter);
-  const otherConfig = useControls("otherConfig", {
-    x: { value: 300, min: 0, max: sizeConfig0.botSizeX, step: 1 },
-    y: { value: 700, min: 0, max: sizeConfig0.botSizeY, step: 1 },
-    z: { value: 200, min: 0, max: sizeConfig0.botSizeZ + 150, step: 1 },
-    beamLength: { value: 1500, min: beamLengthMin, max: 4000, step: 1 },
-    bedXOffset: { value: 50, min: -500, max: 500, step: 1 },
-    bedYOffset: { value: -50, min: -500, max: 500, step: 1 },
     bedZOffset: { value: 0, min: 0, max: 1000, step: 1 },
     legSize: { value: 100, min: 0, max: 200, step: 1 },
     legsFlush: { value: true },
@@ -89,18 +82,46 @@ const Model = () => {
     bedBrightness: { value: 8, min: 1, max: 12, step: 1 },
     soilBrightness: { value: 6, min: 1, max: 12, step: 1 },
     soilHeight: { value: 500, min: 0, max: maxSoilHeight, step: 1 },
+  }, [botSizeConfig0, bedDimensions0]);
+  const botPosition = useControls("Bot Position", {
+    x: { value: 300, min: 0, max: botSizeConfig0.botSizeX, step: 1 },
+    y: { value: 700, min: 0, max: botSizeConfig0.botSizeY, step: 1 },
+    z: { value: 200, min: 0, max: botSizeConfig0.botSizeZ + 150, step: 1 },
+  }, [botSizeConfig0]);
+  const beamLengthMin = Math.max(
+    botSizeConfig0.botSizeY,
+    bedDimensions1.bedWidthOuter,
+  );
+  const botSizeConfig1 = useControls("Bot Dimensions", {
+    beamLength: { value: 1500, min: beamLengthMin, max: 4000, step: 1 },
+    bedXOffset: { value: 50, min: -500, max: 500, step: 1 },
+    bedYOffset: { value: -50, min: -500, max: 500, step: 1 },
+    tracks: { value: true },
+  }, [botSizeConfig0, bedDimensions1]);
+  const otherConfig = useControls("Other", {
     plants: { value: 20, min: 0, max: 3000, step: 1 },
     labels: { value: true },
     trail: { value: true },
-    tracks: { value: true },
-  }, [sizeConfig0, sizeConfig1]);
+  });
   const environmentConfig = useControls("Environment", {
     axes: { value: true },
     grid: { value: true },
     clouds: { value: true },
   });
-  const config: Config = { ...sizeConfig0, ...sizeConfig1, ...otherConfig, ...environmentConfig };
+  const config: Config = {
+    ...botSizeConfig0,
+    ...bedDimensions0,
+    ...bedDimensions1,
+    ...botPosition,
+    ...botSizeConfig1,
+    ...otherConfig,
+    ...environmentConfig,
+  };
   const groundZ = config.bedZOffset + config.bedHeight;
+  const midPoint = {
+    x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
+    y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
+  };
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
@@ -122,13 +143,13 @@ const Model = () => {
     <Plane name={"ground"}
       receiveShadow={true}
       args={[10000, 10000]}
-      position={[0, 0, -groundZ]}>
+      position={[midPoint.x, midPoint.y, -groundZ]}>
       <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={5} />
     </Plane>
     <Grid
       name={"ground-grid"}
       visible={config.grid}
-      position={[0, 0, -groundZ + 5]}
+      position={[midPoint.x, midPoint.y, -groundZ + 5]}
       rotation={[Math.PI / 2, 0, 0]}
       cellSize={100}
       cellThickness={1.5}
@@ -182,7 +203,11 @@ const Model = () => {
       strokeColor={"black"}
       strokeWidth={7}
       fontWeight={"bold"}
-      position={[0, threeSpace(-200, config.bedWidthOuter), -groundZ + 150]}
+      position={[
+        midPoint.x,
+        threeSpace(-200, config.bedWidthOuter),
+        -groundZ + 150,
+      ]}
       rotation={[Math.PI / 4, 0, 0]}>
       {"FarmBot Genesis v1.7"}
     </Text>
