@@ -5,31 +5,34 @@ import {
 import "./bed.css";
 import { Config } from "./garden";
 import { range } from "lodash";
-
-const thickness = 40;
+import { threeSpace } from "./helpers";
 
 const soil = (
   Type: typeof Path | typeof Shape,
-  botSize: Record<"x" | "y", number>,
+  botSize: Record<"x" | "y" | "z" | "thickness", number>,
 ): Path | Shape => {
+  const { x, y, thickness } = botSize;
+
   const hole = new Type();
   hole.moveTo(thickness, thickness);
-  hole.lineTo(thickness, thickness + botSize.y);
-  hole.lineTo(thickness + botSize.x, thickness + botSize.y);
-  hole.lineTo(thickness + botSize.x, thickness);
+  hole.lineTo(thickness, y - thickness);
+  hole.lineTo(x - thickness, y - thickness);
+  hole.lineTo(x - thickness, thickness);
   hole.lineTo(thickness, thickness);
   return hole;
 }
 
-const bedStructure2D = (botSize: Record<"x" | "y", number>) => {
-  const thickness2X = 2 * thickness;
+const bedStructure2D = (
+  botSize: Record<"x" | "y" | "z" | "thickness", number>,
+) => {
+  const { x, y } = botSize;
   const shape = new Shape();
 
   // outer edge
   shape.moveTo(0, 0);
-  shape.lineTo(0, botSize.y + thickness2X);
-  shape.lineTo(botSize.x + thickness2X, botSize.y + thickness2X);
-  shape.lineTo(botSize.x + thickness2X, 0);
+  shape.lineTo(0, y);
+  shape.lineTo(x, y);
+  shape.lineTo(x, 0);
   shape.lineTo(0, 0);
 
   // inner edge
@@ -86,17 +89,31 @@ interface BedProps {
 
 export const Bed = (props: BedProps) => {
   const {
-    botSizeX, botSizeY, bedHeight, bedZOffset, legSize, legsFlush,
-    extraLegsX, bedBrightness, soilBrightness,
+    bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
+    legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
+    soilHeight,
   } = props.config;
-  const botSize = { x: botSizeX, y: botSizeY };
-  const bedLength = botSize.x + 2 * thickness;
-  const bedWidth = botSize.y + 2 * thickness;
-  const legX = (bedLength - legSize) / 2 - thickness;
-  const legY = (bedWidth - legSize) / 2 - thickness;
+  const thickness = props.config.bedWallThickness;
+  const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
   const bedStartZ = bedHeight;
   const bedColor = getColorFromBrightness(bedBrightness);
   const soilColor = getColorFromBrightness(soilBrightness);
+  const soilTop = botSizeZ - soilHeight;
+  const legXPositions = [
+    0 + legSize / 2 + thickness,
+    ...(extraLegsX
+      ? range(0, bedLengthOuter, bedLengthOuter / (extraLegsX + 1)).slice(1)
+      : []),
+    bedLengthOuter - legSize / 2 - thickness,
+  ];
+  const legYPositions = (index: number) =>
+    [
+      0 + legSize / 2 + thickness,
+      ...(extraLegsY && (index == 0 || index == (legXPositions.length - 1))
+        ? range(0, bedWidthOuter, bedWidthOuter / (extraLegsY + 1)).slice(1)
+        : []),
+      bedWidthOuter - legSize / 2 - thickness,
+    ];
   return <group>
     <Extrude name={"bed"}
       castShadow={true}
@@ -106,8 +123,8 @@ export const Bed = (props: BedProps) => {
         { steps: 1, depth: bedHeight, bevelEnabled: false },
       ]}
       position={[
-        -bedLength / 2,
-        -bedWidth / 2,
+        threeSpace(0, bedLengthOuter),
+        threeSpace(0, bedWidthOuter),
         -bedStartZ,
       ]}>
       <meshPhongMaterial map={woodTexture} color={bedColor}
@@ -118,41 +135,32 @@ export const Bed = (props: BedProps) => {
       receiveShadow={true}
       args={[
         soil(Shape, botSize) as Shape,
-        { steps: 1, depth: bedHeight - 50, bevelEnabled: false },
+        { steps: 1, depth: bedHeight + soilTop, bevelEnabled: false },
       ]}
       position={[
-        -bedLength / 2,
-        -bedWidth / 2,
+        threeSpace(0, bedLengthOuter),
+        threeSpace(0, bedWidthOuter),
         -bedStartZ,
       ]}>
       <meshPhongMaterial map={soilTexture} color={soilColor}
         shininess={5} />
     </Extrude>
-    {[
-      { x: -legX, y: legY },
-      { x: legX, y: legY },
-    ]
-      .concat(extraLegsX
-        ? range(0, botSizeX, botSizeX / (extraLegsX + 1))
-          .map(n => ({ x: n - botSizeX / 2, y: legY }))
-          .slice(1)
-        : [])
-      .map(position =>
-        <group>
-          {[-1, 1].map(side =>
-            <Box name={"bed-leg"}
-              castShadow={true}
-              receiveShadow={true}
-              args={[legSize, legSize, bedZOffset + (legsFlush ? bedHeight : 0)]}
-              position={[
-                position.x,
-                position.y * side,
-                -bedZOffset / 2 - (legsFlush ? bedHeight / 2 : bedHeight),
-              ]}>
-              <meshPhongMaterial map={legWoodTexture} color={bedColor}
-                shininess={100} />
-            </Box>)}
-        </group>
-      )}
+    {legXPositions.map((x, index) =>
+      <group>
+        {legYPositions(index).map(y =>
+          <Box name={"bed-leg"}
+            castShadow={true}
+            receiveShadow={true}
+            args={[legSize, legSize, bedZOffset + (legsFlush ? bedHeight : 0)]}
+            position={[
+              threeSpace(x, bedLengthOuter),
+              threeSpace(y, bedWidthOuter),
+              -bedZOffset / 2 - (legsFlush ? bedHeight / 2 : bedHeight),
+            ]}>
+            <meshPhongMaterial map={legWoodTexture} color={bedColor}
+              shininess={100} />
+          </Box>)}
+      </group>
+    )}
   </group>;
 };

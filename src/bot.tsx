@@ -1,9 +1,8 @@
-import { Cylinder, Extrude, Trail } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail } from "@react-three/drei";
 import { DoubleSide, Path, Shape } from "three";
 import { Config } from "./garden";
-import { useRef } from "react";
+import { threeSpace } from "./helpers";
 
-const columnLength = 500;
 const zAxisLength = 1000;
 const extrusionWidth = 20;
 const extrusionWallThickness = 3;
@@ -40,12 +39,22 @@ interface FarmbotModelProps {
 }
 
 export const Bot = (props: FarmbotModelProps) => {
-  const utmRef = useRef();
-  const { x, y, z, botSizeX, botSizeY, beamLength } = props.config;
-  const mapOriginX = -botSizeX / 2;
-  const mapOriginY = -botSizeY / 2;
+  const {
+    x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail,
+    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter,
+  } = props.config;
+  const columnLength = botSizeZ + 200;
+  const boundsDrawZ = 0;
+  const zero = {
+    x: threeSpace(bedXOffset, bedLengthOuter),
+    y: threeSpace(bedYOffset, bedWidthOuter),
+  };
+  const extents = {
+    x: threeSpace(bedXOffset + botSizeX, bedLengthOuter),
+    y: threeSpace(bedYOffset + botSizeY, bedWidthOuter),
+  };
   return <group name={"bot"}>
-    {[-mapOriginY, mapOriginY].map(yPos =>
+    {[0 + extrusionWidth / 2, bedWidthOuter - extrusionWidth / 2].map(y =>
       <Extrude name={"columns"}
         castShadow={true}
         args={[
@@ -53,8 +62,8 @@ export const Bot = (props: FarmbotModelProps) => {
           { steps: 1, depth: columnLength, bevelEnabled: false },
         ]}
         position={[
-          mapOriginX + x + extrusionWidth,
-          yPos - extrusionWidth / 2,
+          threeSpace(x + extrusionWidth, bedLengthOuter),
+          threeSpace(y, bedWidthOuter),
           0,
         ]}
         rotation={[0, 0, 0]}>
@@ -67,34 +76,33 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: zAxisLength, bevelEnabled: false },
       ]}
       position={[
-        mapOriginX + x - extrusionWidth,
-        mapOriginY + y + utmRadius,
+        threeSpace(x - extrusionWidth, bedLengthOuter),
+        threeSpace(y + utmRadius, bedWidthOuter),
         z,
       ]}
       rotation={[0, 0, 0]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
-    <Cylinder ref={utmRef} name={"UTM"}
-      castShadow={true}
-      args={[utmRadius, utmRadius, utmHeight]}
-      position={[
-        mapOriginX + x,
-        mapOriginY + y,
-        z + utmHeight / 2,
-      ]}
-      rotation={[Math.PI / 2, 0, 0]}>
-      <meshPhongMaterial color={"silver"} side={DoubleSide} />
-    </Cylinder>
     <Trail
-      width={500}
+      width={trail ? 500 : 0}
       color={"red"}
       length={100}
       decay={0.5}
       local={false}
       stride={0}
-      interval={1}
-      target={utmRef}
-    ></Trail>
+      interval={1}>
+      <Cylinder name={"UTM"}
+        castShadow={true}
+        args={[utmRadius, utmRadius, utmHeight]}
+        position={[
+          threeSpace(x, bedLengthOuter),
+          threeSpace(y, bedWidthOuter),
+          z + utmHeight / 2,
+        ]}
+        rotation={[Math.PI / 2, 0, 0]}>
+        <meshPhongMaterial color={"silver"} side={DoubleSide} />
+      </Cylinder>
+    </Trail>
     <Extrude name={"gantry-beam"}
       castShadow={true}
       args={[
@@ -102,12 +110,21 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: beamLength, bevelEnabled: false },
       ]}
       position={[
-        mapOriginX + x + extrusionWidth,
-        beamLength / 2,
+        threeSpace(x + extrusionWidth, bedLengthOuter),
+        threeSpace(beamLength, beamLength),
         columnLength,
       ]}
       rotation={[Math.PI / 2, 0, Math.PI / 2]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
+    <Line name={"bounds"}
+      color={"white"}
+      points={[
+        [zero.x, zero.y, boundsDrawZ],
+        [zero.x, extents.y, boundsDrawZ],
+        [extents.x, extents.y, boundsDrawZ],
+        [extents.x, zero.y, boundsDrawZ],
+        [zero.x, zero.y, boundsDrawZ],
+      ]} />
   </group>;
 };
