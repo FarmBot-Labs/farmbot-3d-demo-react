@@ -129,16 +129,19 @@ const Model = () => {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
     y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
   };
-  const inclination = (config.sunInclination / 180) + 0.5;
-  const azimuth = (config.sunAzimuth / 360)
+  const sunPosition = new Vector3(
+    10000 * Math.sin(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.cos(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.sin(config.sunInclination * Math.PI / 180)
+  );
   return <group dispose={null}>
     <Stats />
-    <Sky distance={450000} inclination={inclination} azimuth={azimuth}
+    <Sky distance={450000}
+      sunPosition={sunPosition}
       mieCoefficient={0.01}
       mieDirectionalG={0.9}
       rayleigh={3}
-      turbidity={5}
-      up={[0, 0, 1]} />
+      turbidity={5} />
     <PerspectiveCamera makeDefault={true} name={"camera"}
       fov={40} near={10} far={20000}
       position={[0, -3000, 1500]}
@@ -151,9 +154,9 @@ const Model = () => {
     <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>
-    <pointLight intensity={5} distance={15000} decay={0} castShadow={true}
-      position={[4000, -4000, 6000]} />
-    <ambientLight intensity={1.5} />
+    <pointLight intensity={6} distance={20000} decay={0} castShadow={true}
+      position={sunPosition} />
+    <ambientLight intensity={1} />
     <Plane name={"ground"}
       visible={config.ground}
       receiveShadow={true}

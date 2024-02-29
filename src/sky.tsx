@@ -1,3 +1,5 @@
+// Forked from https://github.com/pmndrs/drei/blob/master/src/core/Sky.tsx
+
 import * as React from 'react'
 import { ReactThreeFiber } from '@react-three/fiber'
 import { Sky as SkyImpl } from 'three-stdlib'
@@ -7,8 +9,6 @@ import { ForwardRefComponent } from '../helpers/ts-utils'
 type Props = {
   distance?: number
   sunPosition?: ReactThreeFiber.Vector3
-  inclination?: number
-  azimuth?: number
   mieCoefficient?: number
   mieDirectionalG?: number
   rayleigh?: number
@@ -16,28 +16,15 @@ type Props = {
   up?: ReactThreeFiber.Vector3
 }
 
-export function calcPosFromAngles(inclination: number, azimuth: number, vector: Vector3 = new Vector3()) {
-  const theta = Math.PI * (inclination - 0.5)
-  const phi = 2 * Math.PI * (azimuth - 0.5)
-
-  vector.x = -Math.sin(phi)
-  vector.y = -Math.cos(phi)
-  vector.z = Math.sin(theta)
-
-  return vector
-}
-
 export const Sky: ForwardRefComponent<Props, SkyImpl> = /* @__PURE__ */ React.forwardRef(
   (
     {
-      inclination = 0.6,
-      azimuth = 0.1,
       distance = 1000,
       mieCoefficient = 0.005,
       mieDirectionalG = 0.8,
       rayleigh = 0.5,
       turbidity = 10,
-      sunPosition = calcPosFromAngles(inclination, azimuth),
+      sunPosition = [0, 5000, 0],
       up = [0, 0, 1],
       ...props
     }: Props,
