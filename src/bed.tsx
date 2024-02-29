@@ -3,9 +3,10 @@ import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
 import "./bed.css";
-import { Config } from "./garden";
 import { range } from "lodash";
 import { threeSpace } from "./helpers";
+import { Config } from "./config";
+import { ASSETS } from "./constants";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -42,7 +43,7 @@ const bedStructure2D = (
 }
 
 const woodTexture = new TextureLoader()
-  .load("/3D/textures/wood.jpg",
+  .load(ASSETS.textures.wood,
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
@@ -50,7 +51,7 @@ const woodTexture = new TextureLoader()
     });
 
 const legWoodTexture = new TextureLoader()
-  .load("/3D/textures/wood.jpg",
+  .load(ASSETS.textures.wood,
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
@@ -58,7 +59,7 @@ const legWoodTexture = new TextureLoader()
     });
 
 const soilTexture = new TextureLoader()
-  .load("/3D/textures/soil.jpg",
+  .load(ASSETS.textures.soil,
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;

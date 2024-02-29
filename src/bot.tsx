@@ -1,7 +1,7 @@
 import { Cylinder, Extrude, Line, Trail } from "@react-three/drei";
 import { DoubleSide, Path, Shape } from "three";
-import { Config } from "./garden";
 import { threeSpace } from "./helpers";
+import { Config } from "./config";
 
 const zAxisLength = 1000;
 const extrusionWidth = 20;
@@ -41,7 +41,7 @@ interface FarmbotModelProps {
 export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail,
-    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks,
+    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
   } = props.config;
   const columnLength = botSizeZ + 200;
   const boundsDrawZ = 0;
@@ -134,6 +134,7 @@ export const Bot = (props: FarmbotModelProps) => {
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
     <Line name={"bounds"}
+      visible={labels}
       color={"white"}
       points={[
         [zero.x, zero.y, boundsDrawZ],
