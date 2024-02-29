@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
-  Plane, Sky, Stats, Grid, Billboard, Text, Image, Clouds, Cloud,
+  Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -9,6 +9,7 @@ import { Bed } from "./bed";
 import { useControls } from "leva";
 import { random, range, sample } from "lodash";
 import { threeSpace } from "./helpers";
+import { Sky } from './sky';
 
 const PLANTS = [
   { label: "Swiss Chard", icon: "/3D/icons/swiss_chard.avif" },
@@ -136,7 +137,8 @@ const Model = () => {
       mieCoefficient={0.01}
       mieDirectionalG={0.9}
       rayleigh={3}
-      turbidity={5} />
+      turbidity={5}
+      up={[0, 0, 1]} />
     <PerspectiveCamera makeDefault={true} name={"camera"}
       fov={40} near={10} far={20000}
       position={[0, -3000, 1500]}
