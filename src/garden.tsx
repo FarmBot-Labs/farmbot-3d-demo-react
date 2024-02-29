@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
-  Plane, Sky, Stats, Grid, Billboard, Text, Image, Clouds, Cloud,
+  Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -9,6 +9,7 @@ import { Bed } from "./bed";
 import { useControls } from "leva";
 import { random, range, sample } from "lodash";
 import { threeSpace } from "./helpers";
+import { Sky } from './sky';
 
 const PLANTS = [
   { label: "Swiss Chard", icon: "/3D/icons/swiss_chard.avif" },
@@ -52,11 +53,14 @@ export interface Config {
   soilHeight: number;
   plants: number;
   labels: boolean;
+  ground: boolean;
   grid: boolean;
   axes: boolean;
   trail: boolean;
   tracks: boolean;
   clouds: boolean;
+  sunInclination: number;
+  sunAzimuth: number;
 }
 
 const Model = () => {
@@ -104,9 +108,12 @@ const Model = () => {
     trail: { value: true },
   });
   const environmentConfig = useControls("Environment", {
+    ground: { value: true },
     axes: { value: true },
     grid: { value: true },
     clouds: { value: true },
+    sunInclination: { value: 0, min: 0, max: 180, step: 1 },
+    sunAzimuth: { value: 0, min: 0, max: 360, step: 1 },
   });
   const config: Config = {
     ...botSizeConfig0,
@@ -122,25 +129,36 @@ const Model = () => {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
     y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
   };
+  const sunPosition = new Vector3(
+    10000 * Math.sin(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.cos(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.sin(config.sunInclination * Math.PI / 180)
+  );
   return <group dispose={null}>
     <Stats />
-    <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
+    <Sky distance={450000}
+      sunPosition={sunPosition}
+      mieCoefficient={0.01}
+      mieDirectionalG={0.9}
+      rayleigh={3}
+      turbidity={5} />
     <PerspectiveCamera makeDefault={true} name={"camera"}
-      fov={40} near={10} far={18000}
+      fov={40} near={10} far={20000}
       position={[0, -3000, 1500]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
       enableZoom={true} enablePan={false} dampingFactor={0.1}
-      minDistance={50} maxDistance={10000} />
+      minDistance={50} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.axes} />
     <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>
-    <pointLight intensity={5} distance={15000} decay={0} castShadow={true}
-      position={[4000, -4000, 6000]} />
-    <ambientLight intensity={1.5} />
+    <pointLight intensity={6} distance={20000} decay={0} castShadow={true}
+      position={sunPosition} />
+    <ambientLight intensity={1} />
     <Plane name={"ground"}
+      visible={config.ground}
       receiveShadow={true}
       args={[10000, 10000]}
       position={[midPoint.x, midPoint.y, -groundZ]}>
