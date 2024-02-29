@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
-  Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud,
+  Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -36,6 +36,7 @@ const Model = () => {
     10000 * Math.cos(config.sunAzimuth * Math.PI / 180),
     10000 * Math.sin(config.sunInclination * Math.PI / 180)
   );
+  const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000}
@@ -44,13 +45,13 @@ const Model = () => {
       mieDirectionalG={0.9}
       rayleigh={3}
       turbidity={5} />
-    <PerspectiveCamera makeDefault={true} name={"camera"}
+    <Camera makeDefault={true} name={"camera"}
       fov={40} near={10} far={20000}
       position={[0, -3000, 1500]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
-      enableZoom={true} enablePan={false} dampingFactor={0.1}
+      enableZoom={true} enablePan={!config.perspective} dampingFactor={0.1}
       minDistance={50} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.axes} />
     <GizmoHelper>

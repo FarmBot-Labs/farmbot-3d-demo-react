@@ -1,7 +1,11 @@
-import { Cylinder, Extrude, Line, Trail } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Path, Shape } from "three";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
+import { GLTF } from "three-stdlib";
+import { ASSETS } from "./constants";
+import { SVGLoader } from "three/examples/jsm/Addons.js";
+import { useEffect, useState } from "react";
 
 const zAxisLength = 1000;
 const extrusionWidth = 20;
@@ -34,6 +38,27 @@ const extrusion = (factor: number) => {
   return shape;
 }
 
+const LIB_DIR = "/3D/lib/";
+
+const MODELS = {
+  gantryWheelPlate: "/3D/models/gantry_wheel_plate.glb",
+};
+
+type GantryWheelPlate = GLTF & {
+  nodes: {
+    Gantry_Wheel_Plate: THREE.Mesh;
+  };
+  materials: {
+    [Material.gantryWheelPlate]: THREE.MeshStandardMaterial;
+  };
+}
+
+enum Material {
+  gantryWheelPlate = "0.603922_0.647059_0.686275_0.000000_0.000000",
+}
+
+Object.values(MODELS).map(model => useGLTF.preload(model, LIB_DIR));
+
 interface FarmbotModelProps {
   config: Config;
 }
@@ -53,8 +78,22 @@ export const Bot = (props: FarmbotModelProps) => {
     x: threeSpace(bedXOffset + botSizeX, bedLengthOuter),
     y: threeSpace(bedYOffset + botSizeY, bedWidthOuter),
   };
+  const gantryWheelPlate =
+    useGLTF(MODELS.gantryWheelPlate, LIB_DIR) as GantryWheelPlate;
+  const [trackShape, setTrackShape] = useState<Shape>();
+  useEffect(() => {
+    new SVGLoader().load(ASSETS.shapes.track,
+      svg => {
+        const smallCutout = SVGLoader.createShapes(svg.paths[0])[0];
+        const largeCutout = SVGLoader.createShapes(svg.paths[1])[0];
+        const outline = SVGLoader.createShapes(svg.paths[2])[0];
+        outline.holes.push(smallCutout);
+        outline.holes.push(largeCutout);
+        setTrackShape(outline);
+      });
+  });
   return <group name={"bot"}>
-    {[0 + extrusionWidth / 2, bedWidthOuter - extrusionWidth / 2].map(y =>
+    {[0 - extrusionWidth, bedWidthOuter].map((y, index) =>
       <group key={y}>
         <Extrude name={"columns"}
           castShadow={true}
@@ -65,7 +104,7 @@ export const Bot = (props: FarmbotModelProps) => {
           position={[
             threeSpace(x + extrusionWidth, bedLengthOuter) + bedXOffset,
             threeSpace(y, bedWidthOuter),
-            0,
+            25,
           ]}
           rotation={[0, 0, 0]}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
@@ -73,17 +112,32 @@ export const Bot = (props: FarmbotModelProps) => {
         <Extrude name={"tracks"} visible={tracks}
           castShadow={true}
           args={[
-            extrusion(1),
+            trackShape,
             { steps: 1, depth: botSizeX, bevelEnabled: false },
           ]}
           position={[
-            threeSpace(0, bedLengthOuter) + bedXOffset,
-            threeSpace(y, bedWidthOuter),
-            extrusionWidth,
+            threeSpace(index == 0 ? botSizeX : 0, bedLengthOuter) + bedXOffset,
+            threeSpace(y + (index == 0 ? 2.5 : 17.5), bedWidthOuter),
+            2,
           ]}
-          rotation={[0, Math.PI / 2, 0]}>
+          rotation={[
+            index == 0 ? -Math.PI / 2 : -Math.PI / 2,
+            index == 0 ? -Math.PI / 2 : Math.PI / 2,
+            0,
+          ]}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </Extrude>
+        <mesh name={"gantryWheelPlate"}
+          position={[
+            threeSpace(x + extrusionWidth * 4, bedLengthOuter) + bedXOffset,
+            threeSpace(y + (index == 0 ? -5 : extrusionWidth), bedWidthOuter),
+            -35,
+          ]}
+          rotation={[Math.PI / 2, Math.PI, 0]}
+          scale={1000}
+          geometry={gantryWheelPlate.nodes.Gantry_Wheel_Plate.geometry}>
+          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+        </mesh>
       </group>)}
     <Extrude name={"z-axis"}
       castShadow={true}
@@ -93,7 +147,7 @@ export const Bot = (props: FarmbotModelProps) => {
       ]}
       position={[
         threeSpace(x - extrusionWidth, bedLengthOuter) + bedXOffset,
-        threeSpace(y + utmRadius, bedWidthOuter) + bedYOffset,
+        threeSpace(y - utmRadius - extrusionWidth, bedWidthOuter) + bedYOffset,
         z,
       ]}
       rotation={[0, 0, 0]}>

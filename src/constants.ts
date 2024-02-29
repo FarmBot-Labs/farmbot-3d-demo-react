@@ -13,6 +13,9 @@ export const ASSETS = {
     chard: "/3D/icons/swiss_chard.avif",
     basil: "/3D/icons/thai_basil.avif",
     bokChoy: "/3D/icons/bok_choy.avif",
+  },
+  shapes: {
+    track: "/3D/shapes/track.svg",
   }
 };
 
