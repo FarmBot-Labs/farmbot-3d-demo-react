@@ -52,11 +52,14 @@ export interface Config {
   soilHeight: number;
   plants: number;
   labels: boolean;
+  ground: boolean;
   grid: boolean;
   axes: boolean;
   trail: boolean;
   tracks: boolean;
   clouds: boolean;
+  sunInclination: number;
+  sunAzimuth: number;
 }
 
 const Model = () => {
@@ -104,9 +107,12 @@ const Model = () => {
     trail: { value: true },
   });
   const environmentConfig = useControls("Environment", {
+    ground: { value: true },
     axes: { value: true },
     grid: { value: true },
     clouds: { value: true },
+    sunInclination: { value: 0, min: 0, max: 180, step: 1 },
+    sunAzimuth: { value: 0, min: 0, max: 360, step: 1 },
   });
   const config: Config = {
     ...botSizeConfig0,
@@ -122,17 +128,23 @@ const Model = () => {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
     y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
   };
+  const inclination = (config.sunInclination / 180) + 0.5;
+  const azimuth = (config.sunAzimuth / 360)
   return <group dispose={null}>
     <Stats />
-    <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
+    <Sky distance={450000} inclination={inclination} azimuth={azimuth}
+      mieCoefficient={0.01}
+      mieDirectionalG={0.9}
+      rayleigh={3}
+      turbidity={5} />
     <PerspectiveCamera makeDefault={true} name={"camera"}
-      fov={40} near={10} far={18000}
+      fov={40} near={10} far={20000}
       position={[0, -3000, 1500]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
       enableZoom={true} enablePan={false} dampingFactor={0.1}
-      minDistance={50} maxDistance={10000} />
+      minDistance={50} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.axes} />
     <GizmoHelper>
       <GizmoViewcube />
@@ -141,6 +153,7 @@ const Model = () => {
       position={[4000, -4000, 6000]} />
     <ambientLight intensity={1.5} />
     <Plane name={"ground"}
+      visible={config.ground}
       receiveShadow={true}
       args={[10000, 10000]}
       position={[midPoint.x, midPoint.y, -groundZ]}>
