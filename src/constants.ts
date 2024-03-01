@@ -4,10 +4,11 @@ export const ASSETS = {
     cabinBold: "/3D/fonts/Cabin_Bold.ttf",
   },
   textures: {
-    cloud: "/3D/textures/cloud.png",
-    grass: "/3D/textures/grass.jpg",
-    wood: "/3D/textures/wood.jpg",
-    soil: "/3D/textures/soil.jpg",
+    cloud: "/3D/textures/cloud.avif",
+    grass: "/3D/textures/grass.avif",
+    wood: "/3D/textures/wood.avif",
+    soil: "/3D/textures/soil.avif",
+    aluminum: "/3D/textures/aluminum.avif",
   },
   icons: {
     chard: "/3D/icons/swiss_chard.avif",

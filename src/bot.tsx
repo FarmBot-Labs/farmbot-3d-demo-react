@@ -1,5 +1,5 @@
 import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
-import { DoubleSide, Shape } from "three";
+import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
 import { GLTF } from "three-stdlib";
@@ -37,6 +37,14 @@ Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 interface FarmbotModelProps {
   config: Config;
 }
+
+const aluminumTexture = new TextureLoader()
+  .load(ASSETS.textures.aluminum,
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(.01, .0003);
+    });
 
 export const Bot = (props: FarmbotModelProps) => {
   const {
@@ -116,7 +124,7 @@ export const Bot = (props: FarmbotModelProps) => {
             30,
           ]}
           rotation={[0, 0, Math.PI / 2]}>
-          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+          <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
         </Extrude>
         <mesh name={index == 0 ? "leftBracket" : "rightBracket"}
           position={[
@@ -147,7 +155,7 @@ export const Bot = (props: FarmbotModelProps) => {
             index == 0 ? -Math.PI / 2 : Math.PI / 2,
             0,
           ]}>
-          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+          <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
         </Extrude>
         <mesh name={"gantryWheelPlate"}
           position={[
@@ -184,7 +192,7 @@ export const Bot = (props: FarmbotModelProps) => {
         z,
       ]}
       rotation={[0, 0, 0]}>
-      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+      <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
 
     <Trail
@@ -219,7 +227,7 @@ export const Bot = (props: FarmbotModelProps) => {
         columnLength + 40,
       ]}
       rotation={[Math.PI / 2, 0, 0]}>
-      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+      <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
     <Line name={"bounds"}
       visible={labels}

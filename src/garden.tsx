@@ -17,7 +17,7 @@ const grassTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(1, 4);
+      texture.repeat.set(4, 4);
     });
 
 interface GardenProps {
@@ -91,7 +91,7 @@ const Model = () => {
         concentrate="random"
         color="#ccc"
         growth={400}
-        speed={.15}
+        speed={.1}
         opacity={0.85}
         fade={5000} />
     </Clouds>
@@ -113,9 +113,9 @@ const Model = () => {
         config.botSizeZ - config.soilHeight,
       );
       return <Billboard key={i} follow={true} position={randomPosition}>
-        <Image url={plant.icon} scale={200} position={[0, 100, 0]}
+        <Image url={plant.icon} scale={200} position={[0, 100, 1]}
           transparent={true} />
-        <Text visible={config.labels} fontSize={40} position={[0, 225, 0]}
+        <Text visible={config.labels} fontSize={40} position={[0, 225, 1]}
           font={ASSETS.fonts.cabin}>
           {plant.label}
         </Text>

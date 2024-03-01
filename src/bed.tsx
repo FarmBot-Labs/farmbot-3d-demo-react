@@ -47,7 +47,7 @@ const woodTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(.0003, .0006);
+      texture.repeat.set(.0003, .003);
     });
 
 const legWoodTexture = new TextureLoader()
@@ -63,7 +63,7 @@ const soilTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(.0003, .0005);
+      texture.repeat.set(.00017, .00034);
     });
 
 const getColorFromBrightness = (value: number) => {
