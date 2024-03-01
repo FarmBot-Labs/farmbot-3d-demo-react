@@ -16,6 +16,15 @@ export const ASSETS = {
   },
   shapes: {
     track: "/3D/shapes/track.svg",
+    column: "/3D/shapes/column.svg",
+    beam: "/3D/shapes/beam.svg",
+    zAxis: "/3D/shapes/z_axis.svg",
+  },
+  models: {
+    gantryWheelPlate: "/3D/models/gantry_wheel_plate.glb",
+    leftBracket: "/3D/models/left_bracket.glb",
+    rightBracket: "/3D/models/right_bracket.glb",
+    crossSlide: "/3D/models/cross_slide.glb",
   }
 };
 

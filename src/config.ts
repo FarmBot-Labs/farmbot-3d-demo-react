@@ -35,6 +35,7 @@ export interface Config {
   sunInclination: number;
   sunAzimuth: number;
   perspective: boolean;
+  bot: boolean;
 }
 
 const INITIAL: Config = {
@@ -71,6 +72,7 @@ const INITIAL: Config = {
   sunInclination: 0,
   sunAzimuth: 0,
   perspective: true,
+  bot: true,
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -127,6 +129,7 @@ export const PRESETS: Record<string, Config> = {
     sunInclination: 90,
     sunAzimuth: 45,
     perspective: true,
+    bot: true,
   },
 };
 
@@ -147,7 +150,8 @@ export const useConfig = () => {
     setBedDim1(pick(presetConfig,
       ["legSize", "legsFlush", "bedBrightness", "soilBrightness", "soilHeight"]));
     setBotPosition(pick(presetConfig, ["x", "y", "z"]));
-    setOther(pick(presetConfig, ["plants", "labels", "trail", "perspective"]));
+    setOther(pick(presetConfig,
+      ["plants", "labels", "trail", "perspective", "bot"]));
     setEnv(pick(presetConfig,
       ["ground", "grid", "axes", "clouds", "sunInclination", "sunAzimuth"]));
   };
@@ -215,6 +219,7 @@ export const useConfig = () => {
     labels: { value: init.labels },
     trail: { value: init.trail },
     perspective: { value: init.perspective },
+    bot: { value: init.bot },
   }));
   const [environmentConfig, setEnv] = useControls("Environment", () => ({
     ground: { value: init.ground },

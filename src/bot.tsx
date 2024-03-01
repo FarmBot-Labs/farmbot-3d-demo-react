@@ -1,63 +1,38 @@
 import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
-import { DoubleSide, Path, Shape } from "three";
+import { DoubleSide, Shape } from "three";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
 import { GLTF } from "three-stdlib";
 import { ASSETS } from "./constants";
 import { SVGLoader } from "three/examples/jsm/Addons.js";
 import { useEffect, useState } from "react";
+import { range } from "lodash";
 
 const zAxisLength = 1000;
 const extrusionWidth = 20;
-const extrusionWallThickness = 3;
 const utmRadius = 35;
 const utmHeight = 35;
 
-const extrusion = (factor: number) => {
-  const shape = new Shape();
-  const width = extrusionWidth;
-  const length = extrusionWidth * factor;
-
-  // outer edge
-  shape.moveTo(0, 0);
-  shape.lineTo(0, width);
-  shape.lineTo(length, width);
-  shape.lineTo(length, 0);
-  shape.lineTo(0, 0);
-
-  // inside
-  const thickness = extrusionWallThickness;
-  const hole = new Path();
-  hole.moveTo(thickness, thickness);
-  hole.lineTo(thickness, width - thickness);
-  hole.lineTo(length - thickness, width - thickness);
-  hole.lineTo(length - thickness, thickness);
-  hole.lineTo(thickness, thickness);
-  shape.holes.push(hole);
-
-  return shape;
-}
-
 const LIB_DIR = "/3D/lib/";
 
-const MODELS = {
-  gantryWheelPlate: "/3D/models/gantry_wheel_plate.glb",
-};
-
 type GantryWheelPlate = GLTF & {
-  nodes: {
-    Gantry_Wheel_Plate: THREE.Mesh;
-  };
-  materials: {
-    [Material.gantryWheelPlate]: THREE.MeshStandardMaterial;
-  };
+  nodes: { Gantry_Wheel_Plate: THREE.Mesh };
+  materials: never;
+}
+type LeftBracket = GLTF & {
+  nodes: { Left_Gantry_Corner_Bracket: THREE.Mesh };
+  materials: never;
+}
+type RightBracket = GLTF & {
+  nodes: { Right_Gantry_Corner_Bracket: THREE.Mesh };
+  materials: never;
+}
+type CrossSlide = GLTF & {
+  nodes: { ["Cross-Slide_Plate"]: THREE.Mesh }
+  materials: never;
 }
 
-enum Material {
-  gantryWheelPlate = "0.603922_0.647059_0.686275_0.000000_0.000000",
-}
-
-Object.values(MODELS).map(model => useGLTF.preload(model, LIB_DIR));
+Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 
 interface FarmbotModelProps {
   config: Config;
@@ -79,36 +54,83 @@ export const Bot = (props: FarmbotModelProps) => {
     y: threeSpace(bedYOffset + botSizeY, bedWidthOuter),
   };
   const gantryWheelPlate =
-    useGLTF(MODELS.gantryWheelPlate, LIB_DIR) as GantryWheelPlate;
+    useGLTF(ASSETS.models.gantryWheelPlate, LIB_DIR) as GantryWheelPlate;
+  const leftBracket = useGLTF(ASSETS.models.leftBracket, LIB_DIR) as LeftBracket;
+  const rightBracket = useGLTF(ASSETS.models.rightBracket, LIB_DIR) as RightBracket;
+  const crossSlide = useGLTF(ASSETS.models.crossSlide, LIB_DIR) as CrossSlide;
   const [trackShape, setTrackShape] = useState<Shape>();
+  const [beamShape, setBeamShape] = useState<Shape>();
+  const [columnShape, setColumnShape] = useState<Shape>();
+  const [zAxisShape, setZAxisShape] = useState<Shape>();
   useEffect(() => {
-    new SVGLoader().load(ASSETS.shapes.track,
-      svg => {
-        const smallCutout = SVGLoader.createShapes(svg.paths[0])[0];
-        const largeCutout = SVGLoader.createShapes(svg.paths[1])[0];
-        const outline = SVGLoader.createShapes(svg.paths[2])[0];
-        outline.holes.push(smallCutout);
-        outline.holes.push(largeCutout);
-        setTrackShape(outline);
-      });
+    if (!(trackShape && beamShape && columnShape && zAxisShape)) {
+      const loader = new SVGLoader();
+      loader.load(ASSETS.shapes.track,
+        svg => {
+          const smallCutout = SVGLoader.createShapes(svg.paths[0])[0];
+          const largeCutout = SVGLoader.createShapes(svg.paths[1])[0];
+          const outline = SVGLoader.createShapes(svg.paths[2])[0];
+          outline.holes.push(smallCutout);
+          outline.holes.push(largeCutout);
+          setTrackShape(outline);
+        });
+      loader.load(ASSETS.shapes.beam,
+        svg => {
+          const outline = SVGLoader.createShapes(svg.paths[0])[0];
+          range(1, 6).map(i => {
+            const hole = SVGLoader.createShapes(svg.paths[i])[0];
+            outline.holes.push(hole);
+          });
+          setBeamShape(outline);
+        });
+      loader.load(ASSETS.shapes.column,
+        svg => {
+          const outline = SVGLoader.createShapes(svg.paths[3])[0];
+          range(3).map(i => {
+            const hole = SVGLoader.createShapes(svg.paths[i])[0];
+            outline.holes.push(hole);
+          })
+          setColumnShape(outline);
+        });
+      loader.load(ASSETS.shapes.zAxis,
+        svg => {
+          const hole = SVGLoader.createShapes(svg.paths[1])[0];
+          const outline = SVGLoader.createShapes(svg.paths[0])[0];
+          outline.holes.push(hole);
+          setZAxisShape(outline);
+        });
+    }
   });
-  return <group name={"bot"}>
+  return <group name={"bot"} visible={props.config.bot}>
     {[0 - extrusionWidth, bedWidthOuter].map((y, index) =>
       <group key={y}>
         <Extrude name={"columns"}
           castShadow={true}
           args={[
-            extrusion(3),
+            columnShape,
             { steps: 1, depth: columnLength, bevelEnabled: false },
           ]}
           position={[
-            threeSpace(x + extrusionWidth, bedLengthOuter) + bedXOffset,
+            threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
             threeSpace(y, bedWidthOuter),
-            25,
+            30,
           ]}
-          rotation={[0, 0, 0]}>
+          rotation={[0, 0, Math.PI / 2]}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </Extrude>
+        <mesh name={index == 0 ? "leftBracket" : "rightBracket"}
+          position={[
+            threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
+            threeSpace(y - (index == 0 ? 0 : 170), bedWidthOuter),
+            columnLength - 30,
+          ]}
+          rotation={[Math.PI / 2, Math.PI / 2, 0]}
+          scale={1000}
+          geometry={index == 0
+            ? leftBracket.nodes.Left_Gantry_Corner_Bracket.geometry
+            : rightBracket.nodes.Right_Gantry_Corner_Bracket.geometry}>
+          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+        </mesh>
         <Extrude name={"tracks"} visible={tracks}
           castShadow={true}
           args={[
@@ -129,30 +151,42 @@ export const Bot = (props: FarmbotModelProps) => {
         </Extrude>
         <mesh name={"gantryWheelPlate"}
           position={[
-            threeSpace(x + extrusionWidth * 4, bedLengthOuter) + bedXOffset,
-            threeSpace(y + (index == 0 ? -5 : extrusionWidth), bedWidthOuter),
-            -35,
+            threeSpace(x - extrusionWidth * 4 - 10, bedLengthOuter) + bedXOffset,
+            threeSpace(y + (index == 0 ? 0 : extrusionWidth + 5), bedWidthOuter),
+            -30,
           ]}
-          rotation={[Math.PI / 2, Math.PI, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
           scale={1000}
           geometry={gantryWheelPlate.nodes.Gantry_Wheel_Plate.geometry}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </mesh>
       </group>)}
+    <mesh name={"crossSlide"}
+      position={[
+        threeSpace(x - 5, bedLengthOuter) + bedXOffset,
+        threeSpace(y - 135, bedWidthOuter),
+        columnLength,
+      ]}
+      rotation={[Math.PI / 2, Math.PI / 2, 0]}
+      scale={1000}
+      geometry={crossSlide.nodes["Cross-Slide_Plate"].geometry}>
+      <meshPhongMaterial color={"silver"} side={DoubleSide} />
+    </mesh>
     <Extrude name={"z-axis"}
       castShadow={true}
       args={[
-        extrusion(1),
+        zAxisShape,
         { steps: 1, depth: zAxisLength, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - extrusionWidth, bedLengthOuter) + bedXOffset,
-        threeSpace(y - utmRadius - extrusionWidth, bedWidthOuter) + bedYOffset,
+        threeSpace(x, bedLengthOuter) + bedXOffset,
+        threeSpace(y + utmRadius, bedWidthOuter) + bedYOffset,
         z,
       ]}
       rotation={[0, 0, 0]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
+
     <Trail
       width={trail ? 500 : 0}
       color={"red"}
@@ -176,15 +210,15 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"gantry-beam"}
       castShadow={true}
       args={[
-        extrusion(3),
+        beamShape,
         { steps: 1, depth: beamLength, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x + extrusionWidth, bedLengthOuter) + bedXOffset,
+        threeSpace(x - extrusionWidth - 5, bedLengthOuter) + bedXOffset,
         threeSpace((bedWidthOuter + beamLength) / 2, bedWidthOuter),
-        columnLength,
+        columnLength + 40,
       ]}
-      rotation={[Math.PI / 2, 0, Math.PI / 2]}>
+      rotation={[Math.PI / 2, 0, 0]}>
       <meshPhongMaterial color={"silver"} side={DoubleSide} />
     </Extrude>
     <Line name={"bounds"}
