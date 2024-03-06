@@ -223,7 +223,6 @@ export const useConfig = () => {
     bedHeight: { value: init.bedHeight, min: 0, max: 1000, step: 1 },
   }));
   const bedMin = bedDimensions0.bedWallThickness * 2;
-  const maxSoilHeight = botSizeConfig0.botSizeZ + bedDimensions0.bedHeight;
   const [bedDimensions1, setBedDim1] = useControls("Bed Properties", () => ({
     bedWidthOuter: { value: init.bedWidthOuter, min: bedMin, max: 3100, step: 1 },
     bedLengthOuter: { value: init.bedLengthOuter, min: bedMin, max: 6100, step: 1 },
@@ -234,7 +233,7 @@ export const useConfig = () => {
     extraLegsY: { value: init.extraLegsY, min: 0, max: 10, step: 1 },
     bedBrightness: { value: init.bedBrightness, min: 1, max: 12, step: 1 },
     soilBrightness: { value: init.soilBrightness, min: 1, max: 12, step: 1 },
-    soilHeight: { value: init.soilHeight, min: 0, max: maxSoilHeight, step: 1 },
+    soilHeight: { value: init.soilHeight, min: 0, max: 1000, step: 1 },
   }), [botSizeConfig0, bedDimensions0]);
   const [botPosition, setBotPosition] = useControls("Bot Position", () => ({
     x: { value: init.x, min: 0, max: botSizeConfig0.botSizeX, step: 1 },

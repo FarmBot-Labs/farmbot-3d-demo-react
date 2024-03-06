@@ -231,7 +231,7 @@ export const Bot = (props: FarmbotModelProps) => {
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
         threeSpace(y - 85, bedWidthOuter) + bedYOffset,
-        columnLength,
+        columnLength + 20,
       ]}
       rotation={[Math.PI / 2, Math.PI / 2, 0]}
       scale={1000}
@@ -343,7 +343,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <mesh name={"yStopMax"} visible={tracks}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
-        threeSpace(botSizeY + 205, bedWidthOuter),
+        threeSpace(botSizeY + bedYOffset + 135, bedWidthOuter),
         columnLength + 40 + extrusionWidth * 3 + 5,
       ]}
       rotation={[0, Math.PI, 0]}
