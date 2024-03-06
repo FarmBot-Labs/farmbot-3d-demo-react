@@ -23,6 +23,7 @@ enum PartName {
   zMotorMount = "Z-Axis_Motor_Mount",
   zStop = "Z-Axis_Hardstop",
   beltClip = "Belt_Clip_-_Slim",
+  utm = "M5_Barb",
 }
 
 type GantryWheelPlate = GLTF & {
@@ -53,6 +54,10 @@ type BeltClip = GLTF & {
   nodes: { [PartName.beltClip]: THREE.Mesh }
   materials: never;
 }
+type UTM = GLTF & {
+  nodes: { [PartName.utm]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
 
 Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 
@@ -72,10 +77,10 @@ export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
-    columnLength, zAxisLength,
+    columnLength, zAxisLength, zGantryOffset,
   } = props.config;
   const zDir = -1;
-  const zZero = columnLength - 100;
+  const zZero = columnLength + 40 - zGantryOffset;
   const zero = {
     x: threeSpace(bedXOffset, bedLengthOuter),
     y: threeSpace(bedYOffset, bedWidthOuter),
@@ -99,6 +104,7 @@ export const Bot = (props: FarmbotModelProps) => {
   const beltClip = useGLTF(ASSETS.models.beltClip, LIB_DIR) as BeltClip;
   const zStop = useGLTF(ASSETS.models.zStop, LIB_DIR) as ZStop;
   const zMotorMount = useGLTF(ASSETS.models.zMotorMount, LIB_DIR) as ZMotorMount;
+  const utm = useGLTF(ASSETS.models.utm, LIB_DIR) as UTM;
   const [trackShape, setTrackShape] = useState<Shape>();
   const [beamShape, setBeamShape] = useState<Shape>();
   const [columnShape, setColumnShape] = useState<Shape>();
@@ -144,8 +150,9 @@ export const Bot = (props: FarmbotModelProps) => {
   });
   const distanceToSoil = soilHeight + zDir * z;
   return <group name={"bot"} visible={props.config.bot}>
-    {[0 - extrusionWidth, bedWidthOuter].map((y, index) =>
-      <group key={y}>
+    {[0 - extrusionWidth, bedWidthOuter].map((y, index) => {
+      const bedColumnYOffset = (tracks ? 0 : extrusionWidth) * (index == 0 ? 1 : -1);
+      return <group key={y}>
         <Extrude name={"columns"}
           castShadow={true}
           args={[
@@ -154,7 +161,7 @@ export const Bot = (props: FarmbotModelProps) => {
           ]}
           position={[
             threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
-            threeSpace(y, bedWidthOuter),
+            threeSpace(y + bedColumnYOffset, bedWidthOuter),
             30,
           ]}
           rotation={[0, 0, Math.PI / 2]}>
@@ -163,7 +170,7 @@ export const Bot = (props: FarmbotModelProps) => {
         <mesh name={index == 0 ? "leftBracket" : "rightBracket"}
           position={[
             threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
-            threeSpace(y - (index == 0 ? 0 : 170), bedWidthOuter),
+            threeSpace(y - (index == 0 ? 0 : 170) + bedColumnYOffset, bedWidthOuter),
             columnLength - 30,
           ]}
           rotation={[Math.PI / 2, Math.PI / 2, 0]}
@@ -193,24 +200,32 @@ export const Bot = (props: FarmbotModelProps) => {
           ]}>
           <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
         </Extrude>
-        <mesh name={"xStopMin"} visible={tracks}
+        <mesh name={"xStopMin"}
           position={[
             threeSpace(-130, bedLengthOuter) + bedXOffset,
-            threeSpace(y + 10, bedWidthOuter),
+            threeSpace(y + 10 + bedColumnYOffset, bedWidthOuter),
             2 + (index == 0 ? 0 : 5),
           ]}
-          rotation={[0, index == 0 ? 0 : Math.PI, (index == 0 ? 1 : -1) * Math.PI / 2]}
+          rotation={[
+            0,
+            index == 0 ? 0 : Math.PI,
+            (index == 0 ? 1 : -1) * Math.PI / 2,
+          ]}
           scale={1000}
           geometry={beltClip.nodes[PartName.beltClip].geometry}>
           <meshPhongMaterial color={"silver"} />
         </mesh>
-        <mesh name={"xStopMax"} visible={tracks}
+        <mesh name={"xStopMax"}
           position={[
             threeSpace(botSizeX + 130, bedLengthOuter) + bedXOffset,
-            threeSpace(y + 10, bedWidthOuter),
+            threeSpace(y + 10 + bedColumnYOffset, bedWidthOuter),
             2 + (index == 0 ? 5 : 0),
           ]}
-          rotation={[0, index == 0 ? Math.PI : 0, (index == 0 ? 1 : -1) * Math.PI / 2]}
+          rotation={[
+            0,
+            index == 0 ? Math.PI : 0,
+            (index == 0 ? 1 : -1) * Math.PI / 2,
+          ]}
           scale={1000}
           geometry={beltClip.nodes[PartName.beltClip].geometry}>
           <meshPhongMaterial color={"silver"} />
@@ -218,7 +233,10 @@ export const Bot = (props: FarmbotModelProps) => {
         <mesh name={"gantryWheelPlate"}
           position={[
             threeSpace(x - extrusionWidth * 4 - 10, bedLengthOuter) + bedXOffset,
-            threeSpace(y + (index == 0 ? 0 : extrusionWidth + 5), bedWidthOuter),
+            threeSpace(
+              y + (index == 0 ? 0 : extrusionWidth + 5)
+              + bedColumnYOffset,
+              bedWidthOuter),
             -30,
           ]}
           rotation={[Math.PI / 2, 0, 0]}
@@ -226,7 +244,8 @@ export const Bot = (props: FarmbotModelProps) => {
           geometry={gantryWheelPlate.nodes[PartName.gantryWheelPlate].geometry}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </mesh>
-      </group>)}
+      </group>;
+    })}
     <mesh name={"crossSlide"}
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
@@ -267,7 +286,7 @@ export const Bot = (props: FarmbotModelProps) => {
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
         threeSpace(y + utmRadius + extrusionWidth / 2, bedWidthOuter) + bedYOffset,
-        zZero + zDir * z + 90,
+        zZero + zDir * z - 30 + zGantryOffset,
       ]}
       rotation={[0, Math.PI / 2, 0]}
       scale={1000}
@@ -278,7 +297,7 @@ export const Bot = (props: FarmbotModelProps) => {
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
         threeSpace(y + utmRadius + extrusionWidth / 2, bedWidthOuter) + bedYOffset,
-        zZero + zDir * z + zAxisLength - 240,
+        zZero + zDir * z + botSizeZ + 140 + zGantryOffset,
       ]}
       rotation={[0, Math.PI / 2, 0]}
       scale={1000}
@@ -293,17 +312,20 @@ export const Bot = (props: FarmbotModelProps) => {
       local={false}
       stride={0}
       interval={1}>
-      <Cylinder name={"UTM"}
-        castShadow={true}
-        args={[utmRadius, utmRadius, utmHeight]}
+      <group name={"UTM"}
         position={[
-          threeSpace(x, bedLengthOuter) + bedXOffset,
+          threeSpace(x + 11, bedLengthOuter) + bedXOffset,
           threeSpace(y, bedWidthOuter) + bedYOffset,
-          zZero + zDir * z + utmHeight / 2,
+          zZero + zDir * z + utmHeight / 2 - 18,
         ]}
-        rotation={[Math.PI / 2, 0, 0]}>
-        <meshPhongMaterial color={"silver"} side={DoubleSide} />
-      </Cylinder>
+        rotation={[0, 0, Math.PI / 2]}
+        scale={1000}>
+        <mesh
+          geometry={utm.nodes.M5_Barb.geometry}
+          material={utm.materials.PaletteMaterial001}
+          position={[0.015, 0.009, 0.036]}
+          rotation={[0, 0, 2.094]} />
+      </group>
     </Trail>
     <Cylinder
       visible={laser}
@@ -329,7 +351,7 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[Math.PI / 2, 0, 0]}>
       <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
-    <mesh name={"yStopMin"} visible={tracks}
+    <mesh name={"yStopMin"}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
         threeSpace(bedYOffset - 125, bedWidthOuter),
@@ -340,7 +362,7 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={beltClip.nodes[PartName.beltClip].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
-    <mesh name={"yStopMax"} visible={tracks}
+    <mesh name={"yStopMax"}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
         threeSpace(botSizeY + bedYOffset + 135, bedWidthOuter),

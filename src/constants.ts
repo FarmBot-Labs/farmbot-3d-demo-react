@@ -29,6 +29,7 @@ export const ASSETS = {
     beltClip: "/3D/models/belt_clip.glb",
     zMotorMount: "/3D/models/z_motor_mount.glb",
     zStop: "/3D/models/z_stop.glb",
+    utm: "/3D/models/utm.glb",
   }
 };
 

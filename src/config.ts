@@ -17,6 +17,7 @@ export interface Config {
   bedXOffset: number;
   bedYOffset: number;
   bedZOffset: number;
+  zGantryOffset: number;
   bedWidthOuter: number;
   bedLengthOuter: number;
   legSize: number;
@@ -57,6 +58,7 @@ const INITIAL: Config = {
   bedXOffset: 140,
   bedYOffset: 80,
   bedZOffset: 0,
+  zGantryOffset: 140,
   bedWidthOuter: 1400,
   bedLengthOuter: 2900,
   legSize: 100,
@@ -93,6 +95,7 @@ export const PRESETS: Record<string, Config> = {
     zAxisLength: 750,
     bedXOffset: 140,
     bedYOffset: 80,
+    zGantryOffset: 140,
     bedWidthOuter: 400,
     bedLengthOuter: 900,
     extraLegsX: 1,
@@ -111,6 +114,7 @@ export const PRESETS: Record<string, Config> = {
     zAxisLength: 1000,
     bedXOffset: 140,
     bedYOffset: 80,
+    zGantryOffset: 140,
     bedWidthOuter: 1400,
     bedLengthOuter: 2900,
     extraLegsX: 1,
@@ -129,6 +133,7 @@ export const PRESETS: Record<string, Config> = {
     zAxisLength: 1000,
     bedXOffset: 140,
     bedYOffset: 80,
+    zGantryOffset: 140,
     bedWidthOuter: 2900,
     bedLengthOuter: 5900,
     extraLegsX: 3,
@@ -172,7 +177,7 @@ export const useConfig = () => {
     ]));
     setBotSize1(pick(presetConfig, [
       "beamLength", "columnLength", "zAxisLength", "bedXOffset", "bedYOffset",
-      "tracks",
+      "tracks", "zGantryOffset",
     ]));
     setOther(pick(presetConfig, ["label"]));
 
@@ -246,6 +251,7 @@ export const useConfig = () => {
     zAxisLength: { value: init.zAxisLength, min: 100, max: 2000, step: 1 },
     bedXOffset: { value: init.bedXOffset, min: -500, max: 500, step: 1 },
     bedYOffset: { value: init.bedYOffset, min: -500, max: 500, step: 1 },
+    zGantryOffset: { value: init.zGantryOffset, min: 0, max: 500, step: 1 },
     tracks: { value: init.tracks },
   }));
   const [otherConfig, setOther] = useControls("Other", () => ({
