@@ -12,6 +12,8 @@ export interface Config {
   y: number;
   z: number;
   beamLength: number;
+  columnLength: number;
+  zAxisLength: number;
   bedXOffset: number;
   bedYOffset: number;
   bedZOffset: number;
@@ -36,24 +38,27 @@ export interface Config {
   sunAzimuth: number;
   perspective: boolean;
   bot: boolean;
+  laser: boolean;
 }
 
 const INITIAL: Config = {
   label: "FarmBot Genesis v1.7",
-  botSizeX: 2900,
-  botSizeY: 1400,
-  botSizeZ: 400,
+  botSizeX: 2620,
+  botSizeY: 1220,
+  botSizeZ: 500,
   bedWallThickness: 40,
   bedHeight: 300,
   x: 300,
   y: 700,
   z: 200,
   beamLength: 1500,
-  bedXOffset: 50,
-  bedYOffset: -50,
+  columnLength: 500,
+  zAxisLength: 1000,
+  bedXOffset: 140,
+  bedYOffset: 80,
   bedZOffset: 0,
-  bedWidthOuter: 1480,
-  bedLengthOuter: 2980,
+  bedWidthOuter: 1400,
+  bedLengthOuter: 2900,
   legSize: 100,
   legsFlush: true,
   extraLegsX: 1,
@@ -73,37 +78,62 @@ const INITIAL: Config = {
   sunAzimuth: 0,
   perspective: true,
   bot: true,
+  laser: false,
 };
 
 export const PRESETS: Record<string, Config> = {
+  "Jr": {
+    ...INITIAL,
+    label: "FarmBot Jr",
+    botSizeX: 620,
+    botSizeY: 220,
+    botSizeZ: 250,
+    beamLength: 550,
+    columnLength: 300,
+    zAxisLength: 750,
+    bedXOffset: 140,
+    bedYOffset: 80,
+    bedWidthOuter: 400,
+    bedLengthOuter: 900,
+    extraLegsX: 1,
+    extraLegsY: 0,
+    soilHeight: 280,
+    tracks: true,
+  },
   "Genesis": {
     ...INITIAL,
     label: "FarmBot Genesis v1.7",
-    botSizeX: 2900,
-    botSizeY: 1400,
-    botSizeZ: 400,
+    botSizeX: 2620,
+    botSizeY: 1220,
+    botSizeZ: 500,
     beamLength: 1500,
-    bedXOffset: 50,
-    bedYOffset: -50,
-    bedWidthOuter: 1480,
-    bedLengthOuter: 2980,
+    columnLength: 500,
+    zAxisLength: 1000,
+    bedXOffset: 140,
+    bedYOffset: 80,
+    bedWidthOuter: 1400,
+    bedLengthOuter: 2900,
     extraLegsX: 1,
     extraLegsY: 0,
+    soilHeight: 500,
     tracks: true,
   },
   "Genesis XL": {
     ...INITIAL,
     label: "FarmBot Genesis XL v1.7",
-    botSizeX: 5900,
-    botSizeY: 2900,
-    botSizeZ: 400,
+    botSizeX: 5620,
+    botSizeY: 2720,
+    botSizeZ: 500,
     beamLength: 3000,
-    bedXOffset: 50,
-    bedYOffset: -50,
-    bedWidthOuter: 2980,
-    bedLengthOuter: 5980,
+    columnLength: 500,
+    zAxisLength: 1000,
+    bedXOffset: 140,
+    bedYOffset: 80,
+    bedWidthOuter: 2900,
+    bedLengthOuter: 5900,
     extraLegsX: 3,
     extraLegsY: 1,
+    soilHeight: 500,
     tracks: true,
   },
   "Initial": INITIAL,
@@ -112,13 +142,12 @@ export const PRESETS: Record<string, Config> = {
     bedWallThickness: 40,
     bedHeight: 300,
     x: 300,
-    y: 700,
+    y: 200,
     z: 200,
     legSize: 100,
     legsFlush: false,
     bedBrightness: 8,
     soilBrightness: 6,
-    soilHeight: 500,
     plants: 0,
     labels: false,
     ground: true,
@@ -130,6 +159,7 @@ export const PRESETS: Record<string, Config> = {
     sunAzimuth: 45,
     perspective: true,
     bot: true,
+    laser: false,
   },
 };
 
@@ -137,10 +167,13 @@ export const useConfig = () => {
   const funcSizePreset = (preset: string) => () => {
     const presetConfig = PRESETS[preset];
     setBotSize0(pick(presetConfig, ["botSizeX", "botSizeY", "botSizeZ"]));
-    setBedDim1(pick(presetConfig,
-      ["bedWidthOuter", "bedLengthOuter", "extraLegsX", "extraLegsY"]));
-    setBotSize1(pick(presetConfig,
-      ["beamLength", "bedXOffset", "bedYOffset", "tracks"]));
+    setBedDim1(pick(presetConfig, [
+      "bedWidthOuter", "bedLengthOuter", "extraLegsX", "extraLegsY", "soilHeight",
+    ]));
+    setBotSize1(pick(presetConfig, [
+      "beamLength", "columnLength", "zAxisLength", "bedXOffset", "bedYOffset",
+      "tracks",
+    ]));
     setOther(pick(presetConfig, ["label"]));
 
   };
@@ -148,10 +181,10 @@ export const useConfig = () => {
     const presetConfig = PRESETS[preset];
     setBedDim0(pick(presetConfig, ["bedWallThickness", "bedHeight"]));
     setBedDim1(pick(presetConfig,
-      ["legSize", "legsFlush", "bedBrightness", "soilBrightness", "soilHeight"]));
+      ["legSize", "legsFlush", "bedBrightness", "soilBrightness"]));
     setBotPosition(pick(presetConfig, ["x", "y", "z"]));
     setOther(pick(presetConfig,
-      ["plants", "labels", "trail", "perspective", "bot"]));
+      ["plants", "labels", "trail", "perspective", "bot", "laser"]));
     setEnv(pick(presetConfig,
       ["ground", "grid", "axes", "clouds", "sunInclination", "sunAzimuth"]));
   };
@@ -163,8 +196,9 @@ export const useConfig = () => {
   };
   useControls("Presets", {
     size: buttonGroup({
+      "Jr": funcSizePreset("Jr"),
       "Genesis": funcSizePreset("Genesis"),
-      "Genesis XL": funcSizePreset("Genesis XL"),
+      "XL": funcSizePreset("Genesis XL"),
     }),
     bed: buttonGroup({
       "Standard": () => setBedDim1({ bedZOffset: 0 }),
@@ -205,10 +239,12 @@ export const useConfig = () => {
   const [botPosition, setBotPosition] = useControls("Bot Position", () => ({
     x: { value: init.x, min: 0, max: botSizeConfig0.botSizeX, step: 1 },
     y: { value: init.y, min: 0, max: botSizeConfig0.botSizeY, step: 1 },
-    z: { value: init.z, min: 0, max: botSizeConfig0.botSizeZ + 150, step: 1 },
+    z: { value: init.z, min: 0, max: botSizeConfig0.botSizeZ, step: 1 },
   }), [botSizeConfig0]);
   const [botSizeConfig1, setBotSize1] = useControls("Bot Dimensions", () => ({
     beamLength: { value: init.beamLength, min: 100, max: 4000, step: 1 },
+    columnLength: { value: init.columnLength, min: 100, max: 1000, step: 1 },
+    zAxisLength: { value: init.zAxisLength, min: 100, max: 2000, step: 1 },
     bedXOffset: { value: init.bedXOffset, min: -500, max: 500, step: 1 },
     bedYOffset: { value: init.bedYOffset, min: -500, max: 500, step: 1 },
     tracks: { value: init.tracks },
@@ -220,6 +256,7 @@ export const useConfig = () => {
     trail: { value: init.trail },
     perspective: { value: init.perspective },
     bot: { value: init.bot },
+    laser: { value: init.laser },
   }));
   const [environmentConfig, setEnv] = useControls("Environment", () => ({
     ground: { value: init.ground },

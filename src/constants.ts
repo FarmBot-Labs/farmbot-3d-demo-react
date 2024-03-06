@@ -26,6 +26,9 @@ export const ASSETS = {
     leftBracket: "/3D/models/left_bracket.glb",
     rightBracket: "/3D/models/right_bracket.glb",
     crossSlide: "/3D/models/cross_slide.glb",
+    beltClip: "/3D/models/belt_clip.glb",
+    zMotorMount: "/3D/models/z_motor_mount.glb",
+    zStop: "/3D/models/z_stop.glb",
   }
 };
 

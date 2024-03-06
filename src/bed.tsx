@@ -8,6 +8,8 @@ import { threeSpace } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
 
+const ccSupportSize = 50;
+
 const soil = (
   Type: typeof Path | typeof Shape,
   botSize: Record<"x" | "y" | "z" | "thickness", number>,
@@ -92,14 +94,14 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight,
+    soilHeight, columnLength,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
   const bedStartZ = bedHeight;
   const bedColor = getColorFromBrightness(bedBrightness);
   const soilColor = getColorFromBrightness(soilBrightness);
-  const soilTop = botSizeZ - soilHeight;
+  const soilDepth = bedHeight + (columnLength - 100) - soilHeight;
   const legXPositions = [
     0 + legSize / 2 + thickness,
     ...(extraLegsX
@@ -131,12 +133,36 @@ export const Bed = (props: BedProps) => {
       <meshPhongMaterial map={woodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Extrude>
+    <Box name={"lower-cc-support"}
+      castShadow={true}
+      receiveShadow={true}
+      args={[bedLengthOuter / 2, ccSupportSize, ccSupportSize]}
+      position={[
+        threeSpace(bedLengthOuter / 4, bedLengthOuter),
+        threeSpace(-ccSupportSize / 2, bedWidthOuter),
+        -bedStartZ + bedHeight / 2,
+      ]}>
+      <meshPhongMaterial map={legWoodTexture} color={bedColor}
+        shininess={100} side={DoubleSide} />
+    </Box>
+    <Box name={"upper-cc-support"}
+      castShadow={true}
+      receiveShadow={true}
+      args={[bedLengthOuter / 2, ccSupportSize, ccSupportSize]}
+      position={[
+        threeSpace(bedLengthOuter * 3 / 4, bedLengthOuter),
+        threeSpace(-ccSupportSize / 2, bedWidthOuter),
+        -bedStartZ + bedHeight * 3 / 4,
+      ]}>
+      <meshPhongMaterial map={legWoodTexture} color={bedColor}
+        shininess={100} side={DoubleSide} />
+    </Box>
     <Extrude name={"soil"}
       castShadow={true}
       receiveShadow={true}
       args={[
         soil(Shape, botSize) as Shape,
-        { steps: 1, depth: bedHeight + soilTop, bevelEnabled: false },
+        { steps: 1, depth: soilDepth, bevelEnabled: false },
       ]}
       position={[
         threeSpace(0, bedLengthOuter),
