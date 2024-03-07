@@ -8,6 +8,7 @@ export interface Config {
   botSizeZ: number;
   bedWallThickness: number;
   bedHeight: number;
+  ccSupportSize: number;
   x: number;
   y: number;
   z: number;
@@ -49,6 +50,7 @@ const INITIAL: Config = {
   botSizeZ: 500,
   bedWallThickness: 40,
   bedHeight: 300,
+  ccSupportSize: 50,
   x: 300,
   y: 700,
   z: 200,
@@ -149,6 +151,7 @@ export const PRESETS: Record<string, Config> = {
     x: 300,
     y: 200,
     z: 200,
+    ccSupportSize: 50,
     legSize: 100,
     legsFlush: false,
     bedBrightness: 8,
@@ -185,8 +188,9 @@ export const useConfig = () => {
   const funcOtherPreset = (preset: string) => () => {
     const presetConfig = PRESETS[preset];
     setBedDim0(pick(presetConfig, ["bedWallThickness", "bedHeight"]));
-    setBedDim1(pick(presetConfig,
-      ["legSize", "legsFlush", "bedBrightness", "soilBrightness"]));
+    setBedDim1(pick(presetConfig, [
+      "ccSupportSize", "legSize", "legsFlush", "bedBrightness", "soilBrightness",
+    ]));
     setBotPosition(pick(presetConfig, ["x", "y", "z"]));
     setOther(pick(presetConfig,
       ["plants", "labels", "trail", "perspective", "bot", "laser"]));
@@ -229,6 +233,7 @@ export const useConfig = () => {
   }));
   const bedMin = bedDimensions0.bedWallThickness * 2;
   const [bedDimensions1, setBedDim1] = useControls("Bed Properties", () => ({
+    ccSupportSize: { value: init.ccSupportSize, min: 0, max: 200, step: 1 },
     bedWidthOuter: { value: init.bedWidthOuter, min: bedMin, max: 3100, step: 1 },
     bedLengthOuter: { value: init.bedLengthOuter, min: bedMin, max: 6100, step: 1 },
     bedZOffset: { value: init.bedZOffset, min: 0, max: 1000, step: 1 },

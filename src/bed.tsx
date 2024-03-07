@@ -8,8 +8,6 @@ import { threeSpace } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
 
-const ccSupportSize = 50;
-
 const soil = (
   Type: typeof Path | typeof Shape,
   botSize: Record<"x" | "y" | "z" | "thickness", number>,
@@ -94,7 +92,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, columnLength,
+    soilHeight, columnLength, ccSupportSize,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -140,7 +138,7 @@ export const Bed = (props: BedProps) => {
       position={[
         threeSpace(bedLengthOuter / 4, bedLengthOuter),
         threeSpace(-ccSupportSize / 2, bedWidthOuter),
-        -bedStartZ + bedHeight / 2,
+        -Math.min(150, bedHeight / 2) - ccSupportSize / 2,
       ]}>
       <meshPhongMaterial map={legWoodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
@@ -152,7 +150,7 @@ export const Bed = (props: BedProps) => {
       position={[
         threeSpace(bedLengthOuter * 3 / 4, bedLengthOuter),
         threeSpace(-ccSupportSize / 2, bedWidthOuter),
-        -bedStartZ + bedHeight * 3 / 4,
+        -Math.min(75, bedHeight / 4) - ccSupportSize / 2,
       ]}>
       <meshPhongMaterial map={legWoodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
