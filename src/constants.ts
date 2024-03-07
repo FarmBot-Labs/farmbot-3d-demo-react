@@ -27,9 +27,13 @@ export const ASSETS = {
     rightBracket: "/3D/models/right_bracket.glb",
     crossSlide: "/3D/models/cross_slide.glb",
     beltClip: "/3D/models/belt_clip.glb",
-    zMotorMount: "/3D/models/z_motor_mount.glb",
     zStop: "/3D/models/z_stop.glb",
     utm: "/3D/models/utm.glb",
+    ccHorizontal: "/3D/models/cc_horizontal.glb",
+    ccVertical: "/3D/models/cc_vertical.glb",
+    housingVertical: "/3D/models/housing_vertical.glb",
+    motorHorizontal: "/3D/models/motor_horizontal.glb",
+    motorVertical: "/3D/models/motor_vertical.glb",
   }
 };
 

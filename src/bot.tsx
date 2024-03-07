@@ -7,6 +7,8 @@ import { ASSETS } from "./constants";
 import { SVGLoader } from "three/examples/jsm/Addons.js";
 import { useEffect, useState } from "react";
 import { range } from "lodash";
+import { CrossSlide, CrossSlideFull } from "./parts/cross_slide";
+import { GantryWheelPlate, GantryWheelPlateFull } from "./parts/gantry_wheel_plate";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -24,6 +26,11 @@ enum PartName {
   zStop = "Z-Axis_Hardstop",
   beltClip = "Belt_Clip_-_Slim",
   utm = "M5_Barb",
+  ccHorizontal = "60mm_Horizontal_Cable_Carrier_Support",
+  ccVertical = "60mm_Vertical_Cable_Carrier_Support",
+  housingVertical = "80mm_Vertical_Motor_Housing",
+  motorHorizontal = "M3_x_12mm_Screw",
+  motorVertical = "M5_x_10mm_Screw",
 }
 
 type GantryWheelPlate = GLTF & {
@@ -42,10 +49,6 @@ type CrossSlide = GLTF & {
   nodes: { [PartName.crossSlide]: THREE.Mesh }
   materials: never;
 }
-type ZMotorMount = GLTF & {
-  nodes: { [PartName.zMotorMount]: THREE.Mesh }
-  materials: never;
-}
 type ZStop = GLTF & {
   nodes: { [PartName.zStop]: THREE.Mesh }
   materials: never;
@@ -56,6 +59,26 @@ type BeltClip = GLTF & {
 }
 type UTM = GLTF & {
   nodes: { [PartName.utm]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type CCHorizontal = GLTF & {
+  nodes: { [PartName.ccHorizontal]: THREE.Mesh };
+  materials: never;
+}
+type CCVertical = GLTF & {
+  nodes: { [PartName.ccVertical]: THREE.Mesh };
+  materials: never;
+}
+type HousingVertical = GLTF & {
+  nodes: { [PartName.housingVertical]: THREE.Mesh };
+  materials: never;
+}
+type MotorHorizontal = GLTF & {
+  nodes: { [PartName.motorHorizontal]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type MotorVertical = GLTF & {
+  nodes: { [PartName.motorVertical]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
 }
 
@@ -97,14 +120,20 @@ export const Bot = (props: FarmbotModelProps) => {
     [x, y, extents.z],
   ];
   const gantryWheelPlate =
-    useGLTF(ASSETS.models.gantryWheelPlate, LIB_DIR) as GantryWheelPlate;
+    useGLTF(ASSETS.models.gantryWheelPlate, LIB_DIR) as GantryWheelPlateFull;
+  const GantryWheelPlateComponent = GantryWheelPlate(gantryWheelPlate);
   const leftBracket = useGLTF(ASSETS.models.leftBracket, LIB_DIR) as LeftBracket;
   const rightBracket = useGLTF(ASSETS.models.rightBracket, LIB_DIR) as RightBracket;
-  const crossSlide = useGLTF(ASSETS.models.crossSlide, LIB_DIR) as CrossSlide;
+  const crossSlide = useGLTF(ASSETS.models.crossSlide, LIB_DIR) as CrossSlideFull;
+  const CrossSlideComponent = CrossSlide(crossSlide);
   const beltClip = useGLTF(ASSETS.models.beltClip, LIB_DIR) as BeltClip;
   const zStop = useGLTF(ASSETS.models.zStop, LIB_DIR) as ZStop;
-  const zMotorMount = useGLTF(ASSETS.models.zMotorMount, LIB_DIR) as ZMotorMount;
   const utm = useGLTF(ASSETS.models.utm, LIB_DIR) as UTM;
+  const ccHorizontal = useGLTF(ASSETS.models.ccHorizontal, LIB_DIR) as CCHorizontal;
+  const ccVertical = useGLTF(ASSETS.models.ccVertical, LIB_DIR) as CCVertical;
+  const housingVertical = useGLTF(ASSETS.models.housingVertical, LIB_DIR) as HousingVertical;
+  const motorHorizontal = useGLTF(ASSETS.models.motorHorizontal, LIB_DIR) as MotorHorizontal;
+  const motorVertical = useGLTF(ASSETS.models.motorVertical, LIB_DIR) as MotorVertical;
   const [trackShape, setTrackShape] = useState<Shape>();
   const [beamShape, setBeamShape] = useState<Shape>();
   const [columnShape, setColumnShape] = useState<Shape>();
@@ -180,6 +209,16 @@ export const Bot = (props: FarmbotModelProps) => {
             : rightBracket.nodes[PartName.rightBracket].geometry}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </mesh>
+        <mesh name={index == 0 ? "leftMotor" : "rightMotor"}
+          position={[
+            threeSpace(x - (index == 0 ? 45 : 75), bedLengthOuter) + bedXOffset,
+            threeSpace(y - (index == 0 ? 0 : -20) + bedColumnYOffset, bedWidthOuter),
+            columnLength + 70,
+          ]}
+          rotation={[Math.PI / 2, (index == 0 ? Math.PI : 0), Math.PI / 2]}
+          scale={1000}
+          geometry={motorHorizontal.nodes[PartName.motorHorizontal].geometry}
+          material={motorHorizontal.materials.PaletteMaterial001} />
         <Extrude name={"tracks"} visible={tracks}
           castShadow={true}
           args={[
@@ -230,33 +269,28 @@ export const Bot = (props: FarmbotModelProps) => {
           geometry={beltClip.nodes[PartName.beltClip].geometry}>
           <meshPhongMaterial color={"silver"} />
         </mesh>
-        <mesh name={"gantryWheelPlate"}
+        <GantryWheelPlateComponent name={"gantryWheelPlate"}
           position={[
-            threeSpace(x - extrusionWidth * 4 - 10, bedLengthOuter) + bedXOffset,
+            threeSpace(x - 40, bedLengthOuter) + bedXOffset,
             threeSpace(
               y + (index == 0 ? 0 : extrusionWidth + 5)
+              - 2 - (index == 0 ? 1 : 0)
               + bedColumnYOffset,
               bedWidthOuter),
             -30,
           ]}
-          rotation={[Math.PI / 2, 0, 0]}
-          scale={1000}
-          geometry={gantryWheelPlate.nodes[PartName.gantryWheelPlate].geometry}>
-          <meshPhongMaterial color={"silver"} side={DoubleSide} />
-        </mesh>
+          rotation={[0, 0, Math.PI / 2 + (index == 0 ? Math.PI : 0)]}
+          scale={[1000, 1000 * (index == 0 ? -1 : 1), 1000]} />
       </group>;
     })}
-    <mesh name={"crossSlide"}
+    <CrossSlideComponent name={"crossSlide"}
       position={[
-        threeSpace(x - 5, bedLengthOuter) + bedXOffset,
-        threeSpace(y - 85, bedWidthOuter) + bedYOffset,
-        columnLength + 20,
+        threeSpace(x, bedLengthOuter) + bedXOffset,
+        threeSpace(y + 5, bedWidthOuter) + bedYOffset,
+        columnLength + 105,
       ]}
-      rotation={[Math.PI / 2, Math.PI / 2, 0]}
-      scale={1000}
-      geometry={crossSlide.nodes[PartName.crossSlide].geometry}>
-      <meshPhongMaterial color={"silver"} side={DoubleSide} />
-    </mesh>
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000} />
     <Extrude name={"z-axis"}
       castShadow={true}
       args={[
@@ -271,17 +305,54 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[0, 0, 0]}>
       <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
-    <mesh name={"zMotorMount"}
+    <group name={"zMotor"}>
+      <mesh name={"zMotorHousing"}
+        position={[
+          threeSpace(x + 4, bedLengthOuter) + bedXOffset,
+          threeSpace(y + utmRadius - 47, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + zAxisLength - 80,
+        ]}
+        rotation={[0, 0, Math.PI]}
+        scale={1000}
+        geometry={housingVertical.nodes[PartName.housingVertical].geometry}>
+        <meshPhongMaterial color={"silver"} />
+      </mesh>
+      <mesh name={"zMotor"}
+        position={[
+          threeSpace(x + 10, bedLengthOuter) + bedXOffset,
+          threeSpace(y + utmRadius - 5, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + zAxisLength - 140,
+        ]}
+        rotation={[Math.PI / 2, 0, 0]}
+        scale={1000}
+        geometry={motorVertical.nodes[PartName.motorVertical].geometry}
+        material={motorVertical.materials.PaletteMaterial001}>
+        <meshPhongMaterial color={"silver"} />
+      </mesh>
+    </group>
+    <Cylinder
+      material-color={"#555"}
+      args={[4, 4, zAxisLength - 200]}
       position={[
-        threeSpace(x + 5, bedLengthOuter) + bedXOffset,
-        threeSpace(y + utmRadius - 65, bedWidthOuter) + bedYOffset,
-        zZero + zDir * z + zAxisLength - 100,
+        threeSpace(x + 6, bedLengthOuter) + bedXOffset,
+        threeSpace(y - 30, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + zAxisLength / 2,
       ]}
-      rotation={[0, 0, Math.PI]}
-      scale={1000}
-      geometry={zMotorMount.nodes[PartName.zMotorMount].geometry}>
-      <meshPhongMaterial color={"silver"} />
-    </mesh>
+      rotation={[Math.PI / 2, 0, 0]} />
+    <group name={"ccVertical"}>
+      {range((zAxisLength - 500) / 200).map(i =>
+        <mesh key={i}
+          position={[
+            threeSpace(x + 20, bedLengthOuter) + bedXOffset,
+            threeSpace(y + 55, bedWidthOuter) + bedYOffset,
+            zZero + zDir * z + (i + 1) * 200,
+          ]}
+          rotation={[0, 0, Math.PI / 2]}
+          scale={1000}
+          geometry={ccVertical.nodes[PartName.ccVertical].geometry}>
+          <meshPhongMaterial color={"silver"} />
+        </mesh>)}
+    </group>
     <mesh name={"zStopMax"}
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
@@ -351,6 +422,20 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[Math.PI / 2, 0, 0]}>
       <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
+    <group name={"ccHorizontal"}>
+      {range((botSizeY - 10) / 200).map(i =>
+        <mesh key={i}
+          position={[
+            threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+            threeSpace(50 + i * 200, bedWidthOuter) + bedYOffset,
+            columnLength + 45,
+          ]}
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={1000}
+          geometry={ccHorizontal.nodes[PartName.ccHorizontal].geometry}>
+          <meshPhongMaterial color={"silver"} />
+        </mesh>)}
+    </group>
     <mesh name={"yStopMin"}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
