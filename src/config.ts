@@ -250,7 +250,7 @@ export const useConfig = () => {
     columnLength: { value: init.columnLength, min: 100, max: 1000, step: 1 },
     zAxisLength: { value: init.zAxisLength, min: 100, max: 2000, step: 1 },
     bedXOffset: { value: init.bedXOffset, min: -500, max: 500, step: 1 },
-    bedYOffset: { value: init.bedYOffset, min: -500, max: 500, step: 1 },
+    bedYOffset: { value: init.bedYOffset, min: -1500, max: 1500, step: 1 },
     zGantryOffset: { value: init.zGantryOffset, min: 0, max: 500, step: 1 },
     tracks: { value: init.tracks },
   }));
