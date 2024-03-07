@@ -110,7 +110,7 @@ const Model = () => {
       const randomPosition = new Vector3(
         threeSpace(random(min.x, max.x), config.bedLengthOuter),
         threeSpace(random(min.y, max.y), config.bedWidthOuter),
-        config.botSizeZ - config.soilHeight,
+        config.columnLength - 100 - config.soilHeight,
       );
       return <Billboard key={i} follow={true} position={randomPosition}>
         <Image url={plant.icon} scale={200} position={[0, 100, 1]}
