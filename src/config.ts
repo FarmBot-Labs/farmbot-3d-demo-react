@@ -42,6 +42,7 @@ export interface Config {
   bot: boolean;
   laser: boolean;
   tool: string;
+  cableCarriers: boolean;
 }
 
 const INITIAL: Config = {
@@ -85,6 +86,7 @@ const INITIAL: Config = {
   bot: true,
   laser: false,
   tool: "rotaryTool",
+  cableCarriers: true,
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -171,6 +173,7 @@ export const PRESETS: Record<string, Config> = {
     bot: true,
     laser: false,
     tool: "",
+    cableCarriers: true,
   },
 };
 
@@ -195,8 +198,10 @@ export const useConfig = () => {
       "ccSupportSize", "legSize", "legsFlush", "bedBrightness", "soilBrightness",
     ]));
     setBotPosition(pick(presetConfig, ["x", "y", "z"]));
-    setOther(pick(presetConfig,
-      ["plants", "labels", "trail", "perspective", "bot", "laser", "tool"]));
+    setOther(pick(presetConfig, [
+      "plants", "labels", "trail", "perspective", "bot", "laser", "tool",
+      "cableCarriers",
+    ]));
     setEnv(pick(presetConfig,
       ["ground", "grid", "axes", "clouds", "sunInclination", "sunAzimuth"]));
   };
@@ -276,6 +281,7 @@ export const useConfig = () => {
       "Rotary Tool": setTool("rotaryTool"),
       "None": setTool(""),
     }),
+    cableCarriers: { value: init.cableCarriers },
   }));
   const [environmentConfig, setEnv] = useControls("Environment", () => ({
     ground: { value: init.ground },

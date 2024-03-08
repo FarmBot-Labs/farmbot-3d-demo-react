@@ -1,4 +1,4 @@
-import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Box, Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
@@ -110,7 +110,8 @@ export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
-    columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool,
+    columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
+    cableCarriers,
   } = props.config;
   const zDir = -1;
   const zZero = columnLength + 40 - zGantryOffset;
@@ -296,6 +297,19 @@ export const Bot = (props: FarmbotModelProps) => {
           scale={[1000, 1000 * (index == 0 ? -1 : 1), 1000]} />
       </group>;
     })}
+    <group name={"xCC"} visible={cableCarriers}>
+      <Box name={"xCCLower"}
+        castShadow={true}
+        receiveShadow={true}
+        args={[bedLengthOuter / 2, 22, 15]}
+        position={[
+          threeSpace(bedLengthOuter / 4, bedLengthOuter),
+          threeSpace(-35, bedWidthOuter),
+          -Math.min(150, bedHeight / 2) + 7,
+        ]}>
+        <meshPhongMaterial color={"black"} />
+      </Box>
+    </group>
     <CrossSlideComponent name={"crossSlide"}
       position={[
         threeSpace(x, bedLengthOuter) + bedXOffset,
@@ -365,6 +379,19 @@ export const Bot = (props: FarmbotModelProps) => {
           geometry={ccVertical.nodes[PartName.ccVertical].geometry}>
           <meshPhongMaterial color={"silver"} />
         </mesh>)}
+    </group>
+    <group name={"zCC"} visible={cableCarriers}>
+      <Box name={"zCCLower"}
+        castShadow={true}
+        receiveShadow={true}
+        args={[20, 60, zAxisLength - 400]}
+        position={[
+          threeSpace(x + 35, bedLengthOuter) + bedXOffset,
+          threeSpace(y + 5, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + zAxisLength / 2,
+        ]}>
+        <meshPhongMaterial color={"black"} />
+      </Box>
     </group>
     <mesh name={"zStopMax"}
       position={[
@@ -456,6 +483,19 @@ export const Bot = (props: FarmbotModelProps) => {
           geometry={ccHorizontal.nodes[PartName.ccHorizontal].geometry}>
           <meshPhongMaterial color={"silver"} />
         </mesh>)}
+    </group>
+    <group name={"yCC"} visible={cableCarriers}>
+      <Box name={"yCCLower"}
+        castShadow={true}
+        receiveShadow={true}
+        args={[60, botSizeY, 20]}
+        position={[
+          threeSpace(x - 60, bedLengthOuter) + bedXOffset,
+          threeSpace(botSizeY / 2 + 20, bedWidthOuter) + bedYOffset,
+          columnLength + 75,
+        ]}>
+        <meshPhongMaterial color={"black"} />
+      </Box>
     </group>
     <mesh name={"yStopMin"}
       position={[
