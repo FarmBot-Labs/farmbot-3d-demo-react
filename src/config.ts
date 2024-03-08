@@ -41,6 +41,7 @@ export interface Config {
   perspective: boolean;
   bot: boolean;
   laser: boolean;
+  tool: string;
 }
 
 const INITIAL: Config = {
@@ -83,6 +84,7 @@ const INITIAL: Config = {
   perspective: true,
   bot: true,
   laser: false,
+  tool: "rotaryTool",
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -168,6 +170,7 @@ export const PRESETS: Record<string, Config> = {
     perspective: true,
     bot: true,
     laser: false,
+    tool: "",
   },
 };
 
@@ -193,7 +196,7 @@ export const useConfig = () => {
     ]));
     setBotPosition(pick(presetConfig, ["x", "y", "z"]));
     setOther(pick(presetConfig,
-      ["plants", "labels", "trail", "perspective", "bot", "laser"]));
+      ["plants", "labels", "trail", "perspective", "bot", "laser", "tool"]));
     setEnv(pick(presetConfig,
       ["ground", "grid", "axes", "clouds", "sunInclination", "sunAzimuth"]));
   };
@@ -203,6 +206,7 @@ export const useConfig = () => {
     funcOtherPreset(preset)();
     setBedDim1({ bedZOffset: presetConfig.bedZOffset });
   };
+  const setTool = (tool: string) => () => setOther({ tool });
   useControls("Presets", {
     size: buttonGroup({
       "Jr": funcSizePreset("Jr"),
@@ -267,6 +271,11 @@ export const useConfig = () => {
     perspective: { value: init.perspective },
     bot: { value: init.bot },
     laser: { value: init.laser },
+    tool: init.tool,
+    toolSelect: buttonGroup({
+      "Rotary Tool": setTool("rotaryTool"),
+      "None": setTool(""),
+    }),
   }));
   const [environmentConfig, setEnv] = useControls("Environment", () => ({
     ground: { value: init.ground },

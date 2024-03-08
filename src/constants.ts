@@ -34,6 +34,8 @@ export const ASSETS = {
     housingVertical: "/3D/models/housing_vertical.glb",
     motorHorizontal: "/3D/models/motor_horizontal.glb",
     motorVertical: "/3D/models/motor_vertical.glb",
+    toolbay3: "/3D/models/toolbay_3.glb",
+    rotaryTool: "/3D/models/rotary_tool.glb",
   }
 };
 

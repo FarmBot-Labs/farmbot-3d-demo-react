@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { range } from "lodash";
 import { CrossSlide, CrossSlideFull } from "./parts/cross_slide";
 import { GantryWheelPlate, GantryWheelPlateFull } from "./parts/gantry_wheel_plate";
+import { RotaryTool, RotaryToolFull } from "./parts/rotary_tool";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -31,6 +32,8 @@ enum PartName {
   housingVertical = "80mm_Vertical_Motor_Housing",
   motorHorizontal = "M3_x_12mm_Screw",
   motorVertical = "M5_x_10mm_Screw",
+  toolbay3 = "mesh0_mesh",
+  toolbay3Logo = "mesh0_mesh_1",
 }
 
 type GantryWheelPlate = GLTF & {
@@ -81,6 +84,13 @@ type MotorVertical = GLTF & {
   nodes: { [PartName.motorVertical]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
 }
+type Toolbay3 = GLTF & {
+  nodes: {
+    [PartName.toolbay3]: THREE.Mesh;
+    [PartName.toolbay3Logo]: THREE.Mesh;
+  };
+  materials: never;
+}
 
 Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 
@@ -100,7 +110,7 @@ export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
-    columnLength, zAxisLength, zGantryOffset,
+    columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool,
   } = props.config;
   const zDir = -1;
   const zZero = columnLength + 40 - zGantryOffset;
@@ -134,6 +144,9 @@ export const Bot = (props: FarmbotModelProps) => {
   const housingVertical = useGLTF(ASSETS.models.housingVertical, LIB_DIR) as HousingVertical;
   const motorHorizontal = useGLTF(ASSETS.models.motorHorizontal, LIB_DIR) as MotorHorizontal;
   const motorVertical = useGLTF(ASSETS.models.motorVertical, LIB_DIR) as MotorVertical;
+  const toolbay3 = useGLTF(ASSETS.models.toolbay3, LIB_DIR) as Toolbay3;
+  const rotaryTool = useGLTF(ASSETS.models.rotaryTool, LIB_DIR) as RotaryToolFull;
+  const RotaryToolComponent = RotaryTool(rotaryTool);
   const [trackShape, setTrackShape] = useState<Shape>();
   const [beamShape, setBeamShape] = useState<Shape>();
   const [columnShape, setColumnShape] = useState<Shape>();
@@ -398,6 +411,14 @@ export const Bot = (props: FarmbotModelProps) => {
           rotation={[0, 0, 2.094]} />
       </group>
     </Trail>
+    <RotaryToolComponent name={"rotaryTool"} visible={tool == "rotaryTool"}
+      position={[
+        threeSpace(x + 11, bedLengthOuter) + bedXOffset,
+        threeSpace(y, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + utmHeight / 2 - 15,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000} />
     <Cylinder
       visible={laser}
       material-color={"red"}
@@ -458,6 +479,31 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={beltClip.nodes[PartName.beltClip].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
+    <group name={"toolbay3"}>
+      {[
+        { node: PartName.toolbay3, color: "black", id: "toolbay3" },
+        { node: PartName.toolbay3Logo, color: "white", id: "toolbay3Logo" },
+      ].map(part =>
+        <mesh name={part.id} key={part.id}
+          position={[
+            threeSpace(105 + bedWallThickness, bedLengthOuter),
+            threeSpace(bedWidthOuter / 2, bedWidthOuter),
+            60,
+          ]}
+          rotation={[0, 0, -Math.PI / 2]}
+          scale={1000}
+          geometry={toolbay3.nodes[part.node as keyof Toolbay3["nodes"]].geometry}>
+          <meshPhongMaterial color={part.color} />
+        </mesh>)}
+    </group>
+    <RotaryToolComponent name={"rotaryTool"} visible={tool != "rotaryTool"}
+      position={[
+        threeSpace(105 + bedWallThickness, bedLengthOuter),
+        threeSpace(bedWidthOuter / 2, bedWidthOuter),
+        70,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000} />
     <Line name={"bounds"}
       visible={labels}
       color={"white"}
