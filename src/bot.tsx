@@ -222,7 +222,7 @@ export const Bot = (props: FarmbotModelProps) => {
     }
   });
   const distanceToSoil = soilHeight + zDir * z;
-  const bedCCSupportHeight = Math.min(150, bedHeight / 2) - ccSupportSize / 2;
+  const bedCCSupportHeight = Math.min(150, bedHeight / 2);
   return <group name={"bot"} visible={props.config.bot}>
     {[0 - extrusionWidth, bedWidthOuter].map((y, index) => {
       const bedColumnYOffset = (tracks ? 0 : extrusionWidth) * (index == 0 ? 1 : -1);
@@ -331,7 +331,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"xCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 5),
+        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 35),
         { steps: 1, depth: 22, bevelEnabled: false },
       ]}
       position={[

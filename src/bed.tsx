@@ -149,7 +149,7 @@ export const Bed = (props: BedProps) => {
       position={[
         threeSpace(bedLengthOuter * 3 / 4, bedLengthOuter),
         threeSpace(-ccSupportSize / 2, bedWidthOuter),
-        -85,
+        -50 - ccSupportSize / 2,
       ]}>
       <meshPhongMaterial map={legWoodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
