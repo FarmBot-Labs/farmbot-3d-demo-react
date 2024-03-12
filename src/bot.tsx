@@ -1,4 +1,4 @@
-import { Box, Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
@@ -94,6 +94,36 @@ type Toolbay3 = GLTF & {
 
 Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 
+const ccPath =
+  (axisLength: number, y: number, curveDiaOverride?: number) => {
+    const lowerLength = (y + axisLength + 180) / 2;
+    const upperLength = lowerLength - y;
+    const curveDia = curveDiaOverride || 85;
+    const outerRadius = curveDia / 2;
+    const height = curveDiaOverride ? 15 : 20;
+    const innerRadius = outerRadius - height;
+
+    const path = new Shape();
+    path.moveTo(y + 20, 0);
+    path.lineTo(y + upperLength, 0);
+    path.arc(0, outerRadius, outerRadius, -Math.PI / 2, Math.PI / 2);
+    path.lineTo(0, curveDia);
+    path.lineTo(0, curveDia - 5);
+    path.lineTo(20, curveDia - height);
+    path.lineTo(lowerLength, curveDia - height);
+    path.arc(0, -innerRadius, innerRadius, Math.PI / 2, -Math.PI / 2, true);
+    if (curveDiaOverride) {
+      path.lineTo(y + 20, height - 1);
+      path.lineTo(y, 5);
+      path.lineTo(y, 0);
+    } else {
+      path.lineTo(y, height - 1);
+      path.lineTo(y, height - 5);
+    }
+    path.lineTo(y + 20, 0);
+    return path;
+  };
+
 interface FarmbotModelProps {
   config: Config;
 }
@@ -111,7 +141,7 @@ export const Bot = (props: FarmbotModelProps) => {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
-    cableCarriers,
+    cableCarriers, ccSupportSize,
   } = props.config;
   const zDir = -1;
   const zZero = columnLength + 40 - zGantryOffset;
@@ -192,6 +222,7 @@ export const Bot = (props: FarmbotModelProps) => {
     }
   });
   const distanceToSoil = soilHeight + zDir * z;
+  const bedCCSupportHeight = Math.min(150, bedHeight / 2) - ccSupportSize / 2;
   return <group name={"bot"} visible={props.config.bot}>
     {[0 - extrusionWidth, bedWidthOuter].map((y, index) => {
       const bedColumnYOffset = (tracks ? 0 : extrusionWidth) * (index == 0 ? 1 : -1);
@@ -297,19 +328,20 @@ export const Bot = (props: FarmbotModelProps) => {
           scale={[1000, 1000 * (index == 0 ? -1 : 1), 1000]} />
       </group>;
     })}
-    <group name={"xCC"} visible={cableCarriers}>
-      <Box name={"xCCLower"}
-        castShadow={true}
-        receiveShadow={true}
-        args={[bedLengthOuter / 2, 22, 15]}
-        position={[
-          threeSpace(bedLengthOuter / 4, bedLengthOuter),
-          threeSpace(-35, bedWidthOuter),
-          -Math.min(150, bedHeight / 2) + 7,
-        ]}>
-        <meshPhongMaterial color={"black"} />
-      </Box>
-    </group>
+    <Extrude name={"xCC"} visible={cableCarriers}
+      castShadow={true}
+      args={[
+        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 5),
+        { steps: 1, depth: 22, bevelEnabled: false },
+      ]}
+      position={[
+        threeSpace(botSizeX / 2, bedLengthOuter) + bedXOffset,
+        threeSpace((tracks ? 0 : extrusionWidth) - 15, bedWidthOuter),
+        -35,
+      ]}
+      rotation={[-Math.PI / 2, -Math.PI, 0 * Math.PI]}>
+      <meshPhongMaterial color={"black"} />
+    </Extrude>
     <CrossSlideComponent name={"crossSlide"}
       position={[
         threeSpace(x, bedLengthOuter) + bedXOffset,
@@ -380,19 +412,20 @@ export const Bot = (props: FarmbotModelProps) => {
           <meshPhongMaterial color={"silver"} />
         </mesh>)}
     </group>
-    <group name={"zCC"} visible={cableCarriers}>
-      <Box name={"zCCLower"}
-        castShadow={true}
-        receiveShadow={true}
-        args={[20, 60, zAxisLength - 400]}
-        position={[
-          threeSpace(x + 35, bedLengthOuter) + bedXOffset,
-          threeSpace(y + 5, bedWidthOuter) + bedYOffset,
-          zZero + zDir * z + zAxisLength / 2,
-        ]}>
-        <meshPhongMaterial color={"black"} />
-      </Box>
-    </group>
+    <Extrude name={"zCC"} visible={cableCarriers}
+      castShadow={true}
+      args={[
+        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 90),
+        { steps: 1, depth: 60, bevelEnabled: false },
+      ]}
+      position={[
+        threeSpace(x - 39, bedLengthOuter) + bedXOffset,
+        threeSpace(y - 25, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + 200,
+      ]}
+      rotation={[Math.PI / 2, Math.PI, Math.PI / 2]}>
+      <meshPhongMaterial color={"black"} />
+    </Extrude>
     <mesh name={"zStopMax"}
       position={[
         threeSpace(x - 5, bedLengthOuter) + bedXOffset,
@@ -484,19 +517,20 @@ export const Bot = (props: FarmbotModelProps) => {
           <meshPhongMaterial color={"silver"} />
         </mesh>)}
     </group>
-    <group name={"yCC"} visible={cableCarriers}>
-      <Box name={"yCCLower"}
-        castShadow={true}
-        receiveShadow={true}
-        args={[60, botSizeY, 20]}
-        position={[
-          threeSpace(x - 60, bedLengthOuter) + bedXOffset,
-          threeSpace(botSizeY / 2 + 20, bedWidthOuter) + bedYOffset,
-          columnLength + 75,
-        ]}>
-        <meshPhongMaterial color={"black"} />
-      </Box>
-    </group>
+    <Extrude name={"yCC"} visible={cableCarriers}
+      castShadow={true}
+      args={[
+        ccPath(botSizeY, y + 40),
+        { steps: 1, depth: 60, bevelEnabled: false },
+      ]}
+      position={[
+        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(20, bedWidthOuter) + bedYOffset,
+        columnLength + 150,
+      ]}
+      rotation={[-Math.PI / 2, -Math.PI / 2, 0]}>
+      <meshPhongMaterial color={"black"} />
+    </Extrude>
     <mesh name={"yStopMin"}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
