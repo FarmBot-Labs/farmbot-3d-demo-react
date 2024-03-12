@@ -8,11 +8,11 @@ import {
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
-import { random, range, sample } from "lodash";
+import { find } from "lodash";
 import { threeSpace } from "./helpers";
 import { Sky } from './sky';
 import { useConfig } from "./config";
-import { ASSETS, PLANTS } from "./constants";
+import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PresetButton } from "./button";
 
@@ -89,6 +89,7 @@ const Model = () => {
     <Clouds name={"clouds"} visible={config.clouds} renderOrder={1}
       texture={ASSETS.textures.cloud}>
       <Cloud position={[0, 0, 3000]}
+        seed={0}
         bounds={[5000, 5000, 1000]}
         segments={80}
         volume={2500}
@@ -122,8 +123,7 @@ const Model = () => {
         z={-groundZ} />)}
     <Bed config={config} />
     <Bot config={config} />
-    {range(config.plants).map(i => {
-      const plant = sample(PLANTS) as typeof PLANTS[0];
+    {GARDENS[config.plants].map((plant, i) => {
       const min = {
         x: config.bedXOffset,
         y: config.bedYOffset,
@@ -132,17 +132,23 @@ const Model = () => {
         x: config.bedXOffset + config.botSizeX,
         y: config.bedYOffset + config.botSizeY,
       }
-      const randomPosition = new Vector3(
-        threeSpace(random(min.x, max.x), config.bedLengthOuter),
-        threeSpace(random(min.y, max.y), config.bedWidthOuter),
+      if (plant.x < min.x || plant.x > max.x
+        || plant.y < min.y || plant.y > max.y) {
+        return;
+      }
+      const plantData =
+        find(PLANTS, ["label", plant.plant]) as { label: string, icon: string };
+      const position = new Vector3(
+        threeSpace(plant.x, config.bedLengthOuter),
+        threeSpace(plant.y, config.bedWidthOuter),
         config.columnLength - 100 - config.soilHeight,
       );
-      return <Billboard key={i} follow={true} position={randomPosition}>
-        <Image url={plant.icon} scale={200} position={[0, 100, 1]}
+      return <Billboard key={i} follow={true} position={position}>
+        <Image url={plantData.icon} scale={200} position={[0, 100, 1]}
           transparent={true} />
         <Text visible={config.labels} fontSize={40} position={[0, 225, 1]}
           font={ASSETS.fonts.cabin}>
-          {plant.label}
+          {plantData.label}
         </Text>
       </Billboard>;
     })}

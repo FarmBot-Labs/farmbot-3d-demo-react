@@ -1,3 +1,5 @@
+import { random, range, sample } from "lodash";
+
 export const ASSETS = {
   fonts: {
     cabin: "/3D/fonts/Cabin.ttf",
@@ -44,3 +46,21 @@ export const PLANTS = [
   { label: "Thai Basil", icon: ASSETS.icons.basil },
   { label: "Bok Choy", icon: ASSETS.icons.bokChoy },
 ];
+
+export const GARDENS: { [x: string]: { plant: string, x: number, y: number }[] } = {
+  rows: [
+    { plant: "Swiss Chard", x: -1000, y: -1000 },
+    ...range(15).map(i => ({ plant: "Swiss Chard", x: 300 + 400 * i, y: 200 })),
+    ...range(15).map(i => ({ plant: "Thai Basil", x: 300 + 400 * i, y: 600 })),
+    ...range(15).map(i => ({ plant: "Bok Choy", x: 300 + 400 * i, y: 1000 })),
+    ...range(15).map(i => ({ plant: "Swiss Chard", x: 300 + 400 * i, y: 1400 })),
+    ...range(15).map(i => ({ plant: "Thai Basil", x: 300 + 400 * i, y: 1800 })),
+    ...range(15).map(i => ({ plant: "Bok Choy", x: 300 + 400 * i, y: 2200 })),
+    ...range(15).map(i => ({ plant: "Swiss Chard", x: 300 + 400 * i, y: 2600 })),
+  ],
+  random: range(100).map(() => ({
+    plant: sample(PLANTS.map(plant => plant.label)) as string,
+    x: random(0, 6000),
+    y: random(0, 3000),
+  })),
+};

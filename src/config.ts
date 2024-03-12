@@ -28,7 +28,7 @@ export interface Config {
   bedBrightness: number;
   soilBrightness: number;
   soilHeight: number;
-  plants: number;
+  plants: string;
   labels: boolean;
   ground: boolean;
   grid: boolean;
@@ -72,7 +72,7 @@ const INITIAL: Config = {
   bedBrightness: 8,
   soilBrightness: 6,
   soilHeight: 500,
-  plants: 20,
+  plants: "random",
   labels: true,
   ground: true,
   grid: true,
@@ -160,7 +160,7 @@ export const PRESETS: Record<string, Config> = {
     legsFlush: false,
     bedBrightness: 8,
     soilBrightness: 6,
-    plants: 0,
+    plants: "rows",
     labels: false,
     ground: true,
     grid: false,
@@ -217,6 +217,7 @@ export const useConfig = (): UseConfig => {
     setBedDim1({ bedZOffset: presetConfig.bedZOffset });
   };
   const setTool = (tool: string) => () => setOther({ tool });
+  const setPlants = (plants: string) => () => setOther({ plants });
   useControls("Presets", {
     size: buttonGroup({
       "Jr": funcSizePreset("Jr"),
@@ -275,7 +276,11 @@ export const useConfig = (): UseConfig => {
   }));
   const [otherConfig, setOther] = useControls("Other", () => ({
     label: init.label,
-    plants: { value: init.plants, min: 0, max: 3000, step: 1 },
+    plants: init.plants,
+    plantsSelect: buttonGroup({
+      rows: setPlants("rows"),
+      random: setPlants("random"),
+    }),
     labels: { value: init.labels },
     trail: { value: init.trail },
     perspective: { value: init.perspective },
