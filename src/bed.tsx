@@ -2,7 +2,6 @@ import { Box, Extrude } from "@react-three/drei";
 import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
-import "./bed.css";
 import { range } from "lodash";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";

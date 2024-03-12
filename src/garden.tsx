@@ -1,7 +1,9 @@
+import React from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
   Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
+  Html,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -11,6 +13,8 @@ import { threeSpace } from "./helpers";
 import { Sky } from './sky';
 import { useConfig } from "./config";
 import { ASSETS, PLANTS } from "./constants";
+import "./garden.css";
+import { PresetButton } from "./button";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -25,7 +29,7 @@ interface GardenProps {
 }
 
 const Model = () => {
-  const config = useConfig();
+  const { config, choosePreset } = useConfig();
   const groundZ = config.bedZOffset + config.bedHeight;
   const midPoint = {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
@@ -37,6 +41,7 @@ const Model = () => {
     10000 * Math.sin(config.sunInclination * Math.PI / 180)
   );
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
+  const [hovered, setHovered] = React.useState("");
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000}
@@ -95,6 +100,26 @@ const Model = () => {
         opacity={0.85}
         fade={5000} />
     </Clouds>
+    {["Genesis", "Genesis XL"].map((preset, index) =>
+      <Html key={index}
+        position={[
+          threeSpace(0, 10000) + index * 500,
+          threeSpace(0, 10000),
+          -groundZ,
+        ]}>
+        <button className={"preset-button"}
+          onClick={choosePreset(preset)}>
+          {preset}
+        </button>
+      </Html>)}
+    {["Genesis", "Genesis XL"].map((preset, index) =>
+      <PresetButton key={index}
+        index={index}
+        preset={preset}
+        choosePreset={choosePreset}
+        hovered={hovered}
+        setHovered={setHovered}
+        z={-groundZ} />)}
     <Bed config={config} />
     <Bot config={config} />
     {range(config.plants).map(i => {

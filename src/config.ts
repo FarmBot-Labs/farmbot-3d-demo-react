@@ -177,7 +177,12 @@ export const PRESETS: Record<string, Config> = {
   },
 };
 
-export const useConfig = () => {
+interface UseConfig {
+  config: Config;
+  choosePreset(preset: string): () => void;
+}
+
+export const useConfig = (): UseConfig => {
   const funcSizePreset = (preset: string) => () => {
     const presetConfig = PRESETS[preset];
     setBotSize0(pick(presetConfig, ["botSizeX", "botSizeY", "botSizeZ"]));
@@ -300,5 +305,5 @@ export const useConfig = () => {
     ...otherConfig,
     ...environmentConfig,
   };
-  return config;
+  return { config, choosePreset: funcSizePreset };
 };

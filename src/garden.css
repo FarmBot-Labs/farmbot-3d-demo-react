@@ -1,0 +1,21 @@
+.garden-bed-3d-model {
+  height: 90vh;
+}
+
+.preset-button {
+  background: #ccc;
+  border: none;
+  color: black;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 1rem;
+
+  &:hover {
+    background: white;
+  }
+
+  &:active {
+    transform: translate(1px, 1px);
+  }
+}
