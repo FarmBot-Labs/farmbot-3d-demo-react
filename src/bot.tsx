@@ -95,12 +95,11 @@ type Toolbay3 = GLTF & {
 Object.values(ASSETS.models).map(model => useGLTF.preload(model, LIB_DIR));
 
 const ccPath =
-  (axisLength: number, y: number, curveDiaOverride?: number) => {
+  (axisLength: number, y: number, curveDia: number, isX?: boolean) => {
     const lowerLength = (y + axisLength + 180) / 2;
     const upperLength = lowerLength - y;
-    const curveDia = curveDiaOverride || 85;
     const outerRadius = curveDia / 2;
-    const height = curveDiaOverride ? 15 : 20;
+    const height = isX ? 15 : 20;
     const innerRadius = outerRadius - height;
 
     const path = new Shape();
@@ -112,7 +111,7 @@ const ccPath =
     path.lineTo(20, curveDia - height);
     path.lineTo(lowerLength, curveDia - height);
     path.arc(0, -innerRadius, innerRadius, Math.PI / 2, -Math.PI / 2, true);
-    if (curveDiaOverride) {
+    if (isX) {
       path.lineTo(y + 20, height - 1);
       path.lineTo(y, 5);
       path.lineTo(y, 0);
@@ -331,7 +330,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"xCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 35),
+        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 35, true),
         { steps: 1, depth: 22, bevelEnabled: false },
       ]}
       position={[
@@ -415,7 +414,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"zCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 90),
+        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 90, 85),
         { steps: 1, depth: 60, bevelEnabled: false },
       ]}
       position={[
@@ -509,7 +508,7 @@ export const Bot = (props: FarmbotModelProps) => {
           position={[
             threeSpace(x - 30, bedLengthOuter) + bedXOffset,
             threeSpace(50 + i * 200, bedWidthOuter) + bedYOffset,
-            columnLength + 45,
+            columnLength + 60,
           ]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={1000}
@@ -520,7 +519,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"yCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeY, y + 40),
+        ccPath(botSizeY, y + 40, 70),
         { steps: 1, depth: 60, bevelEnabled: false },
       ]}
       position={[
