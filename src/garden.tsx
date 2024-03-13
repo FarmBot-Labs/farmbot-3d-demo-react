@@ -92,7 +92,6 @@ const Model = () => {
     return positions;
   };
   const plants = calculatePlantPositions();
-
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000}
@@ -114,6 +113,8 @@ const Model = () => {
       <GizmoViewcube />
     </GizmoHelper>
     <pointLight intensity={6} distance={20000} decay={0} castShadow={true}
+      shadow-mapSize={[512, 512]}
+      shadow-normalBias={100} // warning: distorts shadows
       position={sunPosition} />
     <ambientLight intensity={1} />
     <Plane name={"ground"}
