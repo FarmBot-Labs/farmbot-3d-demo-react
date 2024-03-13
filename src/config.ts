@@ -277,10 +277,13 @@ export const useConfig = (): UseConfig => {
   const [otherConfig, setOther] = useControls("Other", () => ({
     label: init.label,
     plants: init.plants,
-    plantsSelect: buttonGroup({
+    garden: buttonGroup({
       spring: setPlants("spring"),
+    }),
+    " ": buttonGroup({
       minimal: setPlants("minimal"),
       random: setPlants("random"),
+      none: setPlants(""),
     }),
     labels: { value: init.labels },
     trail: { value: init.trail },

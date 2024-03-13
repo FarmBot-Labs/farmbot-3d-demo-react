@@ -51,14 +51,16 @@ const Model = () => {
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
   const [hovered, setHovered] = React.useState("");
 
+  const gardenPlants = GARDENS[config.plants] || [];
   const calculatePlantPositions = (): Plant[] => {
     const positions: Plant[] = [];
     const startX = 350;
     let nextX = startX;
     let index = 0;
     while (nextX <= config.bedLengthOuter) {
-      const plantKey = GARDENS[config.plants][index];
+      const plantKey = gardenPlants[index];
       const plant = PLANTS[plantKey];
+      if (!plant) { return []; }
       positions.push({
         ...plant,
         x: nextX,
@@ -77,13 +79,13 @@ const Model = () => {
           y: config.bedWidthOuter / 2 - plant.spread * i,
         });
       }
-      if (index + 1 < GARDENS[config.plants].length) {
-        const nextPlant = PLANTS[GARDENS[config.plants][index + 1]];
+      if (index + 1 < gardenPlants.length) {
+        const nextPlant = PLANTS[gardenPlants[index + 1]];
         nextX += (plant.spread / 2) + (nextPlant.spread / 2);
         index++;
       } else {
         index = 0;
-        const nextPlant = PLANTS[GARDENS[config.plants][0]];
+        const nextPlant = PLANTS[gardenPlants[0]];
         nextX += (plant.spread / 2) + (nextPlant.spread / 2);
       }
     }
@@ -176,7 +178,7 @@ const Model = () => {
       <Billboard key={i} follow={true} position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
         threeSpace(plant.y, config.bedWidthOuter),
-        config.columnLength - 100 - config.soilHeight,
+        config.columnLength - 100 - config.soilHeight + 5,
       )}>
         <Image url={plant.icon} scale={plant.size} position={[0, plant.size / 2, 1]}
           transparent={true} />
