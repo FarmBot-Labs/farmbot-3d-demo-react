@@ -1,53 +1,94 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { sampleSize } from "lodash";
+import cabin from "/3D/fonts/Cabin.ttf";
+import cabinBold from "/3D/fonts/Cabin_Bold.ttf";
+import cloud from "/3D/textures/cloud.avif";
+import grass from "/3D/textures/grass.avif";
+import wood from "/3D/textures/wood.avif";
+import soil from "/3D/textures/soil.avif";
+import aluminum from "/3D/textures/aluminum.avif";
+import basil from "/3D/icons/thai_basil.avif";
+import beet from "/3D/icons/beet.avif";
+import bibbLettuce from "/3D/icons/bibb_lettuce.avif";
+import bokChoy from "/3D/icons/bok_choy.avif";
+import broccoli from "/3D/icons/broccoli.avif";
+import carrot from "/3D/icons/carrot.avif";
+import cauliflower from "/3D/icons/cauliflower.avif";
+import chard from "/3D/icons/swiss_chard.avif";
+import icicleRadish from "/3D/icons/icicle_radish.avif";
+import rainbowChard from "/3D/icons/rainbow_chard.avif";
+import redRussianKale from "/3D/icons/red_russian_kale.avif";
+import snapPea from "/3D/icons/snap_pea.avif";
+import spinach from "/3D/icons/spinach.avif";
+import track from "/3D/shapes/track.svg";
+import column from "/3D/shapes/column.svg";
+import beam from "/3D/shapes/beam.svg";
+import zAxis from "/3D/shapes/z_axis.svg";
+import gantryWheelPlate from "/3D/models/gantry_wheel_plate.glb";
+import leftBracket from "/3D/models/left_bracket.glb";
+import rightBracket from "/3D/models/right_bracket.glb";
+import crossSlide from "/3D/models/cross_slide.glb";
+import beltClip from "/3D/models/belt_clip.glb";
+import zStop from "/3D/models/z_stop.glb";
+import utm from "/3D/models/utm.glb";
+import ccHorizontal from "/3D/models/cc_horizontal.glb";
+import ccVertical from "/3D/models/cc_vertical.glb";
+import housingVertical from "/3D/models/housing_vertical.glb";
+import motorHorizontal from "/3D/models/motor_horizontal.glb";
+import motorVertical from "/3D/models/motor_vertical.glb";
+import toolbay3 from "/3D/models/toolbay_3.glb";
+import rotaryTool from "/3D/models/rotary_tool.glb";
+
 
 export const ASSETS = {
   fonts: {
-    cabin: "/3D/fonts/Cabin.ttf",
-    cabinBold: "/3D/fonts/Cabin_Bold.ttf",
+    cabin,
+    cabinBold,
   },
   textures: {
-    cloud: "/3D/textures/cloud.avif",
-    grass: "/3D/textures/grass.avif",
-    wood: "/3D/textures/wood.avif",
-    soil: "/3D/textures/soil.avif",
-    aluminum: "/3D/textures/aluminum.avif",
+    cloud,
+    grass,
+    wood,
+    soil,
+    aluminum,
   },
   icons: {
-    basil: "/3D/icons/thai_basil.avif",
-    beet: "/3D/icons/beet.avif",
-    bibbLettuce: "/3D/icons/bibb_lettuce.avif",
-    bokChoy: "/3D/icons/bok_choy.avif",
-    broccoli: "/3D/icons/broccoli.avif",
-    carrot: "/3D/icons/carrot.avif",
-    cauliflower: "/3D/icons/cauliflower.avif",
-    chard: "/3D/icons/swiss_chard.avif",
-    icicleRadish: "/3D/icons/icicle_radish.avif",
-    rainbowChard: "/3D/icons/rainbow_chard.avif",
-    redRussianKale: "/3D/icons/red_russian_kale.avif",
-    snapPea: "/3D/icons/snap_pea.avif",
-    spinach: "/3D/icons/spinach.avif",
+    basil,
+    beet,
+    bibbLettuce,
+    bokChoy,
+    broccoli,
+    carrot,
+    cauliflower,
+    chard,
+    icicleRadish,
+    rainbowChard,
+    redRussianKale,
+    snapPea,
+    spinach,
   },
   shapes: {
-    track: "/3D/shapes/track.svg",
-    column: "/3D/shapes/column.svg",
-    beam: "/3D/shapes/beam.svg",
-    zAxis: "/3D/shapes/z_axis.svg",
+    track,
+    column,
+    beam,
+    zAxis,
   },
   models: {
-    gantryWheelPlate: "/3D/models/gantry_wheel_plate.glb",
-    leftBracket: "/3D/models/left_bracket.glb",
-    rightBracket: "/3D/models/right_bracket.glb",
-    crossSlide: "/3D/models/cross_slide.glb",
-    beltClip: "/3D/models/belt_clip.glb",
-    zStop: "/3D/models/z_stop.glb",
-    utm: "/3D/models/utm.glb",
-    ccHorizontal: "/3D/models/cc_horizontal.glb",
-    ccVertical: "/3D/models/cc_vertical.glb",
-    housingVertical: "/3D/models/housing_vertical.glb",
-    motorHorizontal: "/3D/models/motor_horizontal.glb",
-    motorVertical: "/3D/models/motor_vertical.glb",
-    toolbay3: "/3D/models/toolbay_3.glb",
-    rotaryTool: "/3D/models/rotary_tool.glb",
+    gantryWheelPlate,
+    leftBracket,
+    rightBracket,
+    crossSlide,
+    beltClip,
+    zStop,
+    utm,
+    ccHorizontal,
+    ccVertical,
+    housingVertical,
+    motorHorizontal,
+    motorVertical,
+    toolbay3,
+    rotaryTool,
   }
 };
 
@@ -80,7 +121,7 @@ export const PLANTS: Record<string, Plant> = {
 
 export const GARDENS: Gardens = {
   spring: ["beet", "bibbLettuce", "broccoli", "carrot", "cauliflower", "rainbowChard",
-  "icicleRadish", "redRussianKale", "bokChoy", "spinach", "snapPea"],
+    "icicleRadish", "redRussianKale", "bokChoy", "spinach", "snapPea"],
   minimal: ["chard", "basil", "bokChoy"],
   random: sampleSize(Object.keys(PLANTS), 8),
 };

@@ -13,14 +13,22 @@ import { BufferGeometry } from "three";
 import { debounce, some } from "lodash";
 import "./box.css";
 import { BindingTargetDropdown } from "./stub_components";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import box from "/3D/models/box.glb";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import btn from "/3D/models/push_button.glb";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import led from "/3D/models/led_indicator.glb";
 
-const ASSETS = "/3D/";
-const LIB_DIR = `${ASSETS}lib/`;
+const LIB_DIR = "../farmbot-3d-demo-react/3D/lib/";
 
 const MODELS = {
-  box: `${ASSETS}models/box.glb`,
-  btn: `${ASSETS}models/push_button.glb`,
-  led: `${ASSETS}models/led_indicator.glb`,
+  box,
+  btn,
+  led,
 };
 
 type Box = GLTF & {
