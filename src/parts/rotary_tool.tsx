@@ -1,56 +1,59 @@
+import { InstancedBufferAttribute } from "three";
 import { GLTF } from "three-stdlib";
+
+type Mesh = THREE.Mesh & { instanceMatrix: InstancedBufferAttribute | undefined };
 
 export type RotaryToolFull = GLTF & {
   nodes: {
-    M25_x_6mm_Screw: THREE.Mesh
-    mesh0_mesh: THREE.Mesh
-    mesh0_mesh_1: THREE.Mesh
-    mesh0_mesh_2: THREE.Mesh
-    mesh0_mesh_3: THREE.Mesh
-    mesh0_mesh_4: THREE.Mesh
-    mesh0_mesh_5: THREE.Mesh
-    mesh0_mesh_6: THREE.Mesh
-    mesh0_mesh_7: THREE.Mesh
-    mesh0_mesh_8: THREE.Mesh
-    mesh0_mesh_9: THREE.Mesh
-    mesh0_mesh_10: THREE.Mesh
-    mesh0_mesh_11: THREE.Mesh
-    mesh0_mesh_12: THREE.Mesh
-    mesh0_mesh_13: THREE.Mesh
-    mesh0_mesh_14: THREE.Mesh
-    mesh0_mesh_15: THREE.Mesh
-    mesh0_mesh_16: THREE.Mesh
-    mesh0_mesh_17: THREE.Mesh
-    mesh476_mesh: THREE.Mesh
-    mesh476_mesh_1: THREE.Mesh
-    mesh476_mesh_2: THREE.Mesh
-    mesh476_mesh_3: THREE.Mesh
-    mesh476_mesh_4: THREE.Mesh
-    mesh476_mesh_5: THREE.Mesh
-    mesh476_mesh_6: THREE.Mesh
-    mesh476_mesh_7: THREE.Mesh
-    mesh476_mesh_8: THREE.Mesh
-    mesh476_mesh_9: THREE.Mesh
-    mesh476_mesh_10: THREE.Mesh
-    mesh476_mesh_11: THREE.Mesh
-    mesh476_mesh_12: THREE.Mesh
-    mesh476_mesh_13: THREE.Mesh
-    mesh476_mesh_14: THREE.Mesh
-    mesh476_mesh_15: THREE.Mesh
-    mesh476_mesh_16: THREE.Mesh
-    mesh476_mesh_17: THREE.Mesh
-    mesh476_mesh_18: THREE.Mesh
-    mesh476_mesh_19: THREE.Mesh
-    mesh476_mesh_20: THREE.Mesh
-    mesh476_mesh_21: THREE.Mesh
-    mesh476_mesh_22: THREE.Mesh
-    mesh476_mesh_23: THREE.Mesh
-    mesh476_mesh_24: THREE.Mesh
-    mesh476_mesh_25: THREE.Mesh
-  }
+    M25_x_6mm_Screw: THREE.Mesh;
+    mesh0_mesh: Mesh;
+    mesh0_mesh_1: Mesh;
+    mesh0_mesh_2: Mesh;
+    mesh0_mesh_3: Mesh;
+    mesh0_mesh_4: Mesh;
+    mesh0_mesh_5: Mesh;
+    mesh0_mesh_6: Mesh;
+    mesh0_mesh_7: Mesh;
+    mesh0_mesh_8: Mesh;
+    mesh0_mesh_9: Mesh;
+    mesh0_mesh_10: Mesh;
+    mesh0_mesh_11: Mesh;
+    mesh0_mesh_12: Mesh;
+    mesh0_mesh_13: Mesh;
+    mesh0_mesh_14: Mesh;
+    mesh0_mesh_15: Mesh;
+    mesh0_mesh_16: Mesh;
+    mesh0_mesh_17: Mesh;
+    mesh476_mesh: Mesh;
+    mesh476_mesh_1: Mesh;
+    mesh476_mesh_2: Mesh;
+    mesh476_mesh_3: Mesh;
+    mesh476_mesh_4: Mesh;
+    mesh476_mesh_5: Mesh;
+    mesh476_mesh_6: Mesh;
+    mesh476_mesh_7: Mesh;
+    mesh476_mesh_8: Mesh;
+    mesh476_mesh_9: Mesh;
+    mesh476_mesh_10: Mesh;
+    mesh476_mesh_11: Mesh;
+    mesh476_mesh_12: Mesh;
+    mesh476_mesh_13: Mesh;
+    mesh476_mesh_14: Mesh;
+    mesh476_mesh_15: Mesh;
+    mesh476_mesh_16: Mesh;
+    mesh476_mesh_17: Mesh;
+    mesh476_mesh_18: Mesh;
+    mesh476_mesh_19: Mesh;
+    mesh476_mesh_20: Mesh;
+    mesh476_mesh_21: Mesh;
+    mesh476_mesh_22: Mesh;
+    mesh476_mesh_23: Mesh;
+    mesh476_mesh_24: Mesh;
+    mesh476_mesh_25: Mesh;
+  };
   materials: {
-    PaletteMaterial001: THREE.MeshStandardMaterial
-  }
+    PaletteMaterial001: THREE.MeshStandardMaterial;
+  };
 }
 
 export const RotaryTool = (model: RotaryToolFull) => (props: JSX.IntrinsicElements["group"]) => {

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ReactThreeFiber } from '@react-three/fiber'
 import { Sky as SkyImpl } from 'three-stdlib'
 import { Vector3 } from 'three'
-import { ForwardRefComponent } from '../helpers/ts-utils'
+import { ForwardRefComponent } from '@react-three/drei/helpers/ts-utils'
 
 type Props = {
   distance?: number

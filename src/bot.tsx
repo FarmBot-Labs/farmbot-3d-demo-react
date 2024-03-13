@@ -141,7 +141,7 @@ export const Bot = (props: FarmbotModelProps) => {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
-    cableCarriers, ccSupportSize,
+    cableCarriers,
   } = props.config;
   const zDir = -1;
   const zZero = columnLength + 40 - zGantryOffset;

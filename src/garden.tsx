@@ -9,7 +9,7 @@ import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { threeSpace } from "./helpers";
-import { Sky } from './sky';
+import { Sky } from "./sky";
 import { useConfig } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
@@ -53,7 +53,7 @@ const Model = () => {
 
   const calculatePlantPositions = (): Plant[] => {
     const positions: Plant[] = [];
-    let startX = 350;
+    const startX = 350;
     let nextX = startX;
     let index = 0;
     while (nextX <= config.bedLengthOuter) {
@@ -86,7 +86,7 @@ const Model = () => {
         const nextPlant = PLANTS[GARDENS[config.plants][0]];
         nextX += (plant.spread / 2) + (nextPlant.spread / 2);
       }
-    };
+    }
     return positions;
   };
   const plants = calculatePlantPositions();
