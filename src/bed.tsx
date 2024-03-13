@@ -167,7 +167,7 @@ export const Bed = (props: BedProps) => {
         -bedStartZ,
       ]}>
       <meshPhongMaterial map={soilTexture} color={soilColor}
-        shininess={5} />
+        shininess={0} />
     </Extrude>
     {legXPositions.map((x, index) =>
       <group key={index}>
