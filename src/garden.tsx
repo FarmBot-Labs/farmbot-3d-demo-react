@@ -8,7 +8,6 @@ import {
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
-import { find } from "lodash";
 import { threeSpace } from "./helpers";
 import { Sky } from './sky';
 import { useConfig } from "./config";
@@ -28,6 +27,15 @@ interface GardenProps {
 
 }
 
+interface Plant {
+  label: string;
+  icon: string;
+  size: number;
+  spread: number;
+  x: number;
+  y: number;
+}
+
 const Model = () => {
   const { config, choosePreset } = useConfig();
   const groundZ = config.bedZOffset + config.bedHeight;
@@ -42,6 +50,47 @@ const Model = () => {
   );
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
   const [hovered, setHovered] = React.useState("");
+
+  const calculatePlantPositions = (): Plant[] => {
+    const positions: Plant[] = [];
+    let startX = 350;
+    let nextX = startX;
+    let index = 0;
+    while (nextX <= config.bedLengthOuter) {
+      const plantKey = GARDENS[config.plants][index];
+      const plant = PLANTS[plantKey];
+      positions.push({
+        ...plant,
+        x: nextX,
+        y: config.bedWidthOuter / 2,
+      });
+      const plantsPerHalfRow = Math.ceil((config.bedWidthOuter - plant.spread) / 2 / plant.spread);
+      for (let i = 1; i < plantsPerHalfRow; i++) {
+        positions.push({
+          ...plant,
+          x: nextX,
+          y: config.bedWidthOuter / 2 + plant.spread * i,
+        });
+        positions.push({
+          ...plant,
+          x: nextX,
+          y: config.bedWidthOuter / 2 - plant.spread * i,
+        });
+      }
+      if (index + 1 < GARDENS[config.plants].length) {
+        const nextPlant = PLANTS[GARDENS[config.plants][index + 1]];
+        nextX += (plant.spread / 2) + (nextPlant.spread / 2);
+        index++;
+      } else {
+        index = 0;
+        const nextPlant = PLANTS[GARDENS[config.plants][0]];
+        nextX += (plant.spread / 2) + (nextPlant.spread / 2);
+      }
+    };
+    return positions;
+  };
+  const plants = calculatePlantPositions();
+
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000}
@@ -88,7 +137,7 @@ const Model = () => {
       fadeStrength={1} />
     <Clouds name={"clouds"} visible={config.clouds} renderOrder={1}
       texture={ASSETS.textures.cloud}>
-      <Cloud position={[0, 0, 3000]}
+      <Cloud position={[0, 0, 5000]}
         seed={0}
         bounds={[5000, 5000, 1000]}
         segments={80}
@@ -123,35 +172,20 @@ const Model = () => {
         z={-groundZ} />)}
     <Bed config={config} />
     <Bot config={config} />
-    {GARDENS[config.plants].map((plant, i) => {
-      const min = {
-        x: config.bedXOffset,
-        y: config.bedYOffset,
-      }
-      const max = {
-        x: config.bedXOffset + config.botSizeX,
-        y: config.bedYOffset + config.botSizeY,
-      }
-      if (plant.x < min.x || plant.x > max.x
-        || plant.y < min.y || plant.y > max.y) {
-        return;
-      }
-      const plantData =
-        find(PLANTS, ["label", plant.plant]) as { label: string, icon: string };
-      const position = new Vector3(
+    {plants.map((plant, i) => (
+      <Billboard key={i} follow={true} position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
         threeSpace(plant.y, config.bedWidthOuter),
         config.columnLength - 100 - config.soilHeight,
-      );
-      return <Billboard key={i} follow={true} position={position}>
-        <Image url={plantData.icon} scale={200} position={[0, 100, 1]}
+      )}>
+        <Image url={plant.icon} scale={plant.size} position={[0, plant.size / 2, 1]}
           transparent={true} />
-        <Text visible={config.labels} fontSize={40} position={[0, 225, 1]}
+        <Text visible={config.labels} fontSize={40} position={[0, plant.size + 25, 1]}
           font={ASSETS.fonts.cabin}>
-          {plantData.label}
+          {plant.label}
         </Text>
-      </Billboard>;
-    })}
+      </Billboard>
+    ))}
     <Text fontSize={200} visible={config.labels}
       font={ASSETS.fonts.cabinBold}
       color={"white"}
