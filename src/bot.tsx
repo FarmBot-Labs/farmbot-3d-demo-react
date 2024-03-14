@@ -398,12 +398,12 @@ export const Bot = (props: FarmbotModelProps) => {
       ]}
       rotation={[Math.PI / 2, 0, 0]} />
     <group name={"ccVertical"}>
-      {range((zAxisLength - 500) / 200).map(i =>
+      {range((zAxisLength - 350) / 200).map(i =>
         <mesh key={i}
           position={[
             threeSpace(x + 20, bedLengthOuter) + bedXOffset,
             threeSpace(y + 55, bedWidthOuter) + bedYOffset,
-            zZero + zDir * z + (i + 1) * 200,
+            zZero + zDir * z + i * 200 + 125,
           ]}
           rotation={[0, 0, Math.PI / 2]}
           scale={1000}
@@ -414,13 +414,13 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"zCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 90, 85),
+        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 15, 85),
         { steps: 1, depth: 60, bevelEnabled: false },
       ]}
       position={[
         threeSpace(x - 39, bedLengthOuter) + bedXOffset,
         threeSpace(y - 25, bedWidthOuter) + bedYOffset,
-        zZero + zDir * z + 200,
+        zZero + zDir * z + 125,
       ]}
       rotation={[Math.PI / 2, Math.PI, Math.PI / 2]}>
       <meshPhongMaterial color={"black"} />
@@ -503,11 +503,11 @@ export const Bot = (props: FarmbotModelProps) => {
       <meshPhongMaterial color={"white"} map={aluminumTexture} side={DoubleSide} />
     </Extrude>
     <group name={"ccHorizontal"}>
-      {range((botSizeY - 10) / 200).map(i =>
+      {range((botSizeY - 10) / 300).map(i =>
         <mesh key={i}
           position={[
             threeSpace(x - 30, bedLengthOuter) + bedXOffset,
-            threeSpace(50 + i * 200, bedWidthOuter) + bedYOffset,
+            threeSpace(50 + i * 300, bedWidthOuter) + bedYOffset,
             columnLength + 60,
           ]}
           rotation={[Math.PI / 2, 0, 0]}
