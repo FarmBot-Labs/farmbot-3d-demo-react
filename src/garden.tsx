@@ -183,11 +183,11 @@ const Model = () => {
       <Billboard key={i} follow={true} position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
         threeSpace(plant.y, config.bedWidthOuter),
-        zZero(config) - config.soilHeight + 5,
+        zZero(config) - config.soilHeight + plant.size / 2,
       )}>
-        <Image url={plant.icon} scale={plant.size} position={[0, plant.size / 2, 1]}
+        <Image url={plant.icon} scale={plant.size}
           transparent={true} />
-        <Text visible={config.labels} fontSize={40} position={[0, plant.size + 25, 1]}
+        <Text visible={config.labels} fontSize={40} position={[0, plant.size / 2 + 25, 0]}
           font={ASSETS.fonts.cabin}>
           {plant.label}
         </Text>
