@@ -225,8 +225,8 @@ export const useConfig = (): UseConfig => {
       "XL": funcSizePreset("Genesis XL"),
     }),
     bed: buttonGroup({
-      "Standard": () => setBedDim1({ bedZOffset: 0 }),
-      "Mobile": () => setBedDim1({ bedZOffset: 500 }),
+      "Standard": () => setBedDim1({ bedZOffset: 0, legsFlush: true}),
+      "Mobile": () => setBedDim1({ bedZOffset: 500, legsFlush: false}),
     }),
     other: buttonGroup({
       "Initial": funcOtherPreset("Initial"),
@@ -280,6 +280,7 @@ export const useConfig = (): UseConfig => {
     garden: buttonGroup({
       spring: setPlants("spring"),
       summer: setPlants("summer"),
+      fall: setPlants("fall"),
     }),
     " ": buttonGroup({
       minimal: setPlants("minimal"),
