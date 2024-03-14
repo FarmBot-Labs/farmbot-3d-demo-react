@@ -160,7 +160,7 @@ export const PRESETS: Record<string, Config> = {
     legsFlush: false,
     bedBrightness: 8,
     soilBrightness: 6,
-    plants: "minimal",
+    plants: "spring",
     labels: false,
     ground: true,
     grid: false,
@@ -283,7 +283,7 @@ export const useConfig = (): UseConfig => {
       fall: setPlants("fall"),
     }),
     " ": buttonGroup({
-      minimal: setPlants("minimal"),
+      winter: setPlants("winter"),
       random: setPlants("random"),
       none: setPlants(""),
     }),

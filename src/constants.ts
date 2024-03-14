@@ -16,28 +16,38 @@ import beet from "/3D/icons/beet.avif";
 import bibbLettuce from "/3D/icons/bibb_lettuce.avif";
 import bokChoy from "/3D/icons/bok_choy.avif";
 import broccoli from "/3D/icons/broccoli.avif";
+import brusselsSprout from "/3D/icons/brussels_sprout.avif";
 import carrot from "/3D/icons/carrot.avif";
 import cauliflower from "/3D/icons/cauliflower.avif";
+import celery from "/3D/icons/celery.avif";
 import chard from "/3D/icons/swiss_chard.avif";
 import cherryBelleRadish from "/3D/icons/cherry_belle_radish.avif";
 import cilantro from "/3D/icons/cilantro.avif";
 import collardGreens from "/3D/icons/collard_greens.avif";
 import cucumber from "/3D/icons/cucumber.avif";
 import eggplant from "/3D/icons/eggplant.avif";
+import frenchBreakfastRadish from "/3D/icons/french_breakfast_radish.avif";
 import garlic from "/3D/icons/garlic.avif";
 import goldenBeet from "/3D/icons/golden_beet.avif";
 import hillbillyTomato from "/3D/icons/hillbilly_tomato.avif";
 import icicleRadish from "/3D/icons/icicle_radish.avif";
 import lacinatoKale from "/3D/icons/lacinato_kale.avif";
 import leek from "/3D/icons/leek.avif";
+import napaCabbage from "/3D/icons/napa_cabbage.avif";
 import okra from "/3D/icons/okra.avif";
+import parsnip from "/3D/icons/parsnip.avif";
 import rainbowChard from "/3D/icons/rainbow_chard.avif";
 import redBellPepper from "/3D/icons/red_bell_pepper.avif";
+import redCurlyKale from "/3D/icons/red_curly_kale.avif";
 import redRussianKale from "/3D/icons/red_russian_kale.avif";
 import runnerBean from "/3D/icons/runner_bean.avif";
+import rutabaga from "/3D/icons/rutabaga.avif";
+import savoyCabbage from "/3D/icons/savoy_cabbage.avif";
+import shallot from "/3D/icons/shallot.avif";
 import snapPea from "/3D/icons/snap_pea.avif";
 import spinach from "/3D/icons/spinach.avif";
 import sweetPotato from "/3D/icons/sweet_potato.avif";
+import turmeric from "/3D/icons/turmeric.avif";
 import turnip from "/3D/icons/turnip.avif";
 import yellowOnion from "/3D/icons/yellow_onion.avif";
 import zucchini from "/3D/icons/zucchini.avif";
@@ -82,28 +92,38 @@ export const ASSETS = {
     bibbLettuce,
     bokChoy,
     broccoli,
+    brusselsSprout,
     carrot,
     cauliflower,
+    celery,
     chard,
     cherryBelleRadish,
     cilantro,
     collardGreens,
     cucumber,
     eggplant,
+    frenchBreakfastRadish,
     garlic,
     goldenBeet,
     hillbillyTomato,
     icicleRadish,
     lacinatoKale,
     leek,
+    napaCabbage,
     okra,
+    parsnip,
     rainbowChard,
     redBellPepper,
+    redCurlyKale,
     redRussianKale,
     runnerBean,
+    rutabaga,
+    savoyCabbage,
+    shallot,
     snapPea,
     spinach,
     sweetPotato,
+    turmeric,
     turnip,
     yellowOnion,
     zucchini,
@@ -145,37 +165,47 @@ interface Gardens {
 
 export const PLANTS: Record<string, Plant> = {
   anaheimPepper: { label: "Anaheim Pepper", icon: ASSETS.icons.anaheimPepper, spread: 400, size: 150 },
+  arugula: { label: "Arugula", icon: ASSETS.icons.arugula, spread: 250, size: 180 },
   basil: { label: "Basil", icon: ASSETS.icons.basil, spread: 250, size: 160 },
   beet: { label: "Beet", icon: ASSETS.icons.beet, spread: 175, size: 150 },
   bibbLettuce: { label: "Bibb Lettuce", icon: ASSETS.icons.bibbLettuce, spread: 250, size: 200 },
   bokChoy: { label: "Bok Choy", icon: ASSETS.icons.bokChoy, spread: 210, size: 160 },
   broccoli: { label: "Broccoli", icon: ASSETS.icons.broccoli, spread: 375, size: 250 },
+  brusselsSprout: { label: "Brussels Sprout", icon: ASSETS.icons.brusselsSprout, spread: 300, size: 250 },
   carrot: { label: "Carrot", icon: ASSETS.icons.carrot, spread: 150, size: 125 },
   cauliflower: { label: "Cauliflower", icon: ASSETS.icons.cauliflower, spread: 400, size: 250 },
+  celery: { label: "Celery", icon: ASSETS.icons.celery, spread: 350, size: 200 },
   chard: { label: "Swiss Chard", icon: ASSETS.icons.chard, spread: 300, size: 300 },
-  cucumber: { label: "Cucumber", icon: ASSETS.icons.cucumber, spread: 400, size: 200 },
-  eggplant: { label: "Eggplant", icon: ASSETS.icons.eggplant, spread: 400, size: 200 },
-  hillbillyTomato: { label: "Hillbilly Tomato", icon: ASSETS.icons.hillbillyTomato, spread: 400, size: 200 },
-  icicleRadish: { label: "Icicle Radish", icon: ASSETS.icons.icicleRadish, spread: 100, size: 100 },
-  okra: { label: "Okra", icon: ASSETS.icons.okra, spread: 400, size: 200 },
-  rainbowChard: { label: "Rainbow Chard", icon: ASSETS.icons.rainbowChard, spread: 250, size: 250 },
-  redBellPepper: { label: "Red Bell Pepper", icon: ASSETS.icons.redBellPepper, spread: 350, size: 200 },
-  redRussianKale: { label: "Red Russian Kale", icon: ASSETS.icons.redRussianKale, spread: 250, size: 200 },
-  runnerBean: { label: "Runner Bean", icon: ASSETS.icons.runnerBean, spread: 350, size: 200 },
-  snapPea: { label: "Snap Pea", icon: ASSETS.icons.snapPea, spread: 200, size: 150 },
-  spinach: { label: "Spinach", icon: ASSETS.icons.spinach, spread: 250, size: 200 },
-  sweetPotato: { label: "Sweet Potato", icon: ASSETS.icons.sweetPotato, spread: 400, size: 180 },
-  zucchini: { label: "Zucchini", icon: ASSETS.icons.zucchini, spread: 400, size: 250 },
-  arugula: { label: "Arugula", icon: ASSETS.icons.arugula, spread: 250, size: 180 },
   cherryBelleRadish: { label: "Cherry Belle Radish", icon: ASSETS.icons.cherryBelleRadish, spread: 100, size: 100 },
   cilantro: { label: "Cilantro", icon: ASSETS.icons.cilantro, spread: 180, size: 150 },
   collardGreens: { label: "Collard Greens", icon: ASSETS.icons.collardGreens, spread: 230, size: 230 },
-  garlic: { label: "Garlic", icon: ASSETS.icons.garlic, spread: 170, size: 100 },
+  cucumber: { label: "Cucumber", icon: ASSETS.icons.cucumber, spread: 400, size: 200 },
+  eggplant: { label: "Eggplant", icon: ASSETS.icons.eggplant, spread: 400, size: 200 },
+  frenchBreakfastRadish: { label: "French Breakfast Radish", icon: ASSETS.icons.frenchBreakfastRadish, spread: 100, size: 100 },
+  garlic: { label: "Garlic", icon: ASSETS.icons.garlic, spread: 175, size: 100 },
   goldenBeet: { label: "Golden Beet", icon: ASSETS.icons.goldenBeet, spread: 175, size: 150 },
+  hillbillyTomato: { label: "Hillbilly Tomato", icon: ASSETS.icons.hillbillyTomato, spread: 400, size: 200 },
+  icicleRadish: { label: "Icicle Radish", icon: ASSETS.icons.icicleRadish, spread: 100, size: 100 },
   lacinatoKale: { label: "Lacinato Kale", icon: ASSETS.icons.lacinatoKale, spread: 250, size: 220 },
   leek: { label: "Leek", icon: ASSETS.icons.leek, spread: 200, size: 200 },
+  napaCabbage: { label: "Napa Cabbage", icon: ASSETS.icons.napaCabbage, spread: 400, size: 220 },
+  okra: { label: "Okra", icon: ASSETS.icons.okra, spread: 400, size: 200 },
+  parsnip: { label: "Parsnip", icon: ASSETS.icons.parsnip, spread: 180, size: 120 },
+  rainbowChard: { label: "Rainbow Chard", icon: ASSETS.icons.rainbowChard, spread: 250, size: 250 },
+  redBellPepper: { label: "Red Bell Pepper", icon: ASSETS.icons.redBellPepper, spread: 350, size: 200 },
+  redCurlyKale: { label: "Red Curly Kale", icon: ASSETS.icons.redCurlyKale, spread: 350, size: 220 },
+  redRussianKale: { label: "Red Russian Kale", icon: ASSETS.icons.redRussianKale, spread: 250, size: 200 },
+  runnerBean: { label: "Runner Bean", icon: ASSETS.icons.runnerBean, spread: 350, size: 200 },
+  rutabaga: { label: "Rutabaga", icon: ASSETS.icons.rutabaga, spread: 200, size: 150 },
+  savoyCabbage: { label: "Savoy Cabbage", icon: ASSETS.icons.savoyCabbage, spread: 400, size: 250 },
+  shallot: { label: "Shallot", icon: ASSETS.icons.shallot, spread: 200, size: 140 },
+  snapPea: { label: "Snap Pea", icon: ASSETS.icons.snapPea, spread: 200, size: 150 },
+  spinach: { label: "Spinach", icon: ASSETS.icons.spinach, spread: 250, size: 200 },
+  sweetPotato: { label: "Sweet Potato", icon: ASSETS.icons.sweetPotato, spread: 400, size: 180 },
+  turmeric: { label: "Turmeric", icon: ASSETS.icons.turmeric, spread: 250, size: 150 },
   turnip: { label: "Turnip", icon: ASSETS.icons.turnip, spread: 175, size: 150 },
   yellowOnion: { label: "Yellow Onion", icon: ASSETS.icons.yellowOnion, spread: 200, size: 150 },
+  zucchini: { label: "Zucchini", icon: ASSETS.icons.zucchini, spread: 400, size: 250 },
 };
 
 export const GARDENS: Gardens = {
@@ -185,6 +215,7 @@ export const GARDENS: Gardens = {
     "redBellPepper", "runnerBean", "sweetPotato", "zucchini"],
   fall: ["arugula", "cherryBelleRadish", "cilantro", "collardGreens", "garlic",
     "goldenBeet", "leek", "lacinatoKale", "turnip", "yellowOnion"],
-  minimal: sampleSize(Object.keys(PLANTS), 2),
+  winter: ["frenchBreakfastRadish", "napaCabbage", "parsnip", "redCurlyKale",
+  "rutabaga", "savoyCabbage", "shallot", "turmeric", "celery", "brusselsSprout" ],
   random: sampleSize(Object.keys(PLANTS), 20),
 };
