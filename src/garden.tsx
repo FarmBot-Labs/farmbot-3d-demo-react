@@ -8,7 +8,7 @@ import {
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
-import { threeSpace } from "./helpers";
+import { threeSpace, zZero } from "./helpers";
 import { Sky } from "./sky";
 import { useConfig } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
@@ -156,8 +156,8 @@ const Model = () => {
     {["Genesis", "Genesis XL"].map((preset, index) =>
       <Html key={index}
         position={[
-          threeSpace(0, 10000) + index * 500,
-          threeSpace(0, 10000),
+          midPoint.x - 10000 / 2 + index * 500,
+          midPoint.y - 10000 / 2,
           -groundZ,
         ]}>
         <button className={"preset-button"}
@@ -172,14 +172,18 @@ const Model = () => {
         choosePreset={choosePreset}
         hovered={hovered}
         setHovered={setHovered}
-        z={-groundZ} />)}
+        startPosition={{
+          x: midPoint.x - 10000 / 2 + 1000,
+          y: midPoint.y - 10000 / 2 + 1000,
+          z: -groundZ,
+        }} />)}
     <Bed config={config} />
     <Bot config={config} />
     {plants.map((plant, i) => (
       <Billboard key={i} follow={true} position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
         threeSpace(plant.y, config.bedWidthOuter),
-        config.columnLength - 100 - config.soilHeight + 5,
+        zZero(config) - config.soilHeight + 5,
       )}>
         <Image url={plant.icon} scale={plant.size} position={[0, plant.size / 2, 1]}
           transparent={true} />

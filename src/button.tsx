@@ -1,6 +1,5 @@
 import { Box, Text } from "@react-three/drei";
 import { BufferGeometry } from "three";
-import { threeSpace } from "./helpers";
 import { ASSETS } from "./constants";
 
 interface PresetButtonProps {
@@ -8,20 +7,20 @@ interface PresetButtonProps {
   choosePreset(preset: string): () => void;
   hovered: string;
   setHovered(preset: string): void;
-  z: number;
+  startPosition: Record<"x" | "y" | "z", number>;
   index: number;
 }
 
 export const PresetButton = (props: PresetButtonProps) => {
-  const { preset, choosePreset, hovered, setHovered, z, index } = props;
+  const { preset, choosePreset, hovered, setHovered, startPosition, index } = props;
   const btnHeight = 50;
   const btnZ = 0;
   const textZ = btnHeight / 2 + 1;
   return <group
     position={[
-      threeSpace(1000, 10000) + index * 1100,
-      threeSpace(1000, 10000),
-      z + btnHeight / 2,
+      startPosition.x + index * 1100,
+      startPosition.y,
+      startPosition.z + btnHeight / 2,
     ]}
     onClick={() => {
       choosePreset(preset)();
