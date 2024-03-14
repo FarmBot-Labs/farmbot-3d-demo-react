@@ -47,7 +47,7 @@ export interface Config {
 
 const INITIAL: Config = {
   label: "FarmBot Genesis v1.7",
-  botSizeX: 2620,
+  botSizeX: 2720,
   botSizeY: 1220,
   botSizeZ: 500,
   bedWallThickness: 40,
@@ -64,7 +64,7 @@ const INITIAL: Config = {
   bedZOffset: 0,
   zGantryOffset: 140,
   bedWidthOuter: 1400,
-  bedLengthOuter: 2900,
+  bedLengthOuter: 3000,
   legSize: 100,
   legsFlush: true,
   extraLegsX: 1,
@@ -112,7 +112,7 @@ export const PRESETS: Record<string, Config> = {
   "Genesis": {
     ...INITIAL,
     label: "FarmBot Genesis v1.7",
-    botSizeX: 2620,
+    botSizeX: 2720,
     botSizeY: 1220,
     botSizeZ: 500,
     beamLength: 1500,
@@ -122,7 +122,7 @@ export const PRESETS: Record<string, Config> = {
     bedYOffset: 80,
     zGantryOffset: 140,
     bedWidthOuter: 1400,
-    bedLengthOuter: 2900,
+    bedLengthOuter: 3000,
     extraLegsX: 1,
     extraLegsY: 0,
     soilHeight: 500,
@@ -131,7 +131,7 @@ export const PRESETS: Record<string, Config> = {
   "Genesis XL": {
     ...INITIAL,
     label: "FarmBot Genesis XL v1.7",
-    botSizeX: 5620,
+    botSizeX: 5720,
     botSizeY: 2720,
     botSizeZ: 500,
     beamLength: 3000,
@@ -141,7 +141,7 @@ export const PRESETS: Record<string, Config> = {
     bedYOffset: 80,
     zGantryOffset: 140,
     bedWidthOuter: 2900,
-    bedLengthOuter: 5900,
+    bedLengthOuter: 6000,
     extraLegsX: 3,
     extraLegsY: 1,
     soilHeight: 500,
