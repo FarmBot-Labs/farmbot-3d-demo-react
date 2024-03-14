@@ -2,7 +2,7 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
-  Plane, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
+  Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
   Html,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
@@ -20,7 +20,7 @@ const grassTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(4, 4);
+      texture.repeat.set(8, 8);
     });
 
 interface GardenProps {
@@ -57,7 +57,7 @@ const Model = () => {
     const startX = 350;
     let nextX = startX;
     let index = 0;
-    while (nextX <= config.bedLengthOuter) {
+    while (nextX <= config.bedLengthOuter - 100) {
       const plantKey = gardenPlants[index];
       const plant = PLANTS[plantKey];
       if (!plant) { return []; }
@@ -101,7 +101,7 @@ const Model = () => {
       rayleigh={3}
       turbidity={5} />
     <Camera makeDefault={true} name={"camera"}
-      fov={40} near={10} far={20000}
+      fov={40} near={10} far={25000}
       position={[0, -3000, 1500]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
@@ -117,13 +117,13 @@ const Model = () => {
       shadow-normalBias={100} // warning: distorts shadows
       position={sunPosition} />
     <ambientLight intensity={1} />
-    <Plane name={"ground"}
+    <Circle name={"ground"}
       visible={config.ground}
       receiveShadow={true}
-      args={[10000, 10000]}
+      args={[10000, 100]}
       position={[midPoint.x, midPoint.y, -groundZ]}>
-      <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={5} />
-    </Plane>
+      <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={0} />
+    </Circle>
     <Grid
       name={"ground-grid"}
       visible={config.grid}

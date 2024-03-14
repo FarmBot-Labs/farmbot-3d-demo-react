@@ -279,6 +279,7 @@ export const useConfig = (): UseConfig => {
     plants: init.plants,
     garden: buttonGroup({
       spring: setPlants("spring"),
+      summer: setPlants("summer"),
     }),
     " ": buttonGroup({
       minimal: setPlants("minimal"),
