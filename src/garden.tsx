@@ -188,7 +188,11 @@ const Model = () => {
         <Image url={plant.icon} scale={plant.size}
           transparent={true} />
         <Text visible={config.labels} fontSize={40} position={[0, plant.size / 2 + 25, 0]}
-          font={ASSETS.fonts.cabin}>
+          font={ASSETS.fonts.cabin}
+          outlineColor={"black"}
+          outlineWidth={2}
+          outlineBlur={5}
+          outlineOpacity={0.5}>
           {plant.label}
         </Text>
       </Billboard>
@@ -197,7 +201,7 @@ const Model = () => {
       font={ASSETS.fonts.inknut}
       color={"white"}
       outlineColor={"black"}
-      outlineWidth={0}
+      outlineWidth={5}
       outlineBlur={20}
       outlineOpacity={0.75}
       position={[
