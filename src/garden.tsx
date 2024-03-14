@@ -201,7 +201,7 @@ const Model = () => {
       font={ASSETS.fonts.inknut}
       color={"white"}
       outlineColor={"black"}
-      outlineWidth={5}
+      outlineWidth={0}
       outlineBlur={20}
       outlineOpacity={0.75}
       position={[
