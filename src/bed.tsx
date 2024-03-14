@@ -3,7 +3,7 @@ import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
 import { range } from "lodash";
-import { threeSpace } from "./helpers";
+import { threeSpace, zZero } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
@@ -93,14 +93,14 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, columnLength, ccSupportSize, axes,
+    soilHeight, ccSupportSize, axes,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
   const bedStartZ = bedHeight;
   const bedColor = getColorFromBrightness(bedBrightness);
   const soilColor = getColorFromBrightness(soilBrightness);
-  const soilDepth = bedHeight + (columnLength - 100) - soilHeight;
+  const soilDepth = bedHeight + zZero(props.config) - soilHeight;
   const groundZ = -bedHeight - bedZOffset;
   const legXPositions = [
     0 + legSize / 2 + thickness,
@@ -135,12 +135,24 @@ export const Bed = (props: BedProps) => {
     </Extrude>
     <group visible={axes}>
       <DistanceIndicator
-        start={{ x: -bedLengthOuter / 2, y: (-bedWidthOuter / 2) - 100 }}
-        end={{ x: bedLengthOuter / 2, y: (-bedWidthOuter / 2) - 100 }}
+        start={{
+          x: threeSpace(0, bedLengthOuter),
+          y: threeSpace(0, bedWidthOuter) - 100,
+        }}
+        end={{
+          x: threeSpace(bedLengthOuter, bedLengthOuter),
+          y: threeSpace(0, bedWidthOuter) - 100,
+        }}
         z={groundZ} />
       <DistanceIndicator
-        start={{ x: bedLengthOuter / 2 + 100, y: -bedWidthOuter / 2 }}
-        end={{ x: bedLengthOuter / 2 + 100, y: bedWidthOuter / 2 }}
+        start={{
+          x: threeSpace(bedLengthOuter, bedLengthOuter) + 100,
+          y: threeSpace(0, bedWidthOuter),
+        }}
+        end={{
+          x: threeSpace(bedLengthOuter, bedLengthOuter) + 100,
+          y: threeSpace(bedWidthOuter, bedWidthOuter),
+        }}
         z={groundZ} />
       <FarmBotAxes config={props.config} />
     </group>
