@@ -6,6 +6,8 @@ import { range } from "lodash";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
+import { DistanceIndicator } from "./distance_indicator";
+import { FarmBotAxes } from "./farmbot_axes";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -91,7 +93,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, columnLength, ccSupportSize,
+    soilHeight, columnLength, ccSupportSize, axes,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -99,6 +101,7 @@ export const Bed = (props: BedProps) => {
   const bedColor = getColorFromBrightness(bedBrightness);
   const soilColor = getColorFromBrightness(soilBrightness);
   const soilDepth = bedHeight + (columnLength - 100) - soilHeight;
+  const groundZ = -bedHeight - bedZOffset;
   const legXPositions = [
     0 + legSize / 2 + thickness,
     ...(extraLegsX
@@ -130,6 +133,17 @@ export const Bed = (props: BedProps) => {
       <meshPhongMaterial map={woodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Extrude>
+    <group visible={axes}>
+      <DistanceIndicator
+        start={{ x: -bedLengthOuter / 2, y: (-bedWidthOuter / 2) - 100 }}
+        end={{ x: bedLengthOuter / 2, y: (-bedWidthOuter / 2) - 100 }}
+        z={groundZ} />
+      <DistanceIndicator
+        start={{ x: bedLengthOuter / 2 + 100, y: -bedWidthOuter / 2 }}
+        end={{ x: bedLengthOuter / 2 + 100, y: bedWidthOuter / 2 }}
+        z={groundZ} />
+      <FarmBotAxes config={props.config} />
+    </group>
     <Box name={"lower-cc-support"}
       castShadow={true}
       receiveShadow={true}
