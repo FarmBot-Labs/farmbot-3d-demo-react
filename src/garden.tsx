@@ -194,15 +194,16 @@ const Model = () => {
       </Billboard>
     ))}
     <Text fontSize={200} visible={config.labels}
-      font={ASSETS.fonts.cabinBold}
+      font={ASSETS.fonts.inknut}
       color={"white"}
-      strokeColor={"black"}
-      strokeWidth={7}
-      fontWeight={"bold"}
+      outlineColor={"black"}
+      outlineWidth={0}
+      outlineBlur={20}
+      outlineOpacity={0.75}
       position={[
         midPoint.x,
-        threeSpace(-200, config.bedWidthOuter),
-        -groundZ + 150,
+        threeSpace(-500, config.bedWidthOuter),
+        -groundZ + 100,
       ]}
       rotation={[Math.PI / 4, 0, 0]}>
       {config.label}

@@ -3,12 +3,14 @@
 import { sampleSize } from "lodash";
 import cabin from "/3D/fonts/Cabin.ttf";
 import cabinBold from "/3D/fonts/Cabin_Bold.ttf";
+import inknut from "/3D/fonts/InknutAntiqua-Bold.ttf";
 import cloud from "/3D/textures/cloud.avif";
 import grass from "/3D/textures/grass.avif";
 import wood from "/3D/textures/wood.avif";
 import soil from "/3D/textures/soil.avif";
 import aluminum from "/3D/textures/aluminum.avif";
 import anaheimPepper from "/3D/icons/anaheim_pepper.avif";
+import arugula from "/3D/icons/arugula.avif";
 import basil from "/3D/icons/basil.avif";
 import beet from "/3D/icons/beet.avif";
 import bibbLettuce from "/3D/icons/bibb_lettuce.avif";
@@ -17,10 +19,17 @@ import broccoli from "/3D/icons/broccoli.avif";
 import carrot from "/3D/icons/carrot.avif";
 import cauliflower from "/3D/icons/cauliflower.avif";
 import chard from "/3D/icons/swiss_chard.avif";
+import cherryBelleRadish from "/3D/icons/cherry_belle_radish.avif";
+import cilantro from "/3D/icons/cilantro.avif";
+import collardGreens from "/3D/icons/collard_greens.avif";
 import cucumber from "/3D/icons/cucumber.avif";
 import eggplant from "/3D/icons/eggplant.avif";
+import garlic from "/3D/icons/garlic.avif";
+import goldenBeet from "/3D/icons/golden_beet.avif";
 import hillbillyTomato from "/3D/icons/hillbilly_tomato.avif";
 import icicleRadish from "/3D/icons/icicle_radish.avif";
+import lacinatoKale from "/3D/icons/lacinato_kale.avif";
+import leek from "/3D/icons/leek.avif";
 import okra from "/3D/icons/okra.avif";
 import rainbowChard from "/3D/icons/rainbow_chard.avif";
 import redBellPepper from "/3D/icons/red_bell_pepper.avif";
@@ -29,6 +38,8 @@ import runnerBean from "/3D/icons/runner_bean.avif";
 import snapPea from "/3D/icons/snap_pea.avif";
 import spinach from "/3D/icons/spinach.avif";
 import sweetPotato from "/3D/icons/sweet_potato.avif";
+import turnip from "/3D/icons/turnip.avif";
+import yellowOnion from "/3D/icons/yellow_onion.avif";
 import zucchini from "/3D/icons/zucchini.avif";
 import track from "/3D/shapes/track.svg";
 import column from "/3D/shapes/column.svg";
@@ -54,6 +65,7 @@ export const ASSETS = {
   fonts: {
     cabin,
     cabinBold,
+    inknut,
   },
   textures: {
     cloud,
@@ -64,6 +76,7 @@ export const ASSETS = {
   },
   icons: {
     anaheimPepper,
+    arugula,
     basil,
     beet,
     bibbLettuce,
@@ -72,10 +85,17 @@ export const ASSETS = {
     carrot,
     cauliflower,
     chard,
+    cherryBelleRadish,
+    cilantro,
+    collardGreens,
     cucumber,
     eggplant,
+    garlic,
+    goldenBeet,
     hillbillyTomato,
     icicleRadish,
+    lacinatoKale,
+    leek,
     okra,
     rainbowChard,
     redBellPepper,
@@ -84,6 +104,8 @@ export const ASSETS = {
     snapPea,
     spinach,
     sweetPotato,
+    turnip,
+    yellowOnion,
     zucchini,
   },
   shapes: {
@@ -144,6 +166,16 @@ export const PLANTS: Record<string, Plant> = {
   spinach: { label: "Spinach", icon: ASSETS.icons.spinach, spread: 250, size: 200 },
   sweetPotato: { label: "Sweet Potato", icon: ASSETS.icons.sweetPotato, spread: 400, size: 180 },
   zucchini: { label: "Zucchini", icon: ASSETS.icons.zucchini, spread: 400, size: 250 },
+  arugula: { label: "Arugula", icon: ASSETS.icons.arugula, spread: 250, size: 180 },
+  cherryBelleRadish: { label: "Cherry Belle Radish", icon: ASSETS.icons.cherryBelleRadish, spread: 100, size: 100 },
+  cilantro: { label: "Cilantro", icon: ASSETS.icons.cilantro, spread: 180, size: 150 },
+  collardGreens: { label: "Collard Greens", icon: ASSETS.icons.collardGreens, spread: 230, size: 230 },
+  garlic: { label: "Garlic", icon: ASSETS.icons.garlic, spread: 170, size: 100 },
+  goldenBeet: { label: "Golden Beet", icon: ASSETS.icons.goldenBeet, spread: 175, size: 150 },
+  lacinatoKale: { label: "Lacinato Kale", icon: ASSETS.icons.lacinatoKale, spread: 250, size: 220 },
+  leek: { label: "Leek", icon: ASSETS.icons.leek, spread: 200, size: 200 },
+  turnip: { label: "Turnip", icon: ASSETS.icons.turnip, spread: 175, size: 150 },
+  yellowOnion: { label: "Yellow Onion", icon: ASSETS.icons.yellowOnion, spread: 200, size: 150 },
 };
 
 export const GARDENS: Gardens = {
@@ -151,6 +183,8 @@ export const GARDENS: Gardens = {
     "icicleRadish", "redRussianKale", "bokChoy", "spinach", "snapPea"],
   summer: ["anaheimPepper", "basil", "cucumber", "eggplant", "hillbillyTomato", "okra",
     "redBellPepper", "runnerBean", "sweetPotato", "zucchini"],
+  fall: ["arugula", "cherryBelleRadish", "cilantro", "collardGreens", "garlic",
+    "goldenBeet", "leek", "lacinatoKale", "turnip", "yellowOnion"],
   minimal: sampleSize(Object.keys(PLANTS), 2),
-  random: sampleSize(Object.keys(PLANTS), 10),
+  random: sampleSize(Object.keys(PLANTS), 20),
 };
