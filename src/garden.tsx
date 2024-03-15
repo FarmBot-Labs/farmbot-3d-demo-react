@@ -13,7 +13,7 @@ import { Sky } from "./sky";
 import { useConfig } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
-import { PresetButton } from "./button";
+import _ from 'lodash';
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -179,30 +179,6 @@ const Model = (props: ModelProps) => {
         opacity={0.85}
         fade={5000} />
     </Clouds>
-    {["Genesis", "Genesis XL"].map((preset, index) =>
-      <Html key={index}
-        position={[
-          midPoint.x - 10000 / 2 + index * 500,
-          midPoint.y - 10000 / 2,
-          -groundZ,
-        ]}>
-        <button className={"preset-button"}
-          onClick={choosePreset(preset)}>
-          {preset}
-        </button>
-      </Html>)}
-    {["Genesis", "Genesis XL"].map((preset, index) =>
-      <PresetButton key={index}
-        index={index}
-        preset={preset}
-        choosePreset={choosePreset}
-        hovered={hovered}
-        setHovered={setHovered}
-        startPosition={{
-          x: midPoint.x - 10000 / 2 + 1000,
-          y: midPoint.y - 10000 / 2 + 1000,
-          z: -groundZ,
-        }} />)}
     <Bed config={config} />
     <Bot config={config} />
     {plants.map((plant, i) => (
@@ -252,10 +228,10 @@ export const Garden = (props: GardenProps) => {
       "Mobile": React.createRef(),
     },
     garden: {
-      "winter": React.createRef(),
-      "spring": React.createRef(),
-      "summer": React.createRef(),
-      "fall": React.createRef(),
+      "Winter": React.createRef(),
+      "Spring": React.createRef(),
+      "Summer": React.createRef(),
+      "Fall": React.createRef(),
     },
   };
   return <div className={"garden-bed-3d-model"}>
@@ -264,12 +240,16 @@ export const Garden = (props: GardenProps) => {
     </Canvas>
     <div className={"overlay"}>
       {Object.entries(refs).map(([category, presetRefs], index) =>
-        <div key={index} className={`${category}-row`}>
-          {Object.entries(presetRefs).map(([preset, ref], index) =>
-            <button key={index} ref={ref}>
-              {preset}
-            </button>)}
-        </div>)}
+        <div key={`category-${index}`}>
+          <span className="setting-title">{category}</span>
+          <div key={`row-${index}`} className={`${_.kebabCase(category)}-row row`}>
+            {Object.entries(presetRefs).map(([preset, ref], index) =>
+              <button key={index} ref={ref} className={`${_.kebabCase(preset)} active`}>
+                {preset}
+              </button>)}
+          </div>
+        </div>
+      )}
     </div>
   </div>;
 };
