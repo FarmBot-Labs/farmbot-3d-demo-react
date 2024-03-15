@@ -1,8 +1,16 @@
+import React from "react";
 import { Config, modifyConfig } from "./config";
+
+export interface ToolTip {
+  timeoutId: number;
+  text: string;
+}
 
 interface OverlayProps {
   config: Config;
   setConfig(config: Config): void;
+  toolTip: ToolTip;
+  setToolTip(tooltip: ToolTip): void;
 }
 
 interface SectionProps {
@@ -12,19 +20,37 @@ interface SectionProps {
 }
 
 export const PublicOverlay = (props: OverlayProps) => {
-  const { config, setConfig } = props;
+  const { config, setConfig, toolTip, setToolTip } = props;
 
-  const Section = (props: SectionProps) => {
-    const { title, configKey, options } = props;
+  const Section = (sectionProps: SectionProps) => {
+    const { title, configKey, options } = sectionProps;
     return <div className={"section"}>
       <span className="setting-title">{title}</span>
       <div className={"row"}>
         {Object.entries(options).map(([preset, label]) => {
           const active = label == config[configKey];
-          const className = `${preset} ${active ? "active" : ""}`;
+          const disabled = label == "Mobile"
+            && config.sizePreset == "Genesis XL";
+          const className = [
+            preset,
+            active ? "active" : "",
+            disabled ? "disabled" : "",
+          ].join(" ");
           const update = { [configKey]: label };
           return <button key={preset} className={className}
-            onClick={() => setConfig(modifyConfig(config, update))}>
+            onClick={() => {
+              clearTimeout(toolTip.timeoutId);
+              if (disabled) {
+                const text = "Mobile beds are only recommended for Genesis machines.";
+                const timeoutId = setTimeout(() =>
+                  setToolTip({ timeoutId: 0, text: "" }), 2000);
+                setToolTip(({ timeoutId, text }));
+                return;
+              } else {
+                setToolTip({ timeoutId: 0, text: "" });
+              }
+              setConfig(modifyConfig(config, update));
+            }}>
             {label}
           </button>;
         })}

@@ -13,7 +13,7 @@ import { Sky } from "./sky";
 import { Config, INITIAL } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
-import { PrivateOverlay, PublicOverlay } from "./config_overlays";
+import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -194,14 +194,19 @@ const Model = (props: ModelProps) => {
 
 export const Garden = () => {
   const [config, setConfig] = React.useState<Config>(INITIAL);
+  const [toolTip, setToolTip] = React.useState<ToolTip>({ timeoutId: 0, text: "" });
+  const common = { config, setConfig, toolTip, setToolTip };
   return <div className={"garden-bed-3d-model"}>
     <Canvas shadows={true}>
       <Model config={config} />
     </Canvas>
-    <PublicOverlay config={config} setConfig={setConfig} />
+    <PublicOverlay {...common} />
     {!config.config && <img className={"gear"} src={ASSETS.other.gear}
       onClick={() => setConfig({ ...config, config: true })} />}
     {config.config &&
-      <PrivateOverlay config={config} setConfig={setConfig} />}
+      <PrivateOverlay {...common} />}
+    <span className={"tool-tip"} hidden={!toolTip.text}>
+      {toolTip.text}
+    </span>
   </div>;
 };

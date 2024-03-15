@@ -113,7 +113,32 @@ body {
       cursor: pointer;
       background: rgba(255, 255, 255, 0.3);
     }
+
+    &.disabled {
+      color: gray;
+
+      &:hover {
+        cursor: not-allowed;
+        background: none;
+      }
+    }
   }
+}
+
+.tool-tip {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin: auto;
+  color: #f4f4f4;
+  font-family: InkNut Antiqua;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  pointer-events: none;
 }
 
 .all-configs {
