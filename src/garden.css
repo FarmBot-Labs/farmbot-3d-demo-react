@@ -23,22 +23,30 @@
 
 .overlay {
   position: absolute;
-  bottom: 1rem;
+  bottom: 0;
   left: 0;
   right: 0;
+  padding: 1rem;
   pointer-events: none;
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 1.25rem;
+  overflow-x: scroll;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent);
+
+  @media screen and (max-width: 768px) {
+    justify-content: left;
+  }
 
   .setting-title {
     color: #f4f4f4;
     font-family: Inknut Antiqua;
     text-shadow: 0 0 10px black;
+    line-height: 170%;
   }
 
   .row {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.6);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 5px;
     border-radius: 25px;
     height: 40px;
@@ -46,6 +54,7 @@
     display: flex;
     justify-content: space-evenly;
     backdrop-filter: blur(5px);
+    gap: 5px;
   }
 
   button {
@@ -67,27 +76,27 @@
     }
 
     &.winter.active {
-      background: #326f98;
+      background: linear-gradient(-15deg, #3e8dc2, #152e40);
       color: #f4f4f4;
     }
 
     &.spring.active {
-      background: #46861e;
+      background: linear-gradient(15deg, #65f37d, #055b08);
       color: #f4f4f4;
     }
 
     &.summer.active {
-      background: #ebba15;
+      background: linear-gradient(-15deg, #d87f09, #f5e40a);
     }
 
     &.fall.active {
-      background: #934a12;
+      background: linear-gradient(15deg, #502402, #c69075);
       color: #f4f4f4
     }
 
     &:hover {
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.3);
     }
   }
 }
