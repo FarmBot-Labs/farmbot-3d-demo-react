@@ -238,15 +238,15 @@ export const Garden = (props: GardenProps) => {
       "Genesis": React.createRef(),
       "Genesis XL": React.createRef(),
     },
-    "Bed Type": {
-      "Standard": React.createRef(),
-      "Mobile": React.createRef(),
-    },
     Season: {
       "Winter": React.createRef(),
       "Spring": React.createRef(),
       "Summer": React.createRef(),
       "Fall": React.createRef(),
+    },
+    "Bed Type": {
+      "Standard": React.createRef(),
+      "Mobile": React.createRef(),
     },
   };
   return <div className={"garden-bed-3d-model"}>
