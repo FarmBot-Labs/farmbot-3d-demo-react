@@ -10,6 +10,7 @@ import { range } from "lodash";
 import { CrossSlide, CrossSlideFull } from "./parts/cross_slide";
 import { GantryWheelPlate, GantryWheelPlateFull } from "./parts/gantry_wheel_plate";
 import { RotaryTool, RotaryToolFull } from "./parts/rotary_tool";
+import { DistanceIndicator } from "./distance_indicator";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -140,7 +141,7 @@ export const Bot = (props: FarmbotModelProps) => {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
-    cableCarriers,
+    cableCarriers, axes,
   } = props.config;
   const zDir = -1;
   const zZero = zZeroFunc(props.config);
@@ -592,5 +593,18 @@ export const Bot = (props: FarmbotModelProps) => {
         ...zDip(extents.x, zero.y),
         [zero.x, zero.y, extents.z],
       ]} />
+    <group visible={axes && labels}>
+      <DistanceIndicator
+        start={{
+          x: threeSpace(0, bedLengthOuter),
+          y: threeSpace(bedWidthOuter, bedWidthOuter),
+          z: 0,
+        }}
+        end={{
+          x: threeSpace(0, bedLengthOuter),
+          y: threeSpace(bedWidthOuter, bedWidthOuter),
+          z: zZero - z + zAxisLength,
+        }} />
+    </group>
   </group>;
 };

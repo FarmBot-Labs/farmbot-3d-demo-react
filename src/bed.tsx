@@ -138,22 +138,24 @@ export const Bed = (props: BedProps) => {
         start={{
           x: threeSpace(0, bedLengthOuter),
           y: threeSpace(0, bedWidthOuter) - 100,
+          z: groundZ,
         }}
         end={{
           x: threeSpace(bedLengthOuter, bedLengthOuter),
           y: threeSpace(0, bedWidthOuter) - 100,
-        }}
-        z={groundZ} />
+          z: groundZ,
+        }} />
       <DistanceIndicator
         start={{
           x: threeSpace(bedLengthOuter, bedLengthOuter) + 100,
           y: threeSpace(0, bedWidthOuter),
+          z: groundZ,
         }}
         end={{
           x: threeSpace(bedLengthOuter, bedLengthOuter) + 100,
           y: threeSpace(bedWidthOuter, bedWidthOuter),
-        }}
-        z={groundZ} />
+          z: groundZ,
+        }} />
       <FarmBotAxes config={props.config} />
     </group>
     <Box name={"lower-cc-support"}

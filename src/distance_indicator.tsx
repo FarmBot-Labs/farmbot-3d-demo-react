@@ -3,20 +3,25 @@ import { ASSETS } from "./constants";
 import { Arrow } from "./arrow";
 
 interface DistanceIndicatorProps {
-  start: {x: number, y: number};
-  end: {x: number, y: number};
-  z: number;
+  start: Record<"x" | "y" | "z", number>;
+  end: Record<"x" | "y" | "z", number>;
+  visible?: boolean;
 }
 
 export const DistanceIndicator = (props: DistanceIndicatorProps) => {
-  const { start, end, z } = props;
+  const { start, end } = props;
   const dx = end.x - start.x;
   const dy = end.y - start.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
+  const dz = end.z - start.z;
+  const distance = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
   const midX = (start.x + end.x) / 2;
   const midY = (start.y + end.y) / 2;
-  const angle = Math.atan2(dy, dx);
-  return <group position={[midX, midY, z]} rotation={[0, 0, angle]}>
+  const midZ = (start.z + end.z) / 2;
+  const angleY = Math.atan2(dz, dx);
+  const angleZ = Math.atan2(dy, dx);
+  return <group visible={props.visible}
+    position={[midX, midY, midZ]}
+    rotation={[0, -angleY, angleZ]}>
     <Arrow length={distance / 2} width={25} />
     <Arrow length={distance / 2} width={25} rotation={[0, 0, Math.PI]} />
     <group rotation={[Math.PI / 6, 0, 0]}>
