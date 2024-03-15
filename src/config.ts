@@ -182,11 +182,14 @@ interface UseConfig {
   choosePreset(preset: string): () => void;
   setBedType(preset: string): () => void;
   setPlants(preset: string): () => void;
+  size: string;
+  bedType: string;
 }
 
 export const useConfig = (): UseConfig => {
   const funcSizePreset = (preset: string) => () => {
     const presetConfig = PRESETS[preset];
+    setPreset({ sizePreset: preset });
     setBotSize0(pick(presetConfig, ["botSizeX", "botSizeY", "botSizeZ"]));
     setBedDim1(pick(presetConfig, [
       "bedWidthOuter", "bedLengthOuter", "extraLegsX", "extraLegsY", "soilHeight",
@@ -220,16 +223,21 @@ export const useConfig = (): UseConfig => {
   };
   const setTool = (tool: string) => () => setOther({ tool });
   const setPlants = (plants: string) => () => setOther({ plants });
-  const setBedType = (bedType: string) => () => setBedDim1({
-    bedZOffset: bedType == "Mobile" ? 500 : 0,
-    legsFlush: bedType == "Mobile" ? false : true,
-  });
-  useControls("Presets", {
+  const setBedType = (bedType: string) => () => {
+    setPreset({ bedPreset: bedType });
+    setBedDim1({
+      bedZOffset: bedType == "Mobile" ? 500 : 0,
+      legsFlush: bedType == "Mobile" ? false : true,
+    });
+  };
+  const [presets, setPreset] = useControls("Presets", () => ({
+    sizePreset: "Genesis",
     size: buttonGroup({
       "Jr": funcSizePreset("Jr"),
       "Genesis": funcSizePreset("Genesis"),
       "XL": funcSizePreset("Genesis XL"),
     }),
+    bedPreset: "Standard",
     bed: buttonGroup({
       "Standard": setBedType("Standard"),
       "Mobile": setBedType("Mobile"),
@@ -241,7 +249,7 @@ export const useConfig = (): UseConfig => {
     " ": buttonGroup({
       "Reset all": funcResetPreset("Initial"),
     }),
-  });
+  }));
   const init = PRESETS["Initial"];
   const [botSizeConfig0, setBotSize0] = useControls("Bot Dimensions", () => ({
     botSizeX: { value: init.botSizeX, min: 0, max: 6000, step: 1 },
@@ -322,5 +330,12 @@ export const useConfig = (): UseConfig => {
     ...otherConfig,
     ...environmentConfig,
   };
-  return { config, choosePreset: funcSizePreset, setPlants, setBedType };
+  return {
+    config,
+    choosePreset: funcSizePreset,
+    setPlants,
+    setBedType,
+    size: presets.sizePreset,
+    bedType: presets.bedPreset,
+  };
 };

@@ -26,7 +26,7 @@ interface GardenProps {
 
 }
 
-type Refs = Record<"size" | "bedType" | "garden",
+type Refs = Record<"FarmBot" | "Bed Type" | "Season",
   Record<string, React.RefObject<HTMLButtonElement>>>;
 
 interface ModelProps {
@@ -43,7 +43,9 @@ interface Plant {
 }
 
 const Model = (props: ModelProps) => {
-  const { config, choosePreset, setBedType, setPlants } = useConfig();
+  const {
+    config, choosePreset, setBedType, setPlants, size, bedType,
+  } = useConfig();
   const groundZ = config.bedZOffset + config.bedHeight;
   const midPoint = {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
@@ -71,7 +73,8 @@ const Model = (props: ModelProps) => {
         x: nextX,
         y: config.bedWidthOuter / 2,
       });
-      const plantsPerHalfRow = Math.ceil((config.bedWidthOuter - plant.spread) / 2 / plant.spread);
+      const plantsPerHalfRow =
+        Math.ceil((config.bedWidthOuter - plant.spread) / 2 / plant.spread);
       for (let i = 1; i < plantsPerHalfRow; i++) {
         positions.push({
           ...plant,
@@ -99,22 +102,36 @@ const Model = (props: ModelProps) => {
   const plants = calculatePlantPositions();
 
   React.useEffect(() => {
-    Object.entries(props.refs.size).map(([preset, ref]) => {
+    Object.entries(props.refs.FarmBot).map(([preset, ref]) => {
       if (ref.current) {
         ref.current.onclick = choosePreset(preset);
       }
     });
-    Object.entries(props.refs.bedType).map(([preset, ref]) => {
+    Object.entries(props.refs["Bed Type"]).map(([preset, ref]) => {
       if (ref.current) {
         ref.current.onclick = setBedType(preset);
       }
     });
-    Object.entries(props.refs.garden).map(([preset, ref]) => {
+    Object.entries(props.refs.Season).map(([preset, ref]) => {
       if (ref.current) {
         ref.current.onclick = setPlants(preset);
       }
     });
   }, [props.refs, choosePreset, setBedType, setPlants]);
+
+  Object.values(props.refs).map(categories => {
+    Object.values(categories).map(ref => {
+      if (ref.current) {
+        if (ref.current.textContent == size
+          || ref.current.textContent == bedType
+          || ref.current.textContent == config.plants) {
+          ref.current.classList.add("active");
+        } else {
+          ref.current.classList.remove("active");
+        }
+      }
+    });
+  });
 
   return <group dispose={null}>
     <Stats />
@@ -217,15 +234,15 @@ const Model = (props: ModelProps) => {
 
 export const Garden = (props: GardenProps) => {
   const refs: Refs = {
-    size: {
+    FarmBot: {
       "Genesis": React.createRef(),
       "Genesis XL": React.createRef(),
     },
-    bedType: {
+    "Bed Type": {
       "Standard": React.createRef(),
       "Mobile": React.createRef(),
     },
-    garden: {
+    Season: {
       "Winter": React.createRef(),
       "Spring": React.createRef(),
       "Summer": React.createRef(),
