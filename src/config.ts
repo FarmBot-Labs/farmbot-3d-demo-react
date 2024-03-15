@@ -180,6 +180,8 @@ export const PRESETS: Record<string, Config> = {
 interface UseConfig {
   config: Config;
   choosePreset(preset: string): () => void;
+  setBedType(preset: string): () => void;
+  setPlants(preset: string): () => void;
 }
 
 export const useConfig = (): UseConfig => {
@@ -218,6 +220,10 @@ export const useConfig = (): UseConfig => {
   };
   const setTool = (tool: string) => () => setOther({ tool });
   const setPlants = (plants: string) => () => setOther({ plants });
+  const setBedType = (bedType: string) => () => setBedDim1({
+    bedZOffset: bedType == "Mobile" ? 500 : 0,
+    legsFlush: bedType == "Mobile" ? false : true,
+  });
   useControls("Presets", {
     size: buttonGroup({
       "Jr": funcSizePreset("Jr"),
@@ -225,8 +231,8 @@ export const useConfig = (): UseConfig => {
       "XL": funcSizePreset("Genesis XL"),
     }),
     bed: buttonGroup({
-      "Standard": () => setBedDim1({ bedZOffset: 0, legsFlush: true}),
-      "Mobile": () => setBedDim1({ bedZOffset: 500, legsFlush: false}),
+      "Standard": setBedType("Standard"),
+      "Mobile": setBedType("Mobile"),
     }),
     other: buttonGroup({
       "Initial": funcOtherPreset("Initial"),
@@ -316,5 +322,5 @@ export const useConfig = (): UseConfig => {
     ...otherConfig,
     ...environmentConfig,
   };
-  return { config, choosePreset: funcSizePreset };
+  return { config, choosePreset: funcSizePreset, setPlants, setBedType };
 };

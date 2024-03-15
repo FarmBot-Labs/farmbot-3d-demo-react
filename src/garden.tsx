@@ -27,6 +27,13 @@ interface GardenProps {
 
 }
 
+type Refs = Record<"size" | "bedType" | "garden",
+  Record<string, React.RefObject<HTMLButtonElement>>>;
+
+interface ModelProps {
+  refs: Refs;
+}
+
 interface Plant {
   label: string;
   icon: string;
@@ -36,8 +43,8 @@ interface Plant {
   y: number;
 }
 
-const Model = () => {
-  const { config, choosePreset } = useConfig();
+const Model = (props: ModelProps) => {
+  const { config, choosePreset, setBedType, setPlants } = useConfig();
   const groundZ = config.bedZOffset + config.bedHeight;
   const midPoint = {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
@@ -92,6 +99,25 @@ const Model = () => {
     return positions;
   };
   const plants = calculatePlantPositions();
+
+  React.useEffect(() => {
+    Object.entries(props.refs.size).map(([preset, ref]) => {
+      if (ref.current) {
+        ref.current.onclick = choosePreset(preset);
+      }
+    });
+    Object.entries(props.refs.bedType).map(([preset, ref]) => {
+      if (ref.current) {
+        ref.current.onclick = setBedType(preset);
+      }
+    });
+    Object.entries(props.refs.garden).map(([preset, ref]) => {
+      if (ref.current) {
+        ref.current.onclick = setPlants(preset);
+      }
+    });
+  }, [props.refs, choosePreset, setBedType, setPlants]);
+
   return <group dispose={null}>
     <Stats />
     <Sky distance={450000}
@@ -216,9 +242,34 @@ const Model = () => {
 };
 
 export const Garden = (props: GardenProps) => {
+  const refs: Refs = {
+    size: {
+      "Genesis": React.createRef(),
+      "Genesis XL": React.createRef(),
+    },
+    bedType: {
+      "Standard": React.createRef(),
+      "Mobile": React.createRef(),
+    },
+    garden: {
+      "winter": React.createRef(),
+      "spring": React.createRef(),
+      "summer": React.createRef(),
+      "fall": React.createRef(),
+    },
+  };
   return <div className={"garden-bed-3d-model"}>
     <Canvas shadows={true}>
-      <Model {...props} />
+      <Model {...props} refs={refs} />
     </Canvas>
+    <div className={"overlay"}>
+      {Object.entries(refs).map(([category, presetRefs], index) =>
+        <div key={index} className={`${category}-row`}>
+          {Object.entries(presetRefs).map(([preset, ref], index) =>
+            <button key={index} ref={ref}>
+              {preset}
+            </button>)}
+        </div>)}
+    </div>
   </div>;
 };
