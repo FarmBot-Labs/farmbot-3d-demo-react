@@ -13,7 +13,6 @@ import { Sky } from "./sky";
 import { useConfig } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
-import { PresetButton } from "./button";
 import _ from 'lodash';
 
 const grassTexture = new TextureLoader()
@@ -180,30 +179,6 @@ const Model = (props: ModelProps) => {
         opacity={0.85}
         fade={5000} />
     </Clouds>
-    {["Genesis", "Genesis XL"].map((preset, index) =>
-      <Html key={index}
-        position={[
-          midPoint.x - 10000 / 2 + index * 500,
-          midPoint.y - 10000 / 2,
-          -groundZ,
-        ]}>
-        <button className={"preset-button"}
-          onClick={choosePreset(preset)}>
-          {preset}
-        </button>
-      </Html>)}
-    {["Genesis", "Genesis XL"].map((preset, index) =>
-      <PresetButton key={index}
-        index={index}
-        preset={preset}
-        choosePreset={choosePreset}
-        hovered={hovered}
-        setHovered={setHovered}
-        startPosition={{
-          x: midPoint.x - 10000 / 2 + 1000,
-          y: midPoint.y - 10000 / 2 + 1000,
-          z: -groundZ,
-        }} />)}
     <Bed config={config} />
     <Bot config={config} />
     {plants.map((plant, i) => (
