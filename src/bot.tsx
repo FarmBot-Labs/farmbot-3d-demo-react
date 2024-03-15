@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace, zZero as zZeroFunc } from "./helpers";

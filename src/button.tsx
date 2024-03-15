@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { Box, Text } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { ASSETS } from "./constants";

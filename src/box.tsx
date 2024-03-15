@@ -22,6 +22,7 @@ import btn from "/3D/models/push_button.glb";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import led from "/3D/models/led_indicator.glb";
+import * as THREE from "three";
 
 const LIB_DIR = "../farmbot-3d-demo-react/3D/lib/";
 

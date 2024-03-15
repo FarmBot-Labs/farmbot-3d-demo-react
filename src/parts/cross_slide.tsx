@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { InstancedBufferAttribute } from "three";
 import { GLTF } from "three-stdlib";
 
