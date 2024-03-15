@@ -69,6 +69,7 @@ import motorHorizontal from "/3D/models/motor_horizontal.glb";
 import motorVertical from "/3D/models/motor_vertical.glb";
 import toolbay3 from "/3D/models/toolbay_3.glb";
 import rotaryTool from "/3D/models/rotary_tool.glb";
+import gear from "/gear.svg";
 
 
 export const ASSETS = {
@@ -149,7 +150,10 @@ export const ASSETS = {
     motorVertical,
     toolbay3,
     rotaryTool,
-  }
+  },
+  other: {
+    gear,
+  },
 };
 
 interface Plant {
@@ -216,6 +220,6 @@ export const GARDENS: Gardens = {
   "Fall": ["arugula", "cherryBelleRadish", "cilantro", "collardGreens", "garlic",
     "goldenBeet", "leek", "lacinatoKale", "turnip", "yellowOnion"],
   "Winter": ["frenchBreakfastRadish", "napaCabbage", "parsnip", "redCurlyKale",
-  "rutabaga", "savoyCabbage", "shallot", "turmeric", "celery", "brusselsSprout" ],
+    "rutabaga", "savoyCabbage", "shallot", "turmeric", "celery", "brusselsSprout"],
   "Random": sampleSize(Object.keys(PLANTS), 20),
 };

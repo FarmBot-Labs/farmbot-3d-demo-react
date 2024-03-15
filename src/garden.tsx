@@ -1,7 +1,8 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-  GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
+  GizmoHelper, GizmoViewcube,
+  OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
@@ -9,10 +10,10 @@ import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { threeSpace, zZero } from "./helpers";
 import { Sky } from "./sky";
-import { useConfig } from "./config";
+import { Config, INITIAL } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
-import _ from 'lodash';
+import { PrivateOverlay, PublicOverlay } from "./config_overlays";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -22,15 +23,8 @@ const grassTexture = new TextureLoader()
       texture.repeat.set(8, 8);
     });
 
-interface GardenProps {
-
-}
-
-type Refs = Record<"FarmBot" | "Bed Type" | "Season",
-  Record<string, React.RefObject<HTMLButtonElement>>>;
-
 interface ModelProps {
-  refs: Refs;
+  config: Config;
 }
 
 interface Plant {
@@ -43,9 +37,7 @@ interface Plant {
 }
 
 const Model = (props: ModelProps) => {
-  const {
-    config, choosePreset, setBedType, setPlants, size, bedType,
-  } = useConfig();
+  const { config } = props;
   const groundZ = config.bedZOffset + config.bedHeight;
   const midPoint = {
     x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
@@ -101,40 +93,8 @@ const Model = (props: ModelProps) => {
   };
   const plants = calculatePlantPositions();
 
-  React.useEffect(() => {
-    Object.entries(props.refs.FarmBot).map(([preset, ref]) => {
-      if (ref.current) {
-        ref.current.onclick = choosePreset(preset);
-      }
-    });
-    Object.entries(props.refs["Bed Type"]).map(([preset, ref]) => {
-      if (ref.current) {
-        ref.current.onclick = setBedType(preset);
-      }
-    });
-    Object.entries(props.refs.Season).map(([preset, ref]) => {
-      if (ref.current) {
-        ref.current.onclick = setPlants(preset);
-      }
-    });
-  }, [props.refs, choosePreset, setBedType, setPlants]);
-
-  Object.values(props.refs).map(categories => {
-    Object.values(categories).map(ref => {
-      if (ref.current) {
-        if (ref.current.textContent == size
-          || ref.current.textContent == bedType
-          || ref.current.textContent == config.plants) {
-          ref.current.classList.add("active");
-        } else {
-          ref.current.classList.remove("active");
-        }
-      }
-    });
-  });
-
   return <group dispose={null}>
-    <Stats />
+    {config.stats && <Stats />}
     <Sky distance={450000}
       sunPosition={sunPosition}
       mieCoefficient={0.01}
@@ -150,9 +110,9 @@ const Model = (props: ModelProps) => {
       enableZoom={true} enablePan={!config.perspective} dampingFactor={0.1}
       minDistance={50} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.axes} />
-    <GizmoHelper>
+    {config.viewCube && <GizmoHelper>
       <GizmoViewcube />
-    </GizmoHelper>
+    </GizmoHelper>}
     <pointLight intensity={6} distance={20000} decay={0} castShadow={true}
       shadow-mapSize={[512, 512]}
       shadow-normalBias={100} // warning: distorts shadows
@@ -232,39 +192,16 @@ const Model = (props: ModelProps) => {
   </group>;
 };
 
-export const Garden = (props: GardenProps) => {
-  const refs: Refs = {
-    FarmBot: {
-      "Genesis": React.createRef(),
-      "Genesis XL": React.createRef(),
-    },
-    Season: {
-      "Winter": React.createRef(),
-      "Spring": React.createRef(),
-      "Summer": React.createRef(),
-      "Fall": React.createRef(),
-    },
-    "Bed Type": {
-      "Standard": React.createRef(),
-      "Mobile": React.createRef(),
-    },
-  };
+export const Garden = () => {
+  const [config, setConfig] = React.useState<Config>(INITIAL);
   return <div className={"garden-bed-3d-model"}>
     <Canvas shadows={true}>
-      <Model {...props} refs={refs} />
+      <Model config={config} />
     </Canvas>
-    <div className={"overlay"}>
-      {Object.entries(refs).map(([category, presetRefs], index) =>
-        <div key={`category-${index}`}>
-          <span className="setting-title">{category}</span>
-          <div key={`row-${index}`} className={`${_.kebabCase(category)}-row row`}>
-            {Object.entries(presetRefs).map(([preset, ref], index) =>
-              <button key={index} ref={ref} className={`${_.kebabCase(preset)} active`}>
-                {preset}
-              </button>)}
-          </div>
-        </div>
-      )}
-    </div>
+    <PublicOverlay config={config} setConfig={setConfig} />
+    {!config.config && <img className={"gear"} src={ASSETS.other.gear}
+      onClick={() => setConfig({ ...config, config: true })} />}
+    {config.config &&
+      <PrivateOverlay config={config} setConfig={setConfig} />}
   </div>;
 };

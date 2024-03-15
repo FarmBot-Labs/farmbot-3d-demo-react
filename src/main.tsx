@@ -1,12 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import { ElectronicsBoxModel } from "./box"
+// import { ElectronicsBoxModel } from "./box"
 import { Garden } from "./garden"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Garden />
-    <ElectronicsBoxModel
+    {/* <ElectronicsBoxModel
       isEditing={false}
       dispatch={() => { }}
       resources={{}}
@@ -19,6 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           }
         }
       }}
-      botOnline={true} />
+      botOnline={true} /> */}
   </React.StrictMode>,
 )
