@@ -209,13 +209,13 @@ export const PLANTS: Record<string, Plant> = {
 };
 
 export const GARDENS: Gardens = {
-  spring: ["beet", "bibbLettuce", "broccoli", "carrot", "cauliflower", "rainbowChard",
+  "Spring": ["beet", "bibbLettuce", "broccoli", "carrot", "cauliflower", "rainbowChard",
     "icicleRadish", "redRussianKale", "bokChoy", "spinach", "snapPea"],
-  summer: ["anaheimPepper", "basil", "cucumber", "eggplant", "hillbillyTomato", "okra",
+  "Summer": ["anaheimPepper", "basil", "cucumber", "eggplant", "hillbillyTomato", "okra",
     "redBellPepper", "runnerBean", "sweetPotato", "zucchini"],
-  fall: ["arugula", "cherryBelleRadish", "cilantro", "collardGreens", "garlic",
+  "Fall": ["arugula", "cherryBelleRadish", "cilantro", "collardGreens", "garlic",
     "goldenBeet", "leek", "lacinatoKale", "turnip", "yellowOnion"],
-  winter: ["frenchBreakfastRadish", "napaCabbage", "parsnip", "redCurlyKale",
+  "Winter": ["frenchBreakfastRadish", "napaCabbage", "parsnip", "redCurlyKale",
   "rutabaga", "savoyCabbage", "shallot", "turmeric", "celery", "brusselsSprout" ],
-  random: sampleSize(Object.keys(PLANTS), 20),
+  "Random": sampleSize(Object.keys(PLANTS), 20),
 };

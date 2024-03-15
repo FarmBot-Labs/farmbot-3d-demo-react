@@ -14,6 +14,7 @@ import { useConfig } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PresetButton } from "./button";
+import _ from 'lodash';
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -252,10 +253,10 @@ export const Garden = (props: GardenProps) => {
       "Mobile": React.createRef(),
     },
     garden: {
-      "winter": React.createRef(),
-      "spring": React.createRef(),
-      "summer": React.createRef(),
-      "fall": React.createRef(),
+      "Winter": React.createRef(),
+      "Spring": React.createRef(),
+      "Summer": React.createRef(),
+      "Fall": React.createRef(),
     },
   };
   return <div className={"garden-bed-3d-model"}>
@@ -264,12 +265,16 @@ export const Garden = (props: GardenProps) => {
     </Canvas>
     <div className={"overlay"}>
       {Object.entries(refs).map(([category, presetRefs], index) =>
-        <div key={index} className={`${category}-row`}>
-          {Object.entries(presetRefs).map(([preset, ref], index) =>
-            <button key={index} ref={ref}>
-              {preset}
-            </button>)}
-        </div>)}
+        <div key={`category-${index}`}>
+          <span className="setting-title">{category}</span>
+          <div key={`row-${index}`} className={`${_.kebabCase(category)}-row row`}>
+            {Object.entries(presetRefs).map(([preset, ref], index) =>
+              <button key={index} ref={ref} className={`${_.kebabCase(preset)} active`}>
+                {preset}
+              </button>)}
+          </div>
+        </div>
+      )}
     </div>
   </div>;
 };

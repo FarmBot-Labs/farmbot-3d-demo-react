@@ -1,5 +1,6 @@
 .garden-bed-3d-model {
   height: 90vh;
+  position: relative;
 }
 
 .preset-button {
@@ -22,14 +23,71 @@
 
 .overlay {
   position: absolute;
-  bottom: 6rem;
+  bottom: 1rem;
   left: 0;
+  right: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+
+  .setting-title {
+    color: #f4f4f4;
+    font-family: Inknut Antiqua;
+    text-shadow: 0 0 10px black;
+  }
+
+  .row {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 5px;
+    border-radius: 25px;
+    height: 40px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-evenly;
+    backdrop-filter: blur(5px);
+  }
 
   button {
-    padding: 1rem;
+    padding: 0 1rem;
+    border-radius: 25px;
+    pointer-events: all;
+    font-family: 'Cabin';
+    font-weight: bold;
+    border: none;
+    background: none;
+
+    &.genesis.active, &.standard.active, &.mobile.active{
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    &.genesis-xl.active {
+      background: linear-gradient(315deg, #22a36d, #4ea3ed);
+      color: #f4f4f4;
+    }
+
+    &.winter.active {
+      background: #326f98;
+      color: #f4f4f4;
+    }
+
+    &.spring.active {
+      background: #46861e;
+      color: #f4f4f4;
+    }
+
+    &.summer.active {
+      background: #ebba15;
+    }
+
+    &.fall.active {
+      background: #934a12;
+      color: #f4f4f4
+    }
 
     &:hover {
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.4);
     }
   }
 }
