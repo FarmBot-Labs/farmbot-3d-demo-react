@@ -3,7 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube, OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
-  Html,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -56,7 +55,6 @@ const Model = (props: ModelProps) => {
     10000 * Math.sin(config.sunInclination * Math.PI / 180)
   );
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
-  const [hovered, setHovered] = React.useState("");
 
   const gardenPlants = GARDENS[config.plants] || [];
   const calculatePlantPositions = (): Plant[] => {
