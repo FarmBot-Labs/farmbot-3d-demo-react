@@ -173,7 +173,6 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Slider {...props} configKey={"zAxisLength"} min={0} max={2000} />
       <Slider {...props} configKey={"bedXOffset"} min={-500} max={500} />
       <Slider {...props} configKey={"bedYOffset"} min={-1500} max={1500} />
-      <Slider {...props} configKey={"beamLength"} min={0} max={1000} />
       <Slider {...props} configKey={"zGantryOffset"} min={0} max={500} />
       <Toggle {...props} configKey={"tracks"} />
       <label>{"Bed Properties"}</label>

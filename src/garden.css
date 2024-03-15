@@ -124,7 +124,7 @@ body {
   background: #434343;
   text-align: left;
   padding: 1rem;
-  font-family: Cabin;
+  font-family: Cabin, Arial;
   border-radius: 5px;
   max-height: 30rem;
   overflow-y: scroll;

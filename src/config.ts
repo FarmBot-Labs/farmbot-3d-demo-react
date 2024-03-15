@@ -246,7 +246,7 @@ export const modifyConfig = (config: Config, update: Partial<Config>) => {
     const presetConfig = PRESETS[update.sizePreset];
     SIZE_CONFIG_KEYS.map(key => newConfig[key] = presetConfig[key] as never);
   }
-  if (update.bedType || newConfig.bedType) {
+  if (update.bedType || (newConfig.bedType != config.bedType)) {
     newConfig.bedZOffset = update.bedType == "Mobile" ? 500 : 0;
     newConfig.legsFlush = update.bedType == "Mobile" ? false : true;
   }
