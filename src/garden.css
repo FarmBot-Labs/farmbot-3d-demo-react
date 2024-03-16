@@ -32,6 +32,15 @@ body {
   right: 1rem;
   width: 1rem;
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
+  padding: 7px;
+  border-radius: 5px;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .overlay {
@@ -46,21 +55,28 @@ body {
   gap: 1.25rem;
   overflow-x: scroll;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent);
+  user-select: none;
 
   @media screen and (max-width: 768px) {
     justify-content: left;
+    pointer-events: all;
+  }
+
+  .section {
+    pointer-events: all;
   }
 
   .setting-title {
     color: #f4f4f4;
     font-family: Inknut Antiqua;
     text-shadow: 0 0 10px black;
-    line-height: 170%;
+    line-height: 1.8rem;
+    text-align: center;
   }
 
   .row {
     background: rgba(255, 255, 255, 0.6);
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px;
     border-radius: 25px;
     height: 40px;
     padding: 5px;
@@ -73,11 +89,11 @@ body {
   button {
     padding: 0 1rem;
     border-radius: 25px;
-    pointer-events: all;
     font-family: 'Cabin';
     font-weight: bold;
     border: none;
     background: none;
+    white-space: nowrap;
 
     &.genesis.active,
     &.standard.active,
@@ -91,12 +107,12 @@ body {
     }
 
     &.winter.active {
-      background: linear-gradient(-15deg, #3e8dc2, #152e40);
+      background: linear-gradient(-15deg, #152e40, #3e8dc2);
       color: #f4f4f4;
     }
 
     &.spring.active {
-      background: linear-gradient(15deg, #65f37d, #055b08);
+      background: linear-gradient(15deg, #055b08, #49cc78);
       color: #f4f4f4;
     }
 
@@ -133,12 +149,18 @@ body {
   width: fit-content;
   margin: auto;
   color: #f4f4f4;
-  font-family: InkNut Antiqua;
+  font-family: 'Cabin', Arial;
   background: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
   text-align: center;
   pointer-events: none;
+  backdrop-filter: blur(5px);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
+
+  @media screen and (max-width: 768px) {
+    margin: 0 1rem;
+  }
 }
 
 .all-configs {
@@ -149,7 +171,7 @@ body {
   background: #434343;
   text-align: left;
   padding: 1rem;
-  font-family: Cabin, Arial;
+  font-family: 'Cabin', Arial;
   border-radius: 5px;
   max-height: 30rem;
   overflow-y: scroll;
