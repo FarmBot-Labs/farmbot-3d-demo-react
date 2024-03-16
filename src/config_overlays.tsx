@@ -25,7 +25,7 @@ export const PublicOverlay = (props: OverlayProps) => {
   const Section = (sectionProps: SectionProps) => {
     const { title, configKey, options } = sectionProps;
     return <div className={"section"}>
-      <span className="setting-title">{title}</span>
+      <div className="setting-title">{title}</div>
       <div className={"row"}>
         {Object.entries(options).map(([preset, label]) => {
           const active = label == config[configKey];
@@ -41,9 +41,9 @@ export const PublicOverlay = (props: OverlayProps) => {
             onClick={() => {
               clearTimeout(toolTip.timeoutId);
               if (disabled) {
-                const text = "Mobile beds are only recommended for Genesis machines.";
+                const text = "Mobile beds are not recommended for Genesis XL machines";
                 const timeoutId = setTimeout(() =>
-                  setToolTip({ timeoutId: 0, text: "" }), 2000);
+                  setToolTip({ timeoutId: 0, text: "" }), 3000);
                 setToolTip(({ timeoutId, text }));
                 return;
               } else {
