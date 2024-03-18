@@ -93,7 +93,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, ccSupportSize, axes,
+    soilHeight, ccSupportSize, axes, xyDimensions,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -133,7 +133,7 @@ export const Bed = (props: BedProps) => {
       <meshPhongMaterial map={woodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Extrude>
-    <group visible={axes}>
+    <group visible={xyDimensions}>
       <DistanceIndicator
         start={{
           x: threeSpace(0, bedLengthOuter),
@@ -156,6 +156,8 @@ export const Bed = (props: BedProps) => {
           y: threeSpace(bedWidthOuter, bedWidthOuter),
           z: groundZ,
         }} />
+    </group>
+    <group visible={axes}>
       <FarmBotAxes config={props.config} />
     </group>
     <Box name={"lower-cc-support"}

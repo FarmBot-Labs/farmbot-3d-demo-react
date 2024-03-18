@@ -46,6 +46,11 @@ export interface Config {
   viewCube: boolean;
   stats: boolean;
   config: boolean;
+  zoom: boolean;
+  bounds: boolean;
+  threeAxes: boolean;
+  xyDimensions: boolean;
+  zDimension: boolean;
 }
 
 export const INITIAL: Config = {
@@ -96,6 +101,11 @@ export const INITIAL: Config = {
   viewCube: false,
   stats: false,
   config: false,
+  zoom: false,
+  bounds: false,
+  threeAxes: false,
+  xyDimensions: true,
+  zDimension: false,
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -192,6 +202,11 @@ export const PRESETS: Record<string, Config> = {
     viewCube: false,
     stats: false,
     config: false,
+    zoom: false,
+    bounds: false,
+    threeAxes: false,
+    xyDimensions: false,
+    zDimension: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -222,6 +237,11 @@ export const PRESETS: Record<string, Config> = {
     viewCube: true,
     stats: true,
     config: true,
+    zoom: true,
+    bounds: true,
+    threeAxes: true,
+    xyDimensions: true,
+    zDimension: true,
   },
 };
 
@@ -237,7 +257,8 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "ccSupportSize", "legSize", "legsFlush",
   "bedBrightness", "soilBrightness", "plants", "labels", "ground", "grid", "axes",
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
-  "tool", "cableCarriers", "viewCube", "stats", "config",
+  "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
+  "threeAxes", "xyDimensions", "zDimension",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {

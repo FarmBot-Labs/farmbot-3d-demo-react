@@ -103,13 +103,13 @@ const Model = (props: ModelProps) => {
       turbidity={5} />
     <Camera makeDefault={true} name={"camera"}
       fov={40} near={10} far={25000}
-      position={[0, -3000, 1500]}
+      position={[3300, -2600, 1450]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
-      enableZoom={true} enablePan={!config.perspective} dampingFactor={0.1}
-      minDistance={50} maxDistance={12000} />
-    <axesHelper args={[5000]} visible={config.axes} />
+      enableZoom={config.zoom} enablePan={!config.perspective} dampingFactor={0.1}
+      minDistance={500} maxDistance={12000} />
+    <axesHelper args={[5000]} visible={config.threeAxes} />
     {config.viewCube && <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>}

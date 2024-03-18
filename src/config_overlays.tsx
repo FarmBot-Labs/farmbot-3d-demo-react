@@ -190,10 +190,17 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Slider {...props} configKey={"x"} min={0} max={props.config.botSizeX} />
       <Slider {...props} configKey={"y"} min={0} max={props.config.botSizeY} />
       <Slider {...props} configKey={"z"} min={0} max={props.config.botSizeZ} />
+      <Radio {...props} configKey={"tool"} options={["rotaryTool", "None"]} />
+      <Toggle {...props} configKey={"trail"} />
+      <Toggle {...props} configKey={"laser"} />
       <label>{"Bot Dimensions"}</label>
       <Slider {...props} configKey={"botSizeX"} min={0} max={6000} />
       <Slider {...props} configKey={"botSizeY"} min={0} max={4000} />
       <Slider {...props} configKey={"botSizeZ"} min={0} max={1000} />
+      <Toggle {...props} configKey={"bounds"} />
+      <Toggle {...props} configKey={"xyDimensions"} />
+      <Toggle {...props} configKey={"zDimension"} />
+      <Toggle {...props} configKey={"axes"} />
       <Slider {...props} configKey={"beamLength"} min={0} max={4000} />
       <Slider {...props} configKey={"columnLength"} min={0} max={1000} />
       <Slider {...props} configKey={"zAxisLength"} min={0} max={2000} />
@@ -201,6 +208,8 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Slider {...props} configKey={"bedYOffset"} min={-1500} max={1500} />
       <Slider {...props} configKey={"zGantryOffset"} min={0} max={500} />
       <Toggle {...props} configKey={"tracks"} />
+      <Toggle {...props} configKey={"cableCarriers"} />
+      <Toggle {...props} configKey={"bot"} />
       <label>{"Bed Properties"}</label>
       <Slider {...props} configKey={"bedWallThickness"} min={0} max={200} />
       <Slider {...props} configKey={"bedHeight"} min={0} max={1000} />
@@ -215,26 +224,24 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Slider {...props} configKey={"bedBrightness"} min={1} max={12} />
       <Slider {...props} configKey={"soilBrightness"} min={1} max={12} />
       <Slider {...props} configKey={"soilHeight"} min={0} max={1000} />
-      <label>{"Other"}</label>
+      <label>{"Garden"}</label>
       <Radio {...props} configKey={"plants"}
         options={["Winter", "Spring", "Summer", "Fall", "Random", "None"]} />
-      <Toggle {...props} configKey={"labels"} />
-      <Toggle {...props} configKey={"trail"} />
+      <label>{"Camera"}</label>
       <Toggle {...props} configKey={"perspective"} />
-      <Toggle {...props} configKey={"bot"} />
-      <Toggle {...props} configKey={"laser"} />
-      <Radio {...props} configKey={"tool"} options={["rotaryTool", "None"]} />
-      <Toggle {...props} configKey={"cableCarriers"} />
-      <Toggle {...props} configKey={"stats"} />
-      <Toggle {...props} configKey={"viewCube"} />
-      <Toggle {...props} configKey={"config"} />
+      <Toggle {...props} configKey={"zoom"} />
       <label>{"Environment"}</label>
       <Toggle {...props} configKey={"ground"} />
-      <Toggle {...props} configKey={"axes"} />
       <Toggle {...props} configKey={"grid"} />
+      <Toggle {...props} configKey={"labels"} />
       <Toggle {...props} configKey={"clouds"} />
       <Slider {...props} configKey={"sunInclination"} min={0} max={180} />
       <Slider {...props} configKey={"sunAzimuth"} min={0} max={360} />
+      <label>{"Dev"}</label>
+      <Toggle {...props} configKey={"threeAxes"} />
+      <Toggle {...props} configKey={"stats"} />
+      <Toggle {...props} configKey={"viewCube"} />
+      <Toggle {...props} configKey={"config"} />
     </details>
   </div>;
 };

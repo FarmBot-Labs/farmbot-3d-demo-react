@@ -140,9 +140,9 @@ const aluminumTexture = new TextureLoader()
 export const Bot = (props: FarmbotModelProps) => {
   const {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
-    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, labels,
+    bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, zDimension,
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
-    cableCarriers, axes,
+    cableCarriers, bounds,
   } = props.config;
   const zDir = -1;
   const zZero = zZeroFunc(props.config);
@@ -580,7 +580,7 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[0, 0, Math.PI / 2]}
       scale={1000} />
     <Line name={"bounds"}
-      visible={labels}
+      visible={bounds}
       color={"white"}
       points={[
         [zero.x, zero.y, zero.z],
@@ -594,7 +594,7 @@ export const Bot = (props: FarmbotModelProps) => {
         ...zDip(extents.x, zero.y),
         [zero.x, zero.y, extents.z],
       ]} />
-    <group visible={axes && labels}>
+    <group visible={zDimension}>
       <DistanceIndicator
         start={{
           x: threeSpace(0, bedLengthOuter),
