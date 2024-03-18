@@ -6,6 +6,10 @@ body {
   height: 100vh;
   width: 100vw;
   position: relative;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .preset-button {
@@ -143,14 +147,14 @@ body {
 
 .tool-tip {
   position: absolute;
-  top: 1rem;
+  bottom: 6.5rem;
   left: 0;
   right: 0;
   width: fit-content;
   margin: auto;
   color: #f4f4f4;
   font-family: 'Cabin', Arial;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(120, 0, 0, 0.65);
   padding: 0.75rem 1rem;
   border-radius: 5px;
   text-align: center;
