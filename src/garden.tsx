@@ -107,9 +107,9 @@ const Model = (props: ModelProps) => {
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
-      enableZoom={true} enablePan={!config.perspective} dampingFactor={0.1}
+      enableZoom={config.zoom} enablePan={!config.perspective} dampingFactor={0.1}
       minDistance={50} maxDistance={12000} />
-    <axesHelper args={[5000]} visible={config.axes} />
+    <axesHelper args={[5000]} visible={config.threeAxes} />
     {config.viewCube && <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>}
