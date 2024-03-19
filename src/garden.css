@@ -261,6 +261,12 @@ body {
     max-width: 40vw;
     margin: 0;
     line-height: 1.7rem;
+    .short {
+      display: none;
+    }
+    .full {
+      display: inline;
+    }
   }
 
   .buy-button {
@@ -299,6 +305,44 @@ body {
 
     &:hover {
       background: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .promo-info {
+    top: 1rem;
+    right: 1rem;
+    gap: 0.5rem;
+
+    .title {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+
+    .description {
+      font-size: 1rem;
+      max-width: 80vw;
+      line-height: 1.5rem;
+      .short {
+        display: inline;
+      }
+      .full {
+        display: none;
+      }
+    }
+
+    .buy-button {
+      font-size: 0.85rem;
+      line-height: 2.2rem;
+      padding: 0 0.75rem;
+      border-radius: 5px;
+
+      .genesis-xl {
+        height: 1.5rem;
+        width: 1.5rem;
+        line-height: 1.5rem;
+      }
     }
   }
 }

@@ -86,18 +86,28 @@ export const PublicOverlay = (props: OverlayProps) => {
     </div>
     <div className="promo-info">
       <h2 className="title">Explore our models</h2>
-      <p className="description">
-        {config.sizePreset === "Genesis" ?
-          `FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
-          our most advanced technology, features, and options. Coming 90% pre-assembled
-          in the box, Genesis can be installed on an existing raised bed in an afternoon.
-          It is suitable for fixed or mobile raised beds in classrooms, research labs,
-          and backyards.` :
-          `Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
-          for a family of four, provides ample room for student agronomy competitions,
-          and can take research experiments to new scale. Suitable for fixed installations
-          at home, farm to fork restaurants, universities, and commercial facilities.`}
-      </p>
+      {config.sizePreset === "Genesis" ? (
+        <p className="description">
+          <span className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</span>
+          <span className="full">
+            FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
+            our most advanced technology, features, and options. Coming 90% pre-assembled
+            in the box, Genesis can be installed on an existing raised bed in an afternoon.
+            It is suitable for fixed or mobile raised beds in classrooms, research labs,
+            and backyards.
+          </span>
+        </p>
+      ) : (
+        <p className="description">
+          <span className="short">Covering 400% the area, Genesis XL can grow enough veggies for a family of four.</span>
+          <span className="full">
+            Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
+            for a family of four, provides ample room for student agronomy competitions,
+            and can take research experiments to new scale. Suitable for fixed installations
+            at home, farm to fork restaurants, universities, and commercial facilities.
+          </span>
+        </p>
+      )}
       <a className="buy-button"
         href={config.sizePreset === "Genesis" ?
           "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-v1-7" :
