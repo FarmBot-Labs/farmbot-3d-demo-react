@@ -24,7 +24,7 @@ export const PublicOverlay = (props: OverlayProps) => {
 
   const Section = (sectionProps: SectionProps) => {
     const { title, configKey, options } = sectionProps;
-    return <div className={"section"}>
+    return <div className={"setting-section"}>
       <div className="setting-title">{title}</div>
       <div className={"row"}>
         {Object.entries(options).map(([preset, label]) => {
@@ -59,29 +59,55 @@ export const PublicOverlay = (props: OverlayProps) => {
   };
 
   return <div className={"overlay"}>
-    <Section
-      title={"FarmBot"}
-      configKey={"sizePreset"}
-      options={{
-        "genesis": "Genesis",
-        "genesis-xl": "Genesis XL",
-      }} />
-    <Section
-      title={"Season"}
-      configKey={"plants"}
-      options={{
-        "winter": "Winter",
-        "spring": "Spring",
-        "summer": "Summer",
-        "fall": "Fall",
-      }} />
-    <Section
-      title={"Bed Type"}
-      configKey={"bedType"}
-      options={{
-        "standard": "Standard",
-        "mobile": "Mobile",
-      }} />
+    <div className={"settings-bar"}>
+      <Section
+        title={"FarmBot"}
+        configKey={"sizePreset"}
+        options={{
+          "genesis": "Genesis",
+          "genesis-xl": "Genesis XL",
+        }} />
+      <Section
+        title={"Season"}
+        configKey={"plants"}
+        options={{
+          "winter": "Winter",
+          "spring": "Spring",
+          "summer": "Summer",
+          "fall": "Fall",
+        }} />
+      <Section
+        title={"Bed Type"}
+        configKey={"bedType"}
+        options={{
+          "standard": "Standard",
+          "mobile": "Mobile",
+        }} />
+    </div>
+    <div className="promo-info">
+      <h2 className="title">Explore our models</h2>
+      <p className="description">
+        {config.sizePreset === "Genesis" ?
+          `FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
+          our most advanced technology, features, and options. Coming 90% pre-assembled
+          in the box, Genesis can be installed on an existing raised bed in an afternoon.
+          It is suitable for fixed or mobile raised beds in classrooms, research labs,
+          and backyards.` :
+          `Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
+          for a family of four, provides ample room for student agronomy competitions,
+          and can take research experiments to new scale. Suitable for fixed installations
+          at home, farm to fork restaurants, universities, and commercial facilities.`}
+      </p>
+      <a className="buy-button"
+        href={config.sizePreset === "Genesis" ?
+          "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-v1-7" :
+          "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-xl-v1-7"}>
+        <p>Order Genesis</p>
+        <p className="genesis-xl" style={{display: config.sizePreset === "Genesis" ? "none" : "inline-block"}}>
+          XL
+        </p>
+      </a>
+    </div>
   </div>;
 };
 

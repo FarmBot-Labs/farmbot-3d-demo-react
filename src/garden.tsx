@@ -20,7 +20,7 @@ const grassTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(8, 8);
+      texture.repeat.set(24, 24);
     });
 
 interface ModelProps {
@@ -102,8 +102,8 @@ const Model = (props: ModelProps) => {
       rayleigh={3}
       turbidity={5} />
     <Camera makeDefault={true} name={"camera"}
-      fov={40} near={10} far={25000}
-      position={[3300, -2600, 1450]}
+      fov={40} near={10} far={75000}
+      position={[2200, -3500, 2000]}
       rotation={[0, 0, 0]}
       up={[0, 0, 1]} />
     <OrbitControls maxPolarAngle={Math.PI / 2}
@@ -121,7 +121,7 @@ const Model = (props: ModelProps) => {
     <Circle name={"ground"}
       visible={config.ground}
       receiveShadow={true}
-      args={[10000, 100]}
+      args={[30000, 100]}
       position={[midPoint.x, midPoint.y, -groundZ]}>
       <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={0} />
     </Circle>
