@@ -156,6 +156,10 @@ const Model = (props: ModelProps) => {
     </Clouds>
     <Bed config={config} />
     <Bot config={config} />
+    <group name={"plant-icon-preload"} visible={false}>
+      {Object.values(PLANTS).map((plant, i) =>
+        <Image key={i} url={plant.icon} />)}
+    </group>
     {plants.map((plant, i) => (
       <Billboard key={i} follow={true} position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
@@ -164,7 +168,9 @@ const Model = (props: ModelProps) => {
       )}>
         <Image url={plant.icon} scale={plant.size}
           transparent={true} />
-        <Text visible={config.labels} fontSize={40} position={[0, plant.size / 2 + 25, 0]}
+        <Text visible={config.labels}
+          fontSize={40}
+          position={[0, plant.size / 2 + 25, 0]}
           font={ASSETS.fonts.cabin}
           outlineColor={"black"}
           outlineWidth={2}
