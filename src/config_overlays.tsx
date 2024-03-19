@@ -109,6 +109,7 @@ export const PublicOverlay = (props: OverlayProps) => {
         </p>
       )}
       <a className="buy-button"
+        target="_top"
         href={config.sizePreset === "Genesis" ?
           "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-v1-7" :
           "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-xl-v1-7"}>
