@@ -7,6 +7,7 @@ body {
   width: 100vw;
   position: relative;
   cursor: grab;
+
   &:active {
     cursor: grabbing;
   }
@@ -24,6 +25,7 @@ body {
   border-radius: 5px;
   backdrop-filter: blur(5px);
   opacity: 0;
+
   &:hover {
     opacity: 1;
   }
@@ -170,6 +172,22 @@ body {
   border-radius: 5px;
   max-height: 30rem;
   overflow-y: scroll;
+
+  .close {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border-radius: 5px;
+
+    &:hover {
+      background: #555;
+    }
+  }
 
   .spacer {
     margin-top: 1rem;

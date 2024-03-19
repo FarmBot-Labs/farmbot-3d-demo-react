@@ -212,9 +212,16 @@ const Radio = (props: RadioProps) => {
 
 export const PrivateOverlay = (props: OverlayProps) => {
   const bedMin = props.config.bedWallThickness * 2;
+  const { config, setConfig } = props;
   return <div className={"all-configs"}>
     <details>
-      <summary>{"Configs"}</summary>
+      <summary>
+        {"Configs"}
+        <p className={"close"}
+          onClick={() => setConfig(modifyConfig(config, { config: false }))}>
+          X
+        </p>
+      </summary>
       <div className={"spacer"} />
       <label>{"Presets"}</label>
       <Radio {...props} configKey={"sizePreset"}
