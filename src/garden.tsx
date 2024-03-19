@@ -1,5 +1,5 @@
 import React from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, ThreeEvent } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube,
   OrbitControls, PerspectiveCamera,
@@ -93,6 +93,53 @@ const Model = (props: ModelProps) => {
   };
   const plants = calculatePlantPositions();
 
+  const [hoveredPlant, setHoveredPlant] =
+    React.useState<number | undefined>(undefined);
+
+  const getI = (e: ThreeEvent<PointerEvent>) =>
+    parseInt(e.intersections[0].object.name);
+
+  const setHover = (active: boolean) => {
+    return (active && config.labelsOnHover)
+      ? (e: ThreeEvent<PointerEvent>) => setHoveredPlant(getI(e))
+      : undefined;
+  };
+
+  interface PlantProps {
+    plant: Plant;
+    i: number;
+    labelOnly?: boolean;
+  }
+
+  const Plant = (props: PlantProps) => {
+    const { i, plant, labelOnly } = props;
+    return <Billboard follow={true}
+      position={new Vector3(
+        threeSpace(plant.x, config.bedLengthOuter),
+        threeSpace(plant.y, config.bedWidthOuter),
+        zZero(config) - config.soilHeight + plant.size / 2,
+      )}>
+      {labelOnly
+        ? <Text visible={config.labels || i === hoveredPlant}
+          renderOrder={1}
+          material-depthTest={false}
+          fontSize={40}
+          position={[0, plant.size / 2 + 25, 0]}
+          font={ASSETS.fonts.cabin}
+          outlineColor={"black"}
+          outlineWidth={2}
+          outlineBlur={5}
+          outlineOpacity={0.5}>
+          {plant.label}
+        </Text>
+        : <Image url={plant.icon} scale={plant.size} name={"" + i}
+          onPointerEnter={setHover(true)}
+          onPointerMove={setHover(true)}
+          onPointerLeave={setHover(false)}
+          transparent={true} />}
+    </Billboard>;
+  };
+
   return <group dispose={null}>
     {config.stats && <Stats />}
     <Sky distance={450000}
@@ -160,26 +207,14 @@ const Model = (props: ModelProps) => {
       {Object.values(PLANTS).map((plant, i) =>
         <Image key={i} url={plant.icon} />)}
     </group>
-    {plants.map((plant, i) => (
-      <Billboard key={i} follow={true} position={new Vector3(
-        threeSpace(plant.x, config.bedLengthOuter),
-        threeSpace(plant.y, config.bedWidthOuter),
-        zZero(config) - config.soilHeight + plant.size / 2,
-      )}>
-        <Image url={plant.icon} scale={plant.size}
-          transparent={true} />
-        <Text visible={config.labels}
-          fontSize={40}
-          position={[0, plant.size / 2 + 25, 0]}
-          font={ASSETS.fonts.cabin}
-          outlineColor={"black"}
-          outlineWidth={2}
-          outlineBlur={5}
-          outlineOpacity={0.5}>
-          {plant.label}
-        </Text>
-      </Billboard>
-    ))}
+    <group name={"plant-labels"}>
+      {plants.map((plant, i) =>
+        <Plant key={i} i={i} plant={plant} labelOnly={true} />)}
+    </group>
+    <group name={"plants"}>
+      {plants.map((plant, i) =>
+        <Plant key={i} i={i} plant={plant} />)}
+    </group>
     <Text fontSize={200} visible={config.labels}
       font={ASSETS.fonts.inknut}
       color={"white"}

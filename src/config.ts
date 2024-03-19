@@ -30,6 +30,7 @@ export interface Config {
   soilHeight: number;
   plants: string;
   labels: boolean;
+  labelsOnHover: boolean;
   ground: boolean;
   grid: boolean;
   axes: boolean;
@@ -85,6 +86,7 @@ export const INITIAL: Config = {
   soilHeight: 500,
   plants: "Spring",
   labels: false,
+  labelsOnHover: false,
   ground: true,
   grid: true,
   axes: false,
@@ -187,6 +189,7 @@ export const PRESETS: Record<string, Config> = {
     soilBrightness: 6,
     plants: "Spring",
     labels: false,
+    labelsOnHover: false,
     ground: true,
     grid: false,
     axes: false,
@@ -222,6 +225,7 @@ export const PRESETS: Record<string, Config> = {
     soilBrightness: 6,
     plants: "Spring",
     labels: true,
+    labelsOnHover: false,
     ground: true,
     grid: true,
     axes: true,
