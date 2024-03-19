@@ -13,6 +13,10 @@ import { GantryWheelPlate, GantryWheelPlateFull } from "./parts/gantry_wheel_pla
 import { RotaryTool, RotaryToolFull } from "./parts/rotary_tool";
 import { DistanceIndicator } from "./distance_indicator";
 import { ElectronicsBox } from "./box";
+import { VacuumPumpCover, VacuumPumpCoverFull } from "./parts/vacuum_pump_cover";
+import { SoilSensor, SoilSensorFull } from "./parts/soil_sensor";
+import { SeedTroughAssembly, SeedTroughAssemblyFull } from "./parts/seed_trough_assembly";
+import { SeedTroughHolder, SeedTroughHolderFull } from "./parts/seed_trough_holder";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -37,6 +41,11 @@ enum PartName {
   motorVertical = "M5_x_10mm_Screw",
   toolbay3 = "mesh0_mesh",
   toolbay3Logo = "mesh0_mesh_1",
+  seeder = "Seeder_Brass_Insert",
+  vacuumPump = "Lower_Vacuum_Tube",
+  wateringNozzle = "M5_x_30mm_Screw",
+  seedBin = "Seed_Bin",
+  seedTray = "Seed_Tray",
 }
 
 type GantryWheelPlate = GLTF & {
@@ -92,6 +101,22 @@ type Toolbay3 = GLTF & {
     [PartName.toolbay3]: THREE.Mesh;
     [PartName.toolbay3Logo]: THREE.Mesh;
   };
+  materials: never;
+}
+type VacuumPump = GLTF & {
+  nodes: { [PartName.vacuumPump]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type WateringNozzle = GLTF & {
+  nodes: { [PartName.wateringNozzle]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type SeedBin = GLTF & {
+  nodes: { [PartName.seedBin]: THREE.Mesh };
+  materials: never;
+}
+type SeedTray = GLTF & {
+  nodes: { [PartName.seedTray]: THREE.Mesh };
   materials: never;
 }
 
@@ -180,6 +205,18 @@ export const Bot = (props: FarmbotModelProps) => {
   const toolbay3 = useGLTF(ASSETS.models.toolbay3, LIB_DIR) as Toolbay3;
   const rotaryTool = useGLTF(ASSETS.models.rotaryTool, LIB_DIR) as RotaryToolFull;
   const RotaryToolComponent = RotaryTool(rotaryTool);
+  const vacuumPump = useGLTF(ASSETS.models.vacuumPump, LIB_DIR) as VacuumPump;
+  const vacuumPumpCover = useGLTF(ASSETS.models.vacuumPumpCover, LIB_DIR) as VacuumPumpCoverFull;
+  const VacuumPumpCoverComponent = VacuumPumpCover(vacuumPumpCover);
+  const seedBin = useGLTF(ASSETS.models.seedBin, LIB_DIR) as SeedBin;
+  const seedTray = useGLTF(ASSETS.models.seedTray, LIB_DIR) as SeedTray;
+  const seedTroughHolder = useGLTF(ASSETS.models.seedTroughHolder, LIB_DIR) as SeedTroughHolderFull;
+  const SeedTroughHolderComponent = SeedTroughHolder(seedTroughHolder);
+  const seedTroughAssembly = useGLTF(ASSETS.models.seedTroughAssembly, LIB_DIR) as SeedTroughAssemblyFull;
+  const SeedTroughAssemblyComponent = SeedTroughAssembly(seedTroughAssembly);
+  const soilSensor = useGLTF(ASSETS.models.soilSensor, LIB_DIR) as SoilSensorFull;
+  const SoilSensorComponent = SoilSensor(soilSensor);
+  const wateringNozzle = useGLTF(ASSETS.models.wateringNozzle, LIB_DIR) as WateringNozzle;
   const [trackShape, setTrackShape] = useState<Shape>();
   const [beamShape, setBeamShape] = useState<Shape>();
   const [columnShape, setColumnShape] = useState<Shape>();
@@ -225,6 +262,7 @@ export const Bot = (props: FarmbotModelProps) => {
   });
   const distanceToSoil = soilHeight + zDir * z;
   const bedCCSupportHeight = Math.min(150, bedHeight / 2);
+  const isJr = props.config.sizePreset == "Jr";
   return <group name={"bot"} visible={props.config.bot}>
     {[0 - extrusionWidth, bedWidthOuter].map((y, index) => {
       const bedColumnYOffset = (tracks ? 0 : extrusionWidth) * (index == 0 ? 1 : -1);
@@ -450,6 +488,24 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={zStop.nodes[PartName.zStop].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
+    <mesh name={"vacuumPump"}
+      position={[
+        threeSpace(x + 28, bedLengthOuter) + bedXOffset,
+        threeSpace(y, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + 40,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000}
+      geometry={vacuumPump.nodes[PartName.vacuumPump].geometry}
+      material={vacuumPump.materials.PaletteMaterial001} />
+    <VacuumPumpCoverComponent
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000}
+      position={[
+        threeSpace(x + 12, bedLengthOuter) + bedXOffset,
+        threeSpace(y + 55, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + 490,
+      ]} />
     <Trail
       width={trail ? 500 : 0}
       color={"red"}
@@ -586,27 +642,81 @@ export const Bot = (props: FarmbotModelProps) => {
         <meshPhongMaterial color={"darkgreen"} />
       </Box>
     </group>
+    <group
+      position={[
+        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(2, bedWidthOuter),
+        100,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}>
+      <SeedTroughAssemblyComponent name={"seedTroughAssembly"}
+        position={[3, -15, 30]}
+        scale={1000} />
+      <SeedTroughHolderComponent name={"seedTroughHolder"}
+        scale={1000} />
+    </group>
     <group name={"toolbay3"}>
-      {[
-        { node: PartName.toolbay3, color: "black", id: "toolbay3" },
-        { node: PartName.toolbay3Logo, color: "white", id: "toolbay3Logo" },
-      ].map(part =>
-        <mesh name={part.id} key={part.id}
-          position={[
-            threeSpace(105 + bedWallThickness, bedLengthOuter),
-            threeSpace(bedWidthOuter / 2, bedWidthOuter),
-            60,
-          ]}
-          rotation={[0, 0, -Math.PI / 2]}
-          scale={1000}
-          geometry={toolbay3.nodes[part.node as keyof Toolbay3["nodes"]].geometry}>
-          <meshPhongMaterial color={part.color} />
-        </mesh>)}
+      {(isJr ? [0] : [-200, 200]).map(yPosition =>
+        <group key={yPosition}>
+          {[
+            { node: PartName.toolbay3, color: "black", id: "toolbay3" },
+            { node: PartName.toolbay3Logo, color: "white", id: "toolbay3Logo" },
+          ].map(part =>
+            <mesh name={part.id} key={part.id}
+              position={[
+                threeSpace(105 + bedWallThickness, bedLengthOuter),
+                threeSpace(yPosition + bedWidthOuter / 2, bedWidthOuter),
+                60,
+              ]}
+              rotation={[0, 0, -Math.PI / 2]}
+              scale={1000}
+              geometry={toolbay3.nodes[part.node as keyof Toolbay3["nodes"]].geometry}>
+              <meshPhongMaterial color={part.color} />
+            </mesh>)}
+        </group>)}
     </group>
     <RotaryToolComponent name={"rotaryTool"} visible={tool != "rotaryTool"}
       position={[
         threeSpace(105 + bedWallThickness, bedLengthOuter),
-        threeSpace(bedWidthOuter / 2, bedWidthOuter),
+        threeSpace((isJr ? 0 : 100) + bedWidthOuter / 2, bedWidthOuter),
+        70,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000} />
+    <mesh name={"wateringNozzle"}
+      position={[
+        threeSpace(11 + 105 + bedWallThickness, bedLengthOuter),
+        threeSpace(10 + (isJr ? 100 : 200) + bedWidthOuter / 2, bedWidthOuter),
+        5 + 70,
+      ]}
+      rotation={[0, 0, 2.094 + Math.PI / 2]}
+      scale={1000}
+      geometry={wateringNozzle.nodes[PartName.wateringNozzle].geometry}
+      material={wateringNozzle.materials.PaletteMaterial001} />
+    <mesh name={"seedBin"}
+      position={[
+        threeSpace(110 + bedWallThickness, bedLengthOuter),
+        threeSpace((isJr ? 200 : 300) + bedWidthOuter / 2, bedWidthOuter),
+        55,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000}
+      geometry={seedBin.nodes[PartName.seedBin].geometry} />
+    <mesh name={"seedTray"}
+      position={[
+        threeSpace(110 + bedWallThickness, bedLengthOuter),
+        threeSpace((isJr ? -100 : -200) + bedWidthOuter / 2, bedWidthOuter),
+        55,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000}
+      geometry={seedTray.nodes[PartName.seedTray].geometry}>
+      <meshPhongMaterial color={"silver"} />
+    </mesh>
+    <SoilSensorComponent name={"soilSensor"}
+      position={[
+        threeSpace(105 + bedWallThickness, bedLengthOuter),
+        threeSpace((isJr ? -200 : -300) + bedWidthOuter / 2, bedWidthOuter),
         70,
       ]}
       rotation={[0, 0, Math.PI / 2]}

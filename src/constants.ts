@@ -69,6 +69,15 @@ import motorHorizontal from "/3D/models/motor_horizontal.glb";
 import motorVertical from "/3D/models/motor_vertical.glb";
 import toolbay3 from "/3D/models/toolbay_3.glb";
 import rotaryTool from "/3D/models/rotary_tool.glb";
+import seeder from "/3D/models/seeder.glb";
+import seedTray from "/3D/models/seed_tray.glb";
+import seedBin from "/3D/models/seed_bin.glb";
+import seedTroughAssembly from "/3D/models/seed_trough_assembly.glb";
+import seedTroughHolder from "/3D/models/seed_trough_holder.glb";
+import soilSensor from "/3D/models/soil_sensor.glb";
+import wateringNozzle from "/3D/models/watering_nozzle.glb";
+import vacuumPump from "/3D/models/vacuum_pump.glb";
+import vacuumPumpCover from "/3D/models/vacuum_pump_cover.glb";
 import gear from "/gear.svg";
 
 
@@ -150,6 +159,15 @@ export const ASSETS = {
     motorVertical,
     toolbay3,
     rotaryTool,
+    seeder,
+    seedTray,
+    seedBin,
+    seedTroughAssembly,
+    seedTroughHolder,
+    soilSensor,
+    wateringNozzle,
+    vacuumPump,
+    vacuumPumpCover,
   },
   other: {
     gear,
