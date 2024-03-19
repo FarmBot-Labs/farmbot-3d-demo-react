@@ -129,7 +129,7 @@ interface ButtonOrLedItem {
   ref?: React.MutableRefObject<MeshObject | null>;
 }
 
-export const Model = (props: BoxTopBaseProps) => {
+export const ElectronicsBox = (props: BoxTopBaseProps) => {
   const box = useGLTF(MODELS.box, LIB_DIR) as Box;
   const btn = useGLTF(MODELS.btn, LIB_DIR) as Btn;
   const led = useGLTF(MODELS.led, LIB_DIR) as Led;
@@ -272,16 +272,7 @@ export const Model = (props: BoxTopBaseProps) => {
     setZForAllInGroup(e, Z);
     document.body.style.cursor = "default";
   };
-  return <group dispose={null}
-    rotation={[0, 0, Math.PI / 2]}>
-    <PerspectiveCamera makeDefault name="camera" fov={30} near={0.1} far={1000}
-      position={[-150, 0, 300]}
-      rotation={[0, -Math.PI / 6, -Math.PI / 2]} />
-    <pointLight intensity={2} position={[0, 0, 200]} rotation={[0, 0, 0]}
-      distance={0} decay={0} />
-    <directionalLight intensity={0.1}
-      position={[-100, 0, 100]} rotation={[0, 0, 0]} />
-    <ambientLight intensity={0.5} />
+  return <group rotation={[0, 0, Math.PI / 2]}>
     <mesh name={"electronicsBox"}
       geometry={box.nodes.Electronics_Box.geometry}
       material={box.materials[Material.box]}
@@ -340,28 +331,29 @@ export const Model = (props: BoxTopBaseProps) => {
               args={[6.75, 0, 4]}
               position={[-30, btnPosition, Z]}
               rotation={[Math.PI / 2, 0, 0]} />
-            <Html name={"label"}
-              center={true}
-              position={[-7, btnPosition, Z]}>
-              {props.isEditing
-                ? <BindingTargetDropdown key={btnPosition}
-                  change={setPinBinding({
-                    binding,
-                    dispatch: props.dispatch,
-                    resources: props.resources,
-                    pinNumber: pinNumber,
-                  })}
-                  resources={props.resources}
-                  sequenceIdInput={binding?.sequence_id}
-                  specialActionInput={binding?.special_action} />
-                : <p className={[
-                  "btn-label",
-                  isHovered ? "hovered" : "",
-                  binding ? "" : "unbound",
-                ].join(" ")}>
-                  {getLabel(binding) || label}
-                </p>}
-            </Html>
+            {props.showLabels &&
+              <Html name={"label"}
+                center={true}
+                position={[-7, btnPosition, Z]}>
+                {props.isEditing
+                  ? <BindingTargetDropdown key={btnPosition}
+                    change={setPinBinding({
+                      binding,
+                      dispatch: props.dispatch,
+                      resources: props.resources,
+                      pinNumber: pinNumber,
+                    })}
+                    resources={props.resources}
+                    sequenceIdInput={binding?.sequence_id}
+                    specialActionInput={binding?.special_action} />
+                  : <p className={[
+                    "btn-label",
+                    isHovered ? "hovered" : "",
+                    binding ? "" : "unbound",
+                  ].join(" ")}>
+                    {getLabel(binding) || label}
+                  </p>}
+              </Html>}
           </group>
         </group>;
       })}
@@ -381,11 +373,12 @@ export const Model = (props: BoxTopBaseProps) => {
             args={[6.75, 6.75, 3]}
             position={[-50, position, Z]}
             rotation={[Math.PI / 2, 0, 0]} />
-          <Html name={"label"}
-            center={true}
-            position={[-66, position, Z]}>
-            <p className={"led-label"}>{ledIndicator.label}</p>
-          </Html>
+          {props.showLabels &&
+            <Html name={"label"}
+              center={true}
+              position={[-66, position, Z]}>
+              <p className={"led-label"}>{ledIndicator.label}</p>
+            </Html>}
         </group>;
       })}
   </group>;
@@ -394,7 +387,18 @@ export const Model = (props: BoxTopBaseProps) => {
 export const ElectronicsBoxModel = (props: BoxTopBaseProps) => {
   return <div className={"electronics-box-3d-model"}>
     <Canvas>
-      <Model {...props} />
+      <group dispose={null}
+        rotation={[0, 0, Math.PI / 2]}>
+        <PerspectiveCamera makeDefault name="camera" fov={30} near={0.1} far={1000}
+          position={[-150, 0, 300]}
+          rotation={[0, -Math.PI / 6, -Math.PI / 2]} />
+        <pointLight intensity={2} position={[0, 0, 200]} rotation={[0, 0, 0]}
+          distance={0} decay={0} />
+        <directionalLight intensity={0.1}
+          position={[-100, 0, 100]} rotation={[0, 0, 0]} />
+        <ambientLight intensity={0.5} />
+        <ElectronicsBox {...props} showLabels={true} />
+      </group>
     </Canvas>
   </div>;
 };

@@ -11,6 +11,7 @@ export const pinBindingLabel = (props: {
 };
 export const t = (string: string) => string;
 export interface BoxTopBaseProps {
+  showLabels?: boolean;
   isEditing: boolean;
   dispatch(): void;
   resources: ResourceIndex;

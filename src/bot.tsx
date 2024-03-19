@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Box, Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace, zZero as zZeroFunc } from "./helpers";
 import { Config } from "./config";
@@ -12,6 +12,7 @@ import { CrossSlide, CrossSlideFull } from "./parts/cross_slide";
 import { GantryWheelPlate, GantryWheelPlateFull } from "./parts/gantry_wheel_plate";
 import { RotaryTool, RotaryToolFull } from "./parts/rotary_tool";
 import { DistanceIndicator } from "./distance_indicator";
+import { ElectronicsBox } from "./box";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -554,6 +555,37 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={beltClip.nodes[PartName.beltClip].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
+    <group
+      position={new THREE.Vector3(
+        threeSpace(x - 60, bedLengthOuter) + bedXOffset,
+        threeSpace(-100, bedWidthOuter) + bedYOffset,
+        columnLength - 190,
+      )}>
+      <ElectronicsBox
+        isEditing={false}
+        dispatch={() => { }}
+        resources={{}}
+        firmwareHardware={"arduino"}
+        bot={{
+          hardware: {
+            informational_settings: {
+              locked: false,
+              sync_status: "synced",
+            }
+          }
+        }}
+        botOnline={true} />
+      <Box name={"farmduino"}
+        args={[135, 20, 108]}
+        position={[0, -20, -60]}>
+        <meshPhongMaterial color={"black"} />
+      </Box>
+      <Box name={"raspberry-pi"}
+        args={[85, 20, 56]}
+        position={[-20, -20, 40]}>
+        <meshPhongMaterial color={"darkgreen"} />
+      </Box>
+    </group>
     <group name={"toolbay3"}>
       {[
         { node: PartName.toolbay3, color: "black", id: "toolbay3" },
