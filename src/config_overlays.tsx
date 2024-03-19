@@ -84,41 +84,51 @@ export const PublicOverlay = (props: OverlayProps) => {
           "mobile": "Mobile",
         }} />
     </div>
-    <div className="promo-info">
-      <h2 className="title">Explore our models</h2>
-      {config.sizePreset === "Genesis" ? (
-        <p className="description">
-          <span className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</span>
-          <span className="full">
-            FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
-            our most advanced technology, features, and options. Coming 90% pre-assembled
-            in the box, Genesis can be installed on an existing raised bed in an afternoon.
-            It is suitable for fixed or mobile raised beds in classrooms, research labs,
-            and backyards.
-          </span>
-        </p>
-      ) : (
-        <p className="description">
-          <span className="short">Covering 400% the area, Genesis XL can grow enough veggies for a family of four.</span>
-          <span className="full">
-            Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
-            for a family of four, provides ample room for student agronomy competitions,
-            and can take research experiments to new scale. Suitable for fixed installations
-            at home, farm to fork restaurants, universities, and commercial facilities.
-          </span>
-        </p>
-      )}
-      <a className="buy-button"
-        target="_top"
-        href={config.sizePreset === "Genesis" ?
-          "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-v1-7" :
-          "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-xl-v1-7"}>
-        <p>Order Genesis</p>
-        <p className="genesis-xl" style={{display: config.sizePreset === "Genesis" ? "none" : "inline-block"}}>
-          XL
-        </p>
-      </a>
-    </div>
+    {config.promoInfo &&
+      <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
+  </div>;
+};
+
+interface PromoInfoProps {
+  isGenesis: boolean;
+}
+
+const PromoInfo = (props: PromoInfoProps) => {
+  const { isGenesis } = props;
+  return <div className="promo-info">
+    <h2 className="title">Explore our models</h2>
+    {isGenesis ? (
+      <p className="description">
+        <span className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</span>
+        <span className="full">
+          FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
+          our most advanced technology, features, and options. Coming 90% pre-assembled
+          in the box, Genesis can be installed on an existing raised bed in an afternoon.
+          It is suitable for fixed or mobile raised beds in classrooms, research labs,
+          and backyards.
+        </span>
+      </p>
+    ) : (
+      <p className="description">
+        <span className="short">Covering 400% the area, Genesis XL can grow enough veggies for a family of four.</span>
+        <span className="full">
+          Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
+          for a family of four, provides ample room for student agronomy competitions,
+          and can take research experiments to new scale. Suitable for fixed installations
+          at home, farm to fork restaurants, universities, and commercial facilities.
+        </span>
+      </p>
+    )}
+    <a className="buy-button"
+      target="_top"
+      href={isGenesis ?
+        "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-v1-7" :
+        "https://farm.bot/collections/farmbot-kits/products/farmbot-genesis-xl-v1-7"}>
+      <p>Order Genesis</p>
+      <p className="genesis-xl" style={{ display: isGenesis ? "none" : "inline-block" }}>
+        XL
+      </p>
+    </a>
   </div>;
 };
 
@@ -223,6 +233,7 @@ export const PrivateOverlay = (props: OverlayProps) => {
         </p>
       </summary>
       <div className={"spacer"} />
+      <Toggle {...props} configKey={"promoInfo"} />
       <label>{"Presets"}</label>
       <Radio {...props} configKey={"sizePreset"}
         options={["Jr", "Genesis", "Genesis XL"]} />
@@ -274,6 +285,7 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <label>{"Camera"}</label>
       <Toggle {...props} configKey={"perspective"} />
       <Toggle {...props} configKey={"zoom"} />
+      <Toggle {...props} configKey={"pan"} />
       <label>{"Environment"}</label>
       <Toggle {...props} configKey={"ground"} />
       <Toggle {...props} configKey={"grid"} />

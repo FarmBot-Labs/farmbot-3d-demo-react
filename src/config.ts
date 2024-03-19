@@ -48,10 +48,12 @@ export interface Config {
   stats: boolean;
   config: boolean;
   zoom: boolean;
+  pan: boolean;
   bounds: boolean;
   threeAxes: boolean;
   xyDimensions: boolean;
   zDimension: boolean;
+  promoInfo: boolean;
 }
 
 export const INITIAL: Config = {
@@ -104,10 +106,12 @@ export const INITIAL: Config = {
   stats: false,
   config: false,
   zoom: false,
+  pan: false,
   bounds: false,
   threeAxes: false,
   xyDimensions: true,
   zDimension: false,
+  promoInfo: true,
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -187,7 +191,7 @@ export const PRESETS: Record<string, Config> = {
     legsFlush: false,
     bedBrightness: 8,
     soilBrightness: 6,
-    plants: "Spring",
+    plants: "",
     labels: false,
     labelsOnHover: false,
     ground: true,
@@ -205,11 +209,13 @@ export const PRESETS: Record<string, Config> = {
     viewCube: false,
     stats: false,
     config: false,
-    zoom: false,
+    zoom: true,
+    pan: true,
     bounds: false,
     threeAxes: false,
     xyDimensions: false,
     zDimension: false,
+    promoInfo: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -242,10 +248,12 @@ export const PRESETS: Record<string, Config> = {
     stats: true,
     config: true,
     zoom: true,
+    pan: true,
     bounds: true,
     threeAxes: true,
     xyDimensions: true,
     zDimension: true,
+    promoInfo: true,
   },
 };
 
@@ -262,7 +270,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "bedBrightness", "soilBrightness", "plants", "labels", "ground", "grid", "axes",
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
-  "threeAxes", "xyDimensions", "zDimension",
+  "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {

@@ -614,7 +614,7 @@ export const Bot = (props: FarmbotModelProps) => {
     <group
       position={new THREE.Vector3(
         threeSpace(x - 60, bedLengthOuter) + bedXOffset,
-        threeSpace(-100, bedWidthOuter) + bedYOffset,
+        threeSpace(-20, bedWidthOuter),
         columnLength - 190,
       )}>
       <ElectronicsBox
@@ -701,7 +701,9 @@ export const Bot = (props: FarmbotModelProps) => {
       ]}
       rotation={[0, 0, Math.PI / 2]}
       scale={1000}
-      geometry={seedBin.nodes[PartName.seedBin].geometry} />
+      geometry={seedBin.nodes[PartName.seedBin].geometry}>
+      <meshPhongMaterial color={"silver"} />
+    </mesh>
     <mesh name={"seedTray"}
       position={[
         threeSpace(110 + bedWallThickness, bedLengthOuter),
