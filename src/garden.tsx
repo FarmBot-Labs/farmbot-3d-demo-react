@@ -97,11 +97,14 @@ const Model = (props: ModelProps) => {
     React.useState<number | undefined>(undefined);
 
   const getI = (e: ThreeEvent<PointerEvent>) =>
-    parseInt(e.intersections[0].object.name);
+    e.buttons ? -1 : parseInt(e.intersections[0].object.name);
 
   const setHover = (active: boolean) => {
     return (active && config.labelsOnHover)
-      ? (e: ThreeEvent<PointerEvent>) => setHoveredPlant(getI(e))
+      ? (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+        setHoveredPlant(getI(e));
+      }
       : undefined;
   };
 
@@ -113,6 +116,7 @@ const Model = (props: ModelProps) => {
 
   const Plant = (props: PlantProps) => {
     const { i, plant, labelOnly } = props;
+    const alwaysShowLabels = config.labels && !config.labelsOnHover;
     return <Billboard follow={true}
       position={new Vector3(
         threeSpace(plant.x, config.bedLengthOuter),
@@ -120,7 +124,7 @@ const Model = (props: ModelProps) => {
         zZero(config) - config.soilHeight + plant.size / 2,
       )}>
       {labelOnly
-        ? <Text visible={config.labels || i === hoveredPlant}
+        ? <Text visible={alwaysShowLabels || i === hoveredPlant}
           renderOrder={1}
           material-depthTest={false}
           fontSize={40}
@@ -133,13 +137,9 @@ const Model = (props: ModelProps) => {
           {plant.label}
         </Text>
         : <Image url={plant.icon} scale={plant.size} name={"" + i}
-          onPointerEnter={setHover(true)}
-          onPointerMove={setHover(true)}
-          onPointerLeave={setHover(false)}
           transparent={true} />}
     </Billboard>;
   };
-
   return <group dispose={null}>
     {config.stats && <Stats />}
     <Sky distance={450000}
@@ -211,7 +211,10 @@ const Model = (props: ModelProps) => {
       {plants.map((plant, i) =>
         <Plant key={i} i={i} plant={plant} labelOnly={true} />)}
     </group>
-    <group name={"plants"}>
+    <group name={"plants"}
+      onPointerEnter={setHover(true)}
+      onPointerMove={setHover(true)}
+      onPointerLeave={setHover(false)}>
       {plants.map((plant, i) =>
         <Plant key={i} i={i} plant={plant} />)}
     </group>
