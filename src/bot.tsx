@@ -708,7 +708,7 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: 6, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - 15, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 12.5, bedLengthOuter) + bedXOffset,
         threeSpace(-100, bedWidthOuter) + bedYOffset,
         columnLength + 100,
       ]}
@@ -728,7 +728,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </mesh>
     <mesh name={"solenoid"}
       position={[
-        threeSpace(x - 100, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 102, bedLengthOuter) + bedXOffset,
         threeSpace(20, bedWidthOuter),
         columnLength - 200,
       ]}
