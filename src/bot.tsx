@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Box, Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace, zZero as zZeroFunc } from "./helpers";
 import { Config } from "./config";
@@ -46,6 +46,13 @@ enum PartName {
   wateringNozzle = "M5_x_30mm_Screw",
   seedBin = "Seed_Bin",
   seedTray = "Seed_Tray",
+  cameraMountHalf = "Camera_Mount_Half",
+  pi = "Raspberry_Pi_4B",
+  farmduino = "Farmduino",
+  shaftCoupler1 = "M3_x_12mm_Socket_Head_Screw",
+  shaftCoupler2 = "5mm_to_8mm_Shaft_Coupler",
+  solenoid = "200mm_Zip_Tie",
+  xAxisCCMount = "X-Axis_CC_Mount",
 }
 
 type GantryWheelPlate = GLTF & {
@@ -117,6 +124,33 @@ type SeedBin = GLTF & {
 }
 type SeedTray = GLTF & {
   nodes: { [PartName.seedTray]: THREE.Mesh };
+  materials: never;
+}
+type CameraMountHalf = GLTF & {
+  nodes: { [PartName.cameraMountHalf]: THREE.Mesh };
+  materials: never;
+}
+type Pi = GLTF & {
+  nodes: { [PartName.pi]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type Farmduino = GLTF & {
+  nodes: { [PartName.farmduino]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type ShaftCoupler = GLTF & {
+  nodes: {
+    [PartName.shaftCoupler1]: THREE.Mesh;
+    [PartName.shaftCoupler2]: THREE.Mesh;
+  };
+  materials: never;
+}
+type Solenoid = GLTF & {
+  nodes: { [PartName.solenoid]: THREE.Mesh };
+  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+}
+type XAxisCCMount = GLTF & {
+  nodes: { [PartName.xAxisCCMount]: THREE.Mesh };
   materials: never;
 }
 
@@ -217,6 +251,12 @@ export const Bot = (props: FarmbotModelProps) => {
   const soilSensor = useGLTF(ASSETS.models.soilSensor, LIB_DIR) as SoilSensorFull;
   const SoilSensorComponent = SoilSensor(soilSensor);
   const wateringNozzle = useGLTF(ASSETS.models.wateringNozzle, LIB_DIR) as WateringNozzle;
+  const cameraMountHalf = useGLTF(ASSETS.models.cameraMountHalf, LIB_DIR) as CameraMountHalf;
+  const pi = useGLTF(ASSETS.models.pi, LIB_DIR) as Pi;
+  const farmduino = useGLTF(ASSETS.models.farmduino, LIB_DIR) as Farmduino;
+  const shaftCoupler = useGLTF(ASSETS.models.shaftCoupler, LIB_DIR) as ShaftCoupler;
+  const solenoid = useGLTF(ASSETS.models.solenoid, LIB_DIR) as Solenoid;
+  const xAxisCCMount = useGLTF(ASSETS.models.xAxisCCMount, LIB_DIR) as XAxisCCMount;
   const [trackShape, setTrackShape] = useState<Shape>();
   const [beamShape, setBeamShape] = useState<Shape>();
   const [columnShape, setColumnShape] = useState<Shape>();
@@ -260,6 +300,27 @@ export const Bot = (props: FarmbotModelProps) => {
         });
     }
   });
+  const yBeltPath = () => {
+    const radius = 12;
+    const path = new Shape();
+    path.moveTo(0, 0);
+    path.lineTo(0, y + 30);
+    path.arc(radius, -5, radius, Math.PI, Math.PI / 2, true);
+    path.lineTo(45, y + 30);
+    path.arc(0, 10, 10, -Math.PI / 2, Math.PI / 4);
+    path.lineTo(0, y + 100);
+    path.arc(radius, 5, radius, (-3 / 4) * Math.PI, Math.PI, true);
+    path.lineTo(0, botSizeY + 220);
+    path.lineTo(-2, botSizeY + 220);
+    path.lineTo(-2, y + 100);
+    path.arc(radius, 4, radius, Math.PI, (-3 / 4) * Math.PI);
+    path.lineTo(45, y + 50);
+    path.arc(0, -10, 8, Math.PI / 4, -Math.PI / 2, true);
+    path.lineTo(radius, y + 40);
+    path.arc(-2, -radius, radius, Math.PI / 2, Math.PI);
+    path.lineTo(-2, 0);
+    return path;
+  };
   const distanceToSoil = soilHeight + zDir * z;
   const bedCCSupportHeight = Math.min(150, bedHeight / 2);
   const isJr = props.config.sizePreset == "Jr";
@@ -368,16 +429,27 @@ export const Bot = (props: FarmbotModelProps) => {
           scale={[1000, 1000 * (index == 0 ? -1 : 1), 1000]} />
       </group>;
     })}
+    <mesh name={"xCCMount"}
+      position={[
+        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(-12, bedWidthOuter),
+        -40,
+      ]}
+      rotation={[0, 0, Math.PI / 2]}
+      scale={1000}
+      geometry={xAxisCCMount.nodes[PartName.xAxisCCMount].geometry}>
+      <meshPhongMaterial color={"silver"} />
+    </mesh>
     <Extrude name={"xCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 35, true),
+        ccPath(botSizeX / 2, botSizeX / 2 - x + 20, bedCCSupportHeight - 40, true),
         { steps: 1, depth: 22, bevelEnabled: false },
       ]}
       position={[
         threeSpace(botSizeX / 2, bedLengthOuter) + bedXOffset,
         threeSpace((tracks ? 0 : extrusionWidth) - 15, bedWidthOuter),
-        -35,
+        -40,
       ]}
       rotation={[-Math.PI / 2, -Math.PI, 0 * Math.PI]}>
       <meshPhongMaterial color={"black"} />
@@ -425,10 +497,19 @@ export const Bot = (props: FarmbotModelProps) => {
         rotation={[Math.PI / 2, 0, 0]}
         scale={1000}
         geometry={motorVertical.nodes[PartName.motorVertical].geometry}
-        material={motorVertical.materials.PaletteMaterial001}>
-        <meshPhongMaterial color={"silver"} />
-      </mesh>
+        material={motorVertical.materials.PaletteMaterial001} />
     </group>
+    <mesh name={"shaftCoupler"}
+      position={[
+        threeSpace(x + 5, bedLengthOuter) + bedXOffset,
+        threeSpace(y - 30, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + zAxisLength - 120,
+      ]}
+      rotation={[0, 0, 0]}
+      scale={1000}
+      geometry={shaftCoupler.nodes[PartName.shaftCoupler2].geometry}>
+      <meshPhongMaterial color={"silver"} />
+    </mesh>
     <Cylinder
       material-color={"#555"}
       args={[4, 4, zAxisLength - 200]}
@@ -506,6 +587,27 @@ export const Bot = (props: FarmbotModelProps) => {
         threeSpace(y + 55, bedWidthOuter) + bedYOffset,
         zZero + zDir * z + 490,
       ]} />
+    <group name={"camera"}
+      rotation={[Math.PI, 0, 0]}
+      position={[
+        threeSpace(x + 23, bedLengthOuter) + bedXOffset,
+        threeSpace(y + 25 + extrusionWidth / 2, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z - 140 + zGantryOffset,
+      ]}>
+      <mesh name={"cameraMount"}
+        rotation={[0, 0, 0]}
+        position={[0, 0, -40]}
+        scale={1000}
+        geometry={cameraMountHalf.nodes[PartName.cameraMountHalf].geometry}>
+        <meshPhongMaterial color={"silver"} />
+      </mesh>
+      <mesh name={"cameraMount"}
+        rotation={[0, Math.PI, 0]}
+        scale={1000}
+        geometry={cameraMountHalf.nodes[PartName.cameraMountHalf].geometry}>
+        <meshPhongMaterial color={"silver"} />
+      </mesh>
+    </group>
     <Trail
       width={trail ? 500 : 0}
       color={"red"}
@@ -600,6 +702,19 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={beltClip.nodes[PartName.beltClip].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
+    <Extrude name={"yBelt"}
+      args={[
+        yBeltPath(),
+        { steps: 1, depth: 6, bevelEnabled: false },
+      ]}
+      position={[
+        threeSpace(x - 15, bedLengthOuter) + bedXOffset,
+        threeSpace(-100, bedWidthOuter) + bedYOffset,
+        columnLength + 100,
+      ]}
+      rotation={[0, -Math.PI / 2, 0]}>
+      <meshPhongMaterial color={"black"} />
+    </Extrude>
     <mesh name={"yStopMax"}
       position={[
         threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
@@ -611,7 +726,17 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={beltClip.nodes[PartName.beltClip].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
-    <group
+    <mesh name={"solenoid"}
+      position={[
+        threeSpace(x - 100, bedLengthOuter) + bedXOffset,
+        threeSpace(20, bedWidthOuter),
+        columnLength - 200,
+      ]}
+      rotation={[0, 0, -Math.PI / 2]}
+      scale={1000}
+      geometry={solenoid.nodes[PartName.solenoid].geometry}
+      material={solenoid.materials.PaletteMaterial001} />
+    <group name={"electronics-box"}
       position={new THREE.Vector3(
         threeSpace(x - 60, bedLengthOuter) + bedXOffset,
         threeSpace(-20, bedWidthOuter),
@@ -631,16 +756,18 @@ export const Bot = (props: FarmbotModelProps) => {
           }
         }}
         botOnline={true} />
-      <Box name={"farmduino"}
-        args={[135, 20, 108]}
-        position={[0, -20, -60]}>
-        <meshPhongMaterial color={"black"} />
-      </Box>
-      <Box name={"raspberry-pi"}
-        args={[85, 20, 56]}
-        position={[-20, -20, 40]}>
-        <meshPhongMaterial color={"darkgreen"} />
-      </Box>
+      <mesh name={"farmduino"}
+        position={[-60, -10, -110]}
+        rotation={[Math.PI / 2, 0, 0]}
+        scale={1000}
+        geometry={farmduino.nodes[PartName.farmduino].geometry}
+        material={farmduino.materials.PaletteMaterial001} />
+      <mesh name={"pi"}
+        position={[-20, -10, 40]}
+        rotation={[Math.PI / 2, 0, 0]}
+        scale={1000}
+        geometry={pi.nodes[PartName.pi].geometry}
+        material={pi.materials.PaletteMaterial001} />
     </group>
     <group
       position={[

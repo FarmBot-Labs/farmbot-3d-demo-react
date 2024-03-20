@@ -78,6 +78,12 @@ import soilSensor from "/3D/models/soil_sensor.glb";
 import wateringNozzle from "/3D/models/watering_nozzle.glb";
 import vacuumPump from "/3D/models/vacuum_pump.glb";
 import vacuumPumpCover from "/3D/models/vacuum_pump_cover.glb";
+import pi from "/3D/models/pi.glb";
+import farmduino from "/3D/models/farmduino.glb";
+import cameraMountHalf from "/3D/models/camera_mount_half.glb";
+import shaftCoupler from "/3D/models/shaft_coupler.glb";
+import solenoid from "/3D/models/solenoid.glb";
+import xAxisCCMount from "/3D/models/x_axis_cc_mount.glb";
 import gear from "/gear.svg";
 
 
@@ -168,6 +174,12 @@ export const ASSETS = {
     wateringNozzle,
     vacuumPump,
     vacuumPumpCover,
+    pi,
+    farmduino,
+    cameraMountHalf,
+    shaftCoupler,
+    solenoid,
+    xAxisCCMount,
   },
   other: {
     gear,
