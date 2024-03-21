@@ -14,6 +14,7 @@ import { Config, INITIAL } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
+import { useSpring, animated, config as springConfig } from "@react-spring/three";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -140,6 +141,11 @@ const Model = (props: ModelProps) => {
           transparent={true} />}
     </Billboard>;
   };
+  const isXL = config.sizePreset == "Genesis XL";
+  const { scale } = useSpring({
+    scale: isXL ? 1.5 : 1,
+    config: springConfig.molasses,
+  });
   return <group dispose={null}>
     {config.stats && <Stats />}
     <Sky distance={450000}
@@ -148,13 +154,16 @@ const Model = (props: ModelProps) => {
       mieDirectionalG={0.9}
       rayleigh={3}
       turbidity={5} />
-    <Camera makeDefault={true} name={"camera"}
-      fov={40} near={10} far={75000}
-      position={[2200, -3500, 2000]}
-      rotation={[0, 0, 0]}
-      up={[0, 0, 1]} />
+    <animated.group scale={scale}>
+      <Camera makeDefault={true} name={"camera"}
+        fov={40} near={10} far={75000}
+        position={[2200, -3500, 2000]}
+        rotation={[0, 0, 0]}
+        up={[0, 0, 1]} />
+    </animated.group>
     <OrbitControls maxPolarAngle={Math.PI / 2}
       enableZoom={config.zoom} enablePan={config.pan} dampingFactor={0.1}
+      target={[0, 0, 0]}
       minDistance={500} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.threeAxes} />
     {config.viewCube && <GizmoHelper>
