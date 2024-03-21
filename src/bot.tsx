@@ -335,7 +335,7 @@ export const Bot = (props: FarmbotModelProps) => {
             { steps: 1, depth: columnLength, bevelEnabled: false },
           ]}
           position={[
-            threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
+            threeSpace(x - extrusionWidth - 12, bedLengthOuter) + bedXOffset,
             threeSpace(y + bedColumnYOffset, bedWidthOuter),
             30,
           ]}
@@ -344,7 +344,7 @@ export const Bot = (props: FarmbotModelProps) => {
         </Extrude>
         <mesh name={index == 0 ? "leftBracket" : "rightBracket"}
           position={[
-            threeSpace(x - extrusionWidth - 10, bedLengthOuter) + bedXOffset,
+            threeSpace(x - extrusionWidth - 12, bedLengthOuter) + bedXOffset,
             threeSpace(y - (index == 0 ? 0 : 170) + bedColumnYOffset, bedWidthOuter),
             columnLength - 30,
           ]}
@@ -357,7 +357,7 @@ export const Bot = (props: FarmbotModelProps) => {
         </mesh>
         <mesh name={index == 0 ? "leftMotor" : "rightMotor"}
           position={[
-            threeSpace(x - (index == 0 ? 45 : 75), bedLengthOuter) + bedXOffset,
+            threeSpace(x - (index == 0 ? 47 : 77), bedLengthOuter) + bedXOffset,
             threeSpace(y - (index == 0 ? 0 : -20) + bedColumnYOffset, bedWidthOuter),
             columnLength + 70,
           ]}
@@ -387,7 +387,7 @@ export const Bot = (props: FarmbotModelProps) => {
         </Extrude>
         <mesh name={"xStopMin"}
           position={[
-            threeSpace(-130, bedLengthOuter) + bedXOffset,
+            threeSpace(-132, bedLengthOuter) + bedXOffset,
             threeSpace(y + 10 + bedColumnYOffset, bedWidthOuter),
             2 + (index == 0 ? 0 : 5),
           ]}
@@ -402,7 +402,7 @@ export const Bot = (props: FarmbotModelProps) => {
         </mesh>
         <mesh name={"xStopMax"}
           position={[
-            threeSpace(botSizeX + 130, bedLengthOuter) + bedXOffset,
+            threeSpace(botSizeX + 128, bedLengthOuter) + bedXOffset,
             threeSpace(y + 10 + bedColumnYOffset, bedWidthOuter),
             2 + (index == 0 ? 5 : 0),
           ]}
@@ -417,7 +417,7 @@ export const Bot = (props: FarmbotModelProps) => {
         </mesh>
         <GantryWheelPlateComponent name={"gantryWheelPlate"}
           position={[
-            threeSpace(x - 40, bedLengthOuter) + bedXOffset,
+            threeSpace(x - 42, bedLengthOuter) + bedXOffset,
             threeSpace(
               y + (index == 0 ? 0 : extrusionWidth + 5)
               - 2 - (index == 0 ? 1 : 0)
@@ -431,7 +431,7 @@ export const Bot = (props: FarmbotModelProps) => {
     })}
     <mesh name={"xCCMount"}
       position={[
-        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 32, bedLengthOuter) + bedXOffset,
         threeSpace(-12, bedWidthOuter),
         -40,
       ]}
@@ -456,7 +456,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </Extrude>
     <CrossSlideComponent name={"crossSlide"}
       position={[
-        threeSpace(x, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 1.5, bedLengthOuter) + bedXOffset,
         threeSpace(y + 5, bedWidthOuter) + bedYOffset,
         columnLength + 105,
       ]}
@@ -536,11 +536,11 @@ export const Bot = (props: FarmbotModelProps) => {
     <Extrude name={"zCC"} visible={cableCarriers}
       castShadow={true}
       args={[
-        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 15, 85),
+        ccPath(botSizeZ + zGantryOffset - 100, z + zGantryOffset - 15, 87),
         { steps: 1, depth: 60, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - 39, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 41, bedLengthOuter) + bedXOffset,
         threeSpace(y - 25, bedWidthOuter) + bedYOffset,
         zZero + zDir * z + 125,
       ]}
@@ -656,7 +656,7 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: beamLength, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - extrusionWidth - 5, bedLengthOuter) + bedXOffset,
+        threeSpace(x - extrusionWidth - 8, bedLengthOuter) + bedXOffset,
         threeSpace((bedWidthOuter + beamLength) / 2, bedWidthOuter),
         columnLength + 40,
       ]}
@@ -667,7 +667,7 @@ export const Bot = (props: FarmbotModelProps) => {
       {range((botSizeY - 10) / 300).map(i =>
         <mesh key={i}
           position={[
-            threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+            threeSpace(x - 28, bedLengthOuter) + bedXOffset,
             threeSpace(50 + i * 300, bedWidthOuter) + bedYOffset,
             columnLength + 60,
           ]}
@@ -684,7 +684,7 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: 60, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 28, bedLengthOuter) + bedXOffset,
         threeSpace(20, bedWidthOuter) + bedYOffset,
         columnLength + 150,
       ]}
@@ -693,7 +693,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </Extrude>
     <mesh name={"yStopMin"}
       position={[
-        threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
+        threeSpace(x - extrusionWidth + 2, bedLengthOuter) + bedXOffset,
         threeSpace(bedYOffset - 125, bedWidthOuter),
         columnLength + 40 + extrusionWidth * 3,
       ]}
@@ -708,7 +708,7 @@ export const Bot = (props: FarmbotModelProps) => {
         { steps: 1, depth: 6, bevelEnabled: false },
       ]}
       position={[
-        threeSpace(x - 12.5, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 14.5, bedLengthOuter) + bedXOffset,
         threeSpace(-100, bedWidthOuter) + bedYOffset,
         columnLength + 100,
       ]}
@@ -717,7 +717,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </Extrude>
     <mesh name={"yStopMax"}
       position={[
-        threeSpace(x - extrusionWidth + 5, bedLengthOuter) + bedXOffset,
+        threeSpace(x - extrusionWidth + 2, bedLengthOuter) + bedXOffset,
         threeSpace(botSizeY + bedYOffset + 135, bedWidthOuter),
         columnLength + 40 + extrusionWidth * 3 + 5,
       ]}
@@ -728,7 +728,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </mesh>
     <mesh name={"solenoid"}
       position={[
-        threeSpace(x - 102, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 104, bedLengthOuter) + bedXOffset,
         threeSpace(20, bedWidthOuter),
         columnLength - 200,
       ]}
@@ -738,7 +738,7 @@ export const Bot = (props: FarmbotModelProps) => {
       material={solenoid.materials.PaletteMaterial001} />
     <group name={"electronics-box"}
       position={new THREE.Vector3(
-        threeSpace(x - 60, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 62, bedLengthOuter) + bedXOffset,
         threeSpace(-20, bedWidthOuter),
         columnLength - 190,
       )}>
@@ -771,7 +771,7 @@ export const Bot = (props: FarmbotModelProps) => {
     </group>
     <group
       position={[
-        threeSpace(x - 30, bedLengthOuter) + bedXOffset,
+        threeSpace(x - 32, bedLengthOuter) + bedXOffset,
         threeSpace(2, bedWidthOuter),
         100,
       ]}
