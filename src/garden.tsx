@@ -14,7 +14,7 @@ import { Config, INITIAL } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
-import { useSpring, animated, config as springConfig } from "@react-spring/three";
+import { useSpring, animated } from "@react-spring/three";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -45,8 +45,8 @@ const Model = (props: ModelProps) => {
     y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
   };
   const sunPosition = new Vector3(
-    10000 * Math.sin(config.sunAzimuth * Math.PI / 180),
-    10000 * Math.cos(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.cos(config.sunInclination * Math.PI / 180) * Math.sin(config.sunAzimuth * Math.PI / 180),
+    10000 * Math.cos(config.sunInclination * Math.PI / 180) * Math.cos(config.sunAzimuth * Math.PI / 180),
     10000 * Math.sin(config.sunInclination * Math.PI / 180)
   );
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
@@ -143,8 +143,30 @@ const Model = (props: ModelProps) => {
   };
   const isXL = config.sizePreset == "Genesis XL";
   const { scale } = useSpring({
-    scale: isXL ? 1.5 : 1,
-    config: springConfig.molasses,
+    scale: isXL ? 1.75 : 1,
+    config: {
+      tension: 300,
+      friction: 40,
+    },
+  });
+
+  type SeasonProperties = {
+    sunIntensity: number;
+    sunColor: string;
+    cloudOpacity: number;
+  };
+  const seasonProperties: Record<string, SeasonProperties> = {
+    Winter: { sunIntensity: 4, sunColor: '#A0C4FF', cloudOpacity: 0.85},
+    Spring: { sunIntensity: 7, sunColor: '#BDE0FE', cloudOpacity: 0.2},
+    Summer: { sunIntensity: 9, sunColor: '#FFFFFF', cloudOpacity: 0},
+    Fall: { sunIntensity: 5.5, sunColor: '#FFD6BC', cloudOpacity: 0.3},
+  };
+  const { sunIntensity, sunColor } = useSpring({
+    ...seasonProperties[config.plants] || seasonProperties.Spring,
+    config: {
+      tension: 50,
+      friction: 40,
+    },
   });
   return <group dispose={null}>
     {config.stats && <Stats />}
@@ -157,19 +179,24 @@ const Model = (props: ModelProps) => {
     <animated.group scale={scale}>
       <Camera makeDefault={true} name={"camera"}
         fov={40} near={10} far={75000}
-        position={[2200, -3500, 2000]}
+        position={[4800, -2000, 3900]} // Small screens
+        // position={[2200, -3500, 2000]} // Large screens
         rotation={[0, 0, 0]}
         up={[0, 0, 1]} />
     </animated.group>
     <OrbitControls maxPolarAngle={Math.PI / 2}
-      enableZoom={config.zoom} enablePan={config.pan} dampingFactor={0.1}
+      enableZoom={config.zoom} enablePan={config.pan} dampingFactor={0.2}
       target={[0, 0, 0]}
       minDistance={500} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.threeAxes} />
     {config.viewCube && <GizmoHelper>
       <GizmoViewcube />
     </GizmoHelper>}
-    <pointLight intensity={6} distance={20000} decay={0} castShadow={true}
+    <animated.pointLight intensity={sunIntensity}
+      color={sunColor}
+      distance={20000}
+      decay={0}
+      castShadow={true}
       shadow-mapSize={[512, 512]}
       shadow-normalBias={100} // warning: distorts shadows
       position={sunPosition} />
@@ -207,7 +234,7 @@ const Model = (props: ModelProps) => {
         color="#ccc"
         growth={400}
         speed={.1}
-        opacity={0.85}
+        opacity={seasonProperties[config.plants].cloudOpacity || 0}
         fade={5000} />
     </Clouds>
     <Bed config={config} />
