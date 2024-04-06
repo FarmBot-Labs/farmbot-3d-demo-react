@@ -289,6 +289,7 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <label>{"Environment"}</label>
       <Toggle {...props} configKey={"ground"} />
       <Toggle {...props} configKey={"grid"} />
+      <Toggle {...props} configKey={"utilitiesPost"} />
       <Toggle {...props} configKey={"labels"} />
       <Toggle {...props} configKey={"labelsOnHover"} />
       <Toggle {...props} configKey={"clouds"} />

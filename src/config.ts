@@ -55,6 +55,7 @@ export interface Config {
   zDimension: boolean;
   promoInfo: boolean;
   solar: boolean;
+  utilitiesPost: boolean;
 }
 
 export const INITIAL: Config = {
@@ -114,6 +115,7 @@ export const INITIAL: Config = {
   zDimension: false,
   promoInfo: true,
   solar: true,
+  utilitiesPost: true,
 };
 
 export const PRESETS: Record<string, Config> = {
@@ -219,6 +221,7 @@ export const PRESETS: Record<string, Config> = {
     zDimension: false,
     promoInfo: false,
     solar: false,
+    utilitiesPost: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -258,6 +261,7 @@ export const PRESETS: Record<string, Config> = {
     zDimension: true,
     promoInfo: true,
     solar: true,
+    utilitiesPost: true,
   },
 };
 
@@ -275,7 +279,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
   "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
-  "solar",
+  "solar", "utilitiesPost",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {
