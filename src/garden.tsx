@@ -2,7 +2,7 @@ import React from "react";
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube,
-  OrbitControls, PerspectiveCamera,
+  OrbitControls, PerspectiveCamera, Line,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
@@ -15,6 +15,7 @@ import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 import { useSpring, animated } from "@react-spring/three";
+import { SolarPanel } from "./solar_panel";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -269,6 +270,42 @@ const Model = (props: ModelProps) => {
       rotation={[Math.PI / 4, 0, 0]}>
       {config.label}
     </Text>
+    <group name="solar">
+      <group name="solar-array"
+        position={[
+          threeSpace(-2000, config.bedLengthOuter),
+          threeSpace(-1500, config.bedWidthOuter),
+          -groundZ + 200,
+        ]}
+        visible={config.solar}>
+        <group position={[0, -525, 0]}>
+          <SolarPanel />
+        </group>
+        <group position={[0, 525, 0]}>
+          <SolarPanel />
+        </group>
+        <Text name="solar-disclaimer"
+          fontSize={60}
+          font={ASSETS.fonts.inknut}
+          color={"white"}
+          outlineColor={"black"}
+          outlineWidth={0}
+          outlineBlur={20}
+          outlineOpacity={0.75}
+          position={[-200, 0, 200]}
+          rotation={[0, Math.PI / 3, Math.PI / 2]}>
+          Solar array not included
+        </Text>
+      </group>
+      <Line name="solar-wiring"
+        points={[[0, 0, -groundZ + 20],
+          [0, threeSpace(-1500, config.bedWidthOuter), -groundZ + 20],
+          [threeSpace(-2000, config.bedLengthOuter), threeSpace(-1500, config.bedWidthOuter), -groundZ + 20]]}
+        color="yellow"
+        lineWidth={5}
+        visible={config.solar}
+      />
+    </group>
   </group>;
 };
 
