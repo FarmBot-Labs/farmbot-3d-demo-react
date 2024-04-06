@@ -1,6 +1,12 @@
 import { TextureLoader, RepeatWrapping, Shape } from "three";
-import { Extrude } from "@react-three/drei";
+import { Extrude, Text, Line } from "@react-three/drei";
 import { ASSETS } from "./constants";
+import { threeSpace } from "./helpers";
+import { Config } from "./config";
+
+interface SolarArrayProps {
+  config: Config;
+}
 
 const panelWidth = 540;
 const panelLength = 1040;
@@ -50,7 +56,7 @@ const cellArray = () => {
   return cells;
 };
 
-export const SolarPanel = () => {
+const SolarPanel = () => {
   return (
     <group rotation={[0, Math.PI / 6, 0]}>
       <mesh>
@@ -58,6 +64,49 @@ export const SolarPanel = () => {
         <meshPhongMaterial color={"white"} map={aluminumTexture} />
       </mesh>
       {cellArray()}
+    </group>
+  );
+};
+
+export const SolarArray = (props: SolarArrayProps) => {
+  const { config } = props;
+  const groundZ = config.bedZOffset + config.bedHeight;
+  return (
+    <group name="solar">
+    <group name="solar-array"
+      position={[
+        threeSpace(-2000, config.bedLengthOuter),
+        threeSpace(-1500, config.bedWidthOuter),
+        -groundZ + 200,
+      ]}
+      visible={config.solar}>
+      <group position={[0, -525, 0]}>
+        <SolarPanel />
+      </group>
+      <group position={[0, 525, 0]}>
+        <SolarPanel />
+      </group>
+      <Text name="solar-disclaimer"
+        fontSize={60}
+        font={ASSETS.fonts.inknut}
+        color={"white"}
+        outlineColor={"black"}
+        outlineWidth={0}
+        outlineBlur={20}
+        outlineOpacity={0.75}
+        position={[-200, 0, 200]}
+        rotation={[0, Math.PI / 3, Math.PI / 2]}>
+        Solar array not included
+      </Text>
+    </group>
+    <Line name="solar-wiring"
+      points={[[threeSpace(600, -config.bedLengthOuter), -config.bedWidthOuter / 2, -groundZ + 20],
+        [threeSpace(600, -config.bedLengthOuter), threeSpace(-1500, config.bedWidthOuter), -groundZ + 20],
+        [threeSpace(-2000, config.bedLengthOuter), threeSpace(-1500, config.bedWidthOuter), -groundZ + 20]]}
+      color="yellow"
+      lineWidth={5}
+      visible={config.solar}
+    />
     </group>
   );
 };
