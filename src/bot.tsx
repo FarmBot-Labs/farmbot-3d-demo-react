@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail, useGLTF, Box, CubicBezierLine } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace, zZero as zZeroFunc } from "./helpers";
 import { Config } from "./config";
@@ -202,8 +202,9 @@ export const Bot = (props: FarmbotModelProps) => {
     x, y, z, botSizeX, botSizeY, botSizeZ, beamLength, trail, laser, soilHeight,
     bedXOffset, bedYOffset, bedLengthOuter, bedWidthOuter, tracks, zDimension,
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
-    cableCarriers, bounds,
+    cableCarriers, bounds, ccSupportSize, bedZOffset, legSize
   } = props.config;
+  const zGround = -bedHeight - bedZOffset;
   const zDir = -1;
   const zZero = zZeroFunc(props.config);
   const zero = {
@@ -850,6 +851,71 @@ export const Bot = (props: FarmbotModelProps) => {
       ]}
       rotation={[0, 0, Math.PI / 2]}
       scale={1000} />
+    <group name={"powerSupply"}>
+      <Box
+        castShadow={true}
+        receiveShadow={true}
+        args={[163, 42, 68]}
+        position={[
+          300,
+          threeSpace(-21, bedWidthOuter),
+          -90 - ccSupportSize
+        ]}>
+        <meshPhongMaterial map={aluminumTexture} color={"white"}
+          shininess={100} />
+      </Box>
+      <Line points={[
+          [(-bedLengthOuter + botSizeX) / 2, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)],
+          [0, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]
+        ]}
+        color="#222"
+        lineWidth={2.5} />
+      <CubicBezierLine
+        start={[0, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
+        midA={[100, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
+        midB={[200 - (163 / 2), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+        end={[300 - (163 / 2), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+        color="#222"
+        lineWidth={2.5} />
+      <CubicBezierLine
+        start={[300 + (163 / 2), threeSpace(-20, bedWidthOuter), -bedHeight / 2]}
+        midA={[400 + (163 / 2), threeSpace(-20, bedWidthOuter), -bedHeight / 2]}
+        midB={[400, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+        end={[500, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+        color="#222"
+        lineWidth={2.5} />
+      <Line points={[
+          [500, threeSpace(-20, bedWidthOuter), -bedHeight + 10],
+          [bedLengthOuter / 2 - 150, threeSpace(-20, bedWidthOuter), -bedHeight + 10]
+        ]}
+        color="#222"
+        lineWidth={2.5} />
+      <CubicBezierLine
+        start={[bedLengthOuter / 2 - 150, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+        midA={[bedLengthOuter / 2 - 100, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+        midB={[bedLengthOuter / 2 - 100, threeSpace(-20, bedWidthOuter), zGround + 10]}
+        end={[bedLengthOuter / 2 - 50, threeSpace(-20, bedWidthOuter), zGround + 10]}
+        color="#222"
+        lineWidth={2.5} />
+      <Line points={[
+          [bedLengthOuter / 2 - 50, threeSpace(-20, bedWidthOuter), zGround + 10],
+          [bedLengthOuter / 2 + 400, threeSpace(-20, bedWidthOuter), zGround + 10]
+        ]}
+        color="#222"
+        lineWidth={2.5} />
+      <CubicBezierLine
+        start={[bedLengthOuter / 2 + 400, threeSpace(-20, bedWidthOuter), zGround + 10]}
+        midA={[bedLengthOuter / 2 + 450, threeSpace(-20, bedWidthOuter), zGround + 10]}
+        midB={[bedLengthOuter / 2 + 450, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
+        end={[bedLengthOuter / 2 + 500, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
+        color="#222"
+        lineWidth={2.5} />
+      <Box
+        args={[50, 30, 30]}
+        position={[bedLengthOuter / 2 + 525, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}>
+        <meshPhongMaterial color={"#222"}/>
+      </Box>
+    </group>
     <Line name={"bounds"}
       visible={bounds}
       color={"white"}

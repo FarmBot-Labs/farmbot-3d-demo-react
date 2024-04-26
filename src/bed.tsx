@@ -93,7 +93,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, ccSupportSize, axes, xyDimensions,
+    soilHeight, ccSupportSize, axes, xyDimensions, utilitiesPost,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -216,5 +216,26 @@ export const Bed = (props: BedProps) => {
           </Box>)}
       </group>
     )}
+    <group name={"utilities"}
+      visible={utilitiesPost}
+      position={[
+        threeSpace(600, -bedLengthOuter),
+        threeSpace(legSize / 2, bedWidthOuter),
+        groundZ + 150,
+      ]}>
+      <Box name={"utilities-post"}
+        castShadow={true}
+        args={[legSize, legSize, 300]}>
+        <meshPhongMaterial map={legWoodTexture} color={bedColor}
+          shininess={100} />
+      </Box>
+      <Box name={"electrical-outlet"}
+        castShadow={true}
+        args={[50, 90, 120]}
+        position={[-legSize / 2, 0, 85]}>
+        <meshPhongMaterial color={"gray"}
+          shininess={100} />
+      </Box>
+    </group>
   </group>;
 };

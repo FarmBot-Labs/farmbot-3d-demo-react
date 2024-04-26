@@ -15,6 +15,7 @@ import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 import { useSpring, animated } from "@react-spring/three";
+import { Solar } from "./solar";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -269,6 +270,7 @@ const Model = (props: ModelProps) => {
       rotation={[Math.PI / 4, 0, 0]}>
       {config.label}
     </Text>
+    <Solar config={config} />
   </group>;
 };
 
