@@ -216,17 +216,24 @@ export const Bed = (props: BedProps) => {
           </Box>)}
       </group>
     )}
-    <group name={"utilities-post"}
-      visible={utilitiesPost}>
-      <Box
+    <group name={"utilities"}
+      visible={utilitiesPost}
+      position={[
+        threeSpace(600, -bedLengthOuter),
+        threeSpace(legSize / 2, bedWidthOuter),
+        groundZ + 150,
+      ]}>
+      <Box name={"utilities-post"}
         castShadow={true}
-        args={[legSize, legSize, 300]}
-        position={[
-          threeSpace(600, -bedLengthOuter),
-          threeSpace(legSize / 2, bedWidthOuter),
-          groundZ + 150,
-        ]}>
+        args={[legSize, legSize, 300]}>
         <meshPhongMaterial map={legWoodTexture} color={bedColor}
+          shininess={100} />
+      </Box>
+      <Box name={"electrical-outlet"}
+        castShadow={true}
+        args={[50, 90, 120]}
+        position={[-legSize / 2, 0, 85]}>
+        <meshPhongMaterial color={"gray"}
           shininess={100} />
       </Box>
     </group>
