@@ -20,19 +20,19 @@ const aluminumTexture = new TextureLoader()
     });
 
 const cell2D = () => {
-    const cellSize = 95;
-    const cellBevel = 15;
-    const path = new Shape();
-    path.moveTo(cellBevel, 0);
-    path.lineTo(cellSize - cellBevel, 0);
-    path.lineTo(cellSize, cellBevel);
-    path.lineTo(cellSize, cellSize - cellBevel);
-    path.lineTo(cellSize - cellBevel, cellSize);
-    path.lineTo(cellBevel, cellSize);
-    path.lineTo(0, cellSize - cellBevel);
-    path.lineTo(0, cellBevel);
-    return path;
-  };
+  const cellSize = 95;
+  const cellBevel = 15;
+  const path = new Shape();
+  path.moveTo(cellBevel, 0);
+  path.lineTo(cellSize - cellBevel, 0);
+  path.lineTo(cellSize, cellBevel);
+  path.lineTo(cellSize, cellSize - cellBevel);
+  path.lineTo(cellSize - cellBevel, cellSize);
+  path.lineTo(cellBevel, cellSize);
+  path.lineTo(0, cellSize - cellBevel);
+  path.lineTo(0, cellBevel);
+  return path;
+};
 
 const cellArray = () => {
   const cells = [];
@@ -41,17 +41,17 @@ const cellArray = () => {
   const cellsLong = Math.floor(panelLength / cellSize);
 
   for (let x = 0; x < cellsWide; x++) {
-      for (let y = 0; y < cellsLong; y++) {
-          const xPos = x * cellSize - (panelWidth / 2) + 20 + 2.5;
-          const yPos = y * cellSize - (panelLength / 2) + 20 + 2.5;
-          cells.push(
-              <mesh key={`${x}-${y}`} position={[xPos, yPos, 15]}>
-                  <Extrude args={[cell2D(), { steps: 1, depth: 2, bevelEnabled: false }]}>
-                      <meshPhongMaterial color={"#131361"} />
-                  </Extrude>
-              </mesh>
-          );
-      }
+    for (let y = 0; y < cellsLong; y++) {
+      const xPos = x * cellSize - (panelWidth / 2) + 20 + 2.5;
+      const yPos = y * cellSize - (panelLength / 2) + 20 + 2.5;
+      cells.push(
+        <mesh key={`${x}-${y}`} position={[xPos, yPos, 15]}>
+          <Extrude args={[cell2D(), { steps: 1, depth: 2, bevelEnabled: false }]}>
+            <meshPhongMaterial color={"#131361"} />
+          </Extrude>
+        </mesh>
+      );
+    }
   }
   return cells;
 };
@@ -72,9 +72,9 @@ export const Solar = (props: SolarProps) => {
   const { config } = props;
   const zGround = -config.bedZOffset - config.bedHeight;
   return (
-    <group name="solar"
+    <group name={"solar"}
       visible={config.solar}>
-      <group name="solar-array"
+      <group name={"solar-array"}
         position={[
           threeSpace(-2000, config.bedLengthOuter),
           threeSpace(-1500, config.bedWidthOuter),
@@ -86,7 +86,7 @@ export const Solar = (props: SolarProps) => {
         <group position={[0, 525, 0]}>
           <SolarPanel />
         </group>
-        <Text name="solar-disclaimer"
+        <Text name={"solar-disclaimer"}
           fontSize={60}
           font={ASSETS.fonts.inknut}
           color={"white"}
@@ -99,13 +99,25 @@ export const Solar = (props: SolarProps) => {
           Solar array not included
         </Text>
       </group>
-      <Line name="solar-wiring"
-        points={[[threeSpace(600, -config.bedLengthOuter), -config.bedWidthOuter / 2, zGround + 20],
-          [threeSpace(600, -config.bedLengthOuter), threeSpace(-1500, config.bedWidthOuter), zGround + 20],
-          [threeSpace(-2000, config.bedLengthOuter), threeSpace(-1500, config.bedWidthOuter), zGround + 20]]}
-        color="yellow"
-        lineWidth={5}
-      />
+      <Line name={"solar-wiring"}
+        points={[
+          [
+            threeSpace(config.bedLengthOuter + 600, config.bedLengthOuter),
+            threeSpace(0, config.bedWidthOuter),
+            zGround + 20,
+          ],
+          [
+            threeSpace(config.bedLengthOuter + 600, config.bedLengthOuter),
+            threeSpace(-1500, config.bedWidthOuter),
+            zGround + 20,
+          ],
+          [
+            threeSpace(-2000, config.bedLengthOuter),
+            threeSpace(-1500, config.bedWidthOuter),
+            zGround + 20,
+          ]]}
+        color={"yellow"}
+        lineWidth={5} />
     </group>
   );
 };

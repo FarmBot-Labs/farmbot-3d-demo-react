@@ -8,6 +8,7 @@ import { Config } from "./config";
 import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
+import { outletDepth } from "./bot";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -219,7 +220,7 @@ export const Bed = (props: BedProps) => {
     <group name={"utilities"}
       visible={utilitiesPost}
       position={[
-        threeSpace(600, -bedLengthOuter),
+        threeSpace(bedLengthOuter + 600, bedLengthOuter),
         threeSpace(legSize / 2, bedWidthOuter),
         groundZ + 150,
       ]}>
@@ -231,8 +232,8 @@ export const Bed = (props: BedProps) => {
       </Box>
       <Box name={"electrical-outlet"}
         castShadow={true}
-        args={[50, 90, 120]}
-        position={[-legSize / 2, 0, 85]}>
+        args={[outletDepth, 90, 120]}
+        position={[-legSize / 2 - outletDepth / 2, 0, 85]}>
         <meshPhongMaterial color={"gray"}
           shininess={100} />
       </Box>

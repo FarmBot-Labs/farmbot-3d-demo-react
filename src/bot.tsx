@@ -1,5 +1,8 @@
 import * as THREE from "three";
-import { Cylinder, Extrude, Line, Trail, useGLTF, Box, CubicBezierLine } from "@react-three/drei";
+import {
+  Cylinder, Extrude, Line, Trail, useGLTF, Box, CubicBezierLine,
+
+} from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { threeSpace, zZero as zZeroFunc } from "./helpers";
 import { Config } from "./config";
@@ -22,6 +25,18 @@ const extrusionWidth = 20;
 const utmRadius = 35;
 const utmHeight = 35;
 const xTrackPadding = 280;
+
+export const outletDepth = 25;
+const plugDepth = 25;
+
+const CABLE_DEBUG = false;
+let incr = 0;
+const cableColor = () => {
+  if (!CABLE_DEBUG) { return "#222"; }
+  const hue = incr * 80;
+  incr++;
+  return `hsl(${hue}, 100%, 50%)`;
+};
 
 const LIB_DIR = "../farmbot-3d-demo-react/3D/lib/";
 
@@ -851,70 +866,103 @@ export const Bot = (props: FarmbotModelProps) => {
       ]}
       rotation={[0, 0, Math.PI / 2]}
       scale={1000} />
-    <group name={"powerSupply"}>
-      <Box
+    <group name={"powerSupplyGroup"}>
+      <Box name={"powerSupply"}
         castShadow={true}
         receiveShadow={true}
         args={[163, 42, 68]}
         position={[
-          300,
+          threeSpace(bedLengthOuter / 2 + 300, bedLengthOuter),
           threeSpace(-21, bedWidthOuter),
           -90 - ccSupportSize
         ]}>
         <meshPhongMaterial map={aluminumTexture} color={"white"}
           shininess={100} />
       </Box>
-      <Line points={[
-          [(-bedLengthOuter + botSizeX) / 2, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)],
-          [0, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]
-        ]}
-        color="#222"
-        lineWidth={2.5} />
-      <CubicBezierLine
-        start={[0, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
-        midA={[100, threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
-        midB={[200 - (163 / 2), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-        end={[300 - (163 / 2), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-        color="#222"
-        lineWidth={2.5} />
-      <CubicBezierLine
-        start={[300 + (163 / 2), threeSpace(-20, bedWidthOuter), -bedHeight / 2]}
-        midA={[400 + (163 / 2), threeSpace(-20, bedWidthOuter), -bedHeight / 2]}
-        midB={[400, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-        end={[500, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-        color="#222"
-        lineWidth={2.5} />
-      <Line points={[
-          [500, threeSpace(-20, bedWidthOuter), -bedHeight + 10],
-          [bedLengthOuter / 2 - 150, threeSpace(-20, bedWidthOuter), -bedHeight + 10]
-        ]}
-        color="#222"
-        lineWidth={2.5} />
-      <CubicBezierLine
-        start={[bedLengthOuter / 2 - 150, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-        midA={[bedLengthOuter / 2 - 100, threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-        midB={[bedLengthOuter / 2 - 100, threeSpace(-20, bedWidthOuter), zGround + 10]}
-        end={[bedLengthOuter / 2 - 50, threeSpace(-20, bedWidthOuter), zGround + 10]}
-        color="#222"
-        lineWidth={2.5} />
-      <Line points={[
-          [bedLengthOuter / 2 - 50, threeSpace(-20, bedWidthOuter), zGround + 10],
-          [bedLengthOuter / 2 + 400, threeSpace(-20, bedWidthOuter), zGround + 10]
-        ]}
-        color="#222"
-        lineWidth={2.5} />
-      <CubicBezierLine
-        start={[bedLengthOuter / 2 + 400, threeSpace(-20, bedWidthOuter), zGround + 10]}
-        midA={[bedLengthOuter / 2 + 450, threeSpace(-20, bedWidthOuter), zGround + 10]}
-        midB={[bedLengthOuter / 2 + 450, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
-        end={[bedLengthOuter / 2 + 500, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
-        color="#222"
-        lineWidth={2.5} />
-      <Box
-        args={[50, 30, 30]}
-        position={[bedLengthOuter / 2 + 525, threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}>
-        <meshPhongMaterial color={"#222"}/>
-      </Box>
+      <group name={"powerCableGroup"}>
+        <Line name={"powerCableInCC"}
+          points={[
+            [
+              threeSpace(botSizeX / 2, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              10 - Math.min(150, bedHeight / 2),
+            ],
+            [
+              threeSpace(bedLengthOuter / 2, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              10 - Math.min(150, bedHeight / 2),
+            ]
+          ]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <CubicBezierLine name={"powerCableFromSupplyToCC"}
+          start={[threeSpace(bedLengthOuter / 2 + 0, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
+          midA={[threeSpace(bedLengthOuter / 2 + 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
+          midB={[threeSpace(bedLengthOuter / 2 + 200 - (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+          end={[threeSpace(bedLengthOuter / 2 + 300 - (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <CubicBezierLine name={"powerCableFromGroundToSupply"}
+          start={[threeSpace(bedLengthOuter / 2 + 300 + (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+          midA={[threeSpace(bedLengthOuter / 2 + 400 + (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
+          midB={[threeSpace(bedLengthOuter / 2 + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+          end={[threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <Line name={"powerCableFromBedEndToSupply"}
+          points={[
+            [
+              threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              -bedHeight + 10,
+            ],
+            [
+              threeSpace(bedLengthOuter - 150, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              -bedHeight + 10,
+            ]
+          ]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <CubicBezierLine name={"powerCableFromGroundToBedEnd"}
+          start={[threeSpace(bedLengthOuter - 150, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+          midA={[threeSpace(bedLengthOuter - 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
+          midB={[threeSpace(bedLengthOuter - 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
+          end={[threeSpace(bedLengthOuter - 50, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <Line name={"powerCableFromPostToBedEnd"}
+          points={[
+            [
+              threeSpace(bedLengthOuter - 50, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              zGround + 10,
+            ],
+            [
+              threeSpace(bedLengthOuter + 400, bedLengthOuter),
+              threeSpace(-20, bedWidthOuter),
+              zGround + 10,
+            ]
+          ]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <CubicBezierLine name={"powerCableFromOutletToGround"}
+          start={[threeSpace(bedLengthOuter + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
+          midA={[threeSpace(bedLengthOuter + 450, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
+          midB={[threeSpace(bedLengthOuter + 450, bedLengthOuter), threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
+          end={[threeSpace(bedLengthOuter + 550 - legSize / 2, bedLengthOuter), threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
+          color={cableColor()}
+          lineWidth={2.5} />
+        <Box name={"powerPlug"}
+          args={[plugDepth, 30, 30]}
+          position={[
+            threeSpace(bedLengthOuter + 600 - plugDepth / 2 - outletDepth - legSize / 2, bedLengthOuter),
+            threeSpace(legSize / 2, bedWidthOuter),
+            zGround + 250,
+          ]}>
+          <meshPhongMaterial color={cableColor()} />
+        </Box>
+      </group>
     </group>
     <Line name={"bounds"}
       visible={bounds}
