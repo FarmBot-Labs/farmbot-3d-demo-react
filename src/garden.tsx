@@ -10,7 +10,7 @@ import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { threeSpace, zZero } from "./helpers";
 import { Sky } from "./sky";
-import { Config, INITIAL } from "./config";
+import { Config, INITIAL, modifyConfigsFromUrlParams } from "./config";
 import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
@@ -277,6 +277,12 @@ const Model = (props: ModelProps) => {
 export const Garden = () => {
   const [config, setConfig] = React.useState<Config>(INITIAL);
   const [toolTip, setToolTip] = React.useState<ToolTip>({ timeoutId: 0, text: "" });
+
+  React.useEffect(() => {
+    setConfig(modifyConfigsFromUrlParams(config));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty dependency array
+
   const common = { config, setConfig, toolTip, setToolTip };
   return <div className={"garden-bed-3d-model"}>
     <Canvas shadows={true}>
