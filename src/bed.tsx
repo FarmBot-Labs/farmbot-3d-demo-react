@@ -9,6 +9,7 @@ import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
 import { outletDepth } from "./bot";
+import { FarmBotPackaging } from "./packaging";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -287,5 +288,6 @@ export const Bed = (props: BedProps) => {
           shininess={100} />
       </Box>
     </group>
+    <FarmBotPackaging config={props.config} />
   </group>;
 };
