@@ -1,4 +1,4 @@
-import { Box, Cylinder, Extrude } from "@react-three/drei";
+import { Box, Extrude } from "@react-three/drei";
 import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
@@ -10,6 +10,7 @@ import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
 import { outletDepth } from "./bot";
 import { FarmBotPackaging } from "./packaging";
+import { Caster } from "./caster";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -120,15 +121,6 @@ export const Bed = (props: BedProps) => {
       bedWidthOuter - legSize / 2 - thickness,
     ];
   const casterHeight = legSize * 1.375;
-  const casterBracket2D = () => {
-    const shape = new Shape();
-    shape.moveTo(0, 0);
-    shape.lineTo(legSize, 0);
-    shape.lineTo(legSize / 3 * 2, -legSize);
-    shape.lineTo(legSize / 3, -legSize);
-    shape.lineTo(0, 0);
-    return shape;
-  }
   return <group>
     <Extrude name={"bed"}
       castShadow={true}
@@ -231,39 +223,7 @@ export const Bed = (props: BedProps) => {
               <meshPhongMaterial map={legWoodTexture} color={bedColor}
                 shininess={100} />
             </Box>
-            <group name={"caster"}
-              position={[
-                -legSize / 2,
-                legSize / 2,
-                (-bedZOffset - (legsFlush ? bedHeight : 0) + casterHeight) / 2
-              ]}
-              rotation={[Math.PI / 2, 0, 0]}>
-              <Extrude name={"caster-bracket"}
-                castShadow={true}
-                receiveShadow={true}
-                args={[
-                  casterBracket2D(),
-                  { steps: 1, depth: legSize, bevelEnabled: false },
-                ]}>
-                <meshPhongMaterial color={"silver"} shininess={100} />
-              </Extrude>
-              <group name={"caster-wheel"}
-                position={[legSize / 2, -legSize * 0.75, legSize / 2]}
-                rotation={[Math.PI / 2, 0, 0]}>
-                <Cylinder name={"wheel"}
-                  castShadow={true}
-                  receiveShadow={true}
-                  args={[legSize * 0.625, legSize * 0.625, legSize / 3]}>
-                  <meshPhongMaterial color={"#434343"} shininess={100} />
-                </Cylinder>
-                <Cylinder name={"axle"}
-                  castShadow={true}
-                  receiveShadow={true}
-                  args={[legSize / 10, legSize / 10, legSize * 1.1]}>
-                  <meshPhongMaterial color={"#434343"} shininess={100} />
-                </Cylinder>
-              </group>
-            </group>
+            <Caster config={props.config} />
           </group>)}
       </group>
     )}
