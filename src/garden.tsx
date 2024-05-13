@@ -4,6 +4,7 @@ import {
   GizmoHelper, GizmoViewcube,
   OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
+  Box,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -23,6 +24,14 @@ const grassTexture = new TextureLoader()
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
       texture.repeat.set(24, 24);
+    });
+
+const concreteTexture = new TextureLoader()
+  .load(ASSETS.textures.concrete,
+    texture => {
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(16, 24);
     });
 
 interface ModelProps {
@@ -169,6 +178,13 @@ const Model = (props: ModelProps) => {
       friction: 40,
     },
   });
+
+  const wallHeight = 2500;
+  const wallThickness = 200
+  const wallOffset = 2000;
+  const wallColor = "#f4f4f4";
+  const wallOpacity = 1;
+
   return <group dispose={null}>
     {config.stats && <Stats />}
     <Sky distance={450000}
@@ -207,7 +223,10 @@ const Model = (props: ModelProps) => {
       receiveShadow={true}
       args={[30000, 100]}
       position={[midPoint.x, midPoint.y, -groundZ]}>
-      <meshPhongMaterial map={grassTexture} color={"#ddd"} shininess={0} />
+      <meshPhongMaterial
+        map={config.lab ? concreteTexture : grassTexture}
+        color={"#ddd"}
+        shininess={0} />
     </Circle>
     <Grid
       name={"ground-grid"}
@@ -271,6 +290,62 @@ const Model = (props: ModelProps) => {
       {config.label}
     </Text>
     <Solar config={config} />
+    <group name={"lab-environment"}>
+      <Box name={"back-wall"}
+        visible={config.lab}
+        castShadow={true}
+        receiveShadow={true}
+        args={[
+          wallThickness,
+          config.bedWidthOuter + wallOffset * 2 - wallThickness,
+          wallHeight
+        ]}
+        position={[
+          threeSpace(-wallOffset, config.bedLengthOuter),
+          0,
+          -groundZ + wallHeight / 2
+        ]}>
+        <meshPhongMaterial color={wallColor}
+          opacity={wallOpacity}
+          transparent={true}
+          shininess={100} />
+      </Box>
+      <Box name={"side-wall"}
+        visible={config.lab}
+        castShadow={true}
+        receiveShadow={true}
+        args={[
+          config.bedLengthOuter + wallOffset * 2 + wallThickness,
+          wallThickness,
+          wallHeight
+        ]}
+        position={[
+          0,
+          threeSpace(wallOffset, -config.bedWidthOuter),
+          -groundZ + wallHeight / 2
+        ]}>
+        <meshPhongMaterial color={wallColor}
+          opacity={wallOpacity}
+          transparent={true}
+          shininess={100} />
+      </Box>
+      <Billboard name={"person"}
+        visible={config.people}
+        scale={1}
+        position={[
+          threeSpace(-300, config.bedLengthOuter),
+          threeSpace(-300, config.bedWidthOuter),
+          -groundZ,
+        ]}>
+        <Image
+          url={ASSETS.people.person1Flipped}
+          position={[0, 900, 0]}
+          scale={[900,1800]}
+          transparent={true}
+          opacity={0.4}
+          renderOrder={1} />
+      </Billboard>
+    </group>
   </group>;
 };
 

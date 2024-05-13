@@ -27,6 +27,7 @@ export const Arrow = (props: ArrowProps) => {
       arrow2D(props.length, props.width),
       { steps: 1, depth: 10, bevelEnabled: false },
     ]}
+    receiveShadow={true}
     rotation={props.rotation}>
     <meshPhongMaterial color={"#ccc"} />
   </Extrude>;

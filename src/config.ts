@@ -57,6 +57,8 @@ export interface Config {
   solar: boolean;
   utilitiesPost: boolean;
   packaging: boolean;
+  lab: boolean;
+  people: boolean;
 }
 
 export const INITIAL: Config = {
@@ -118,6 +120,8 @@ export const INITIAL: Config = {
   solar: true,
   utilitiesPost: true,
   packaging: false,
+  lab: false,
+  people: false,
 };
 
 export const STRING_KEYS = [
@@ -137,7 +141,7 @@ export const BOOLEAN_KEYS = [
   "tracks", "clouds", "perspective", "bot", "laser", "cableCarriers",
   "viewCube", "stats", "config", "zoom", "pan", "bounds", "threeAxes",
   "xyDimensions", "zDimension", "promoInfo", "solar", "utilitiesPost",
-  "packaging",
+  "packaging", "lab", "people",
 ];
 
 export const PRESETS: Record<string, Config> = {
@@ -245,6 +249,8 @@ export const PRESETS: Record<string, Config> = {
     solar: false,
     utilitiesPost: false,
     packaging: false,
+    lab: false,
+    people: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -286,6 +292,8 @@ export const PRESETS: Record<string, Config> = {
     solar: true,
     utilitiesPost: true,
     packaging: true,
+    lab: true,
+    people: true,
   },
 };
 
@@ -303,7 +311,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
   "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
-  "solar", "utilitiesPost", "packaging",
+  "solar", "utilitiesPost", "packaging", "lab", "people",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {

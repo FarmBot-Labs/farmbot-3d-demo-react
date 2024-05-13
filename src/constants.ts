@@ -9,6 +9,7 @@ import grass from "/3D/textures/grass.avif";
 import wood from "/3D/textures/wood.avif";
 import soil from "/3D/textures/soil.avif";
 import aluminum from "/3D/textures/aluminum.avif";
+import concrete from "/3D/textures/concrete.avif";
 import anaheimPepper from "/3D/icons/anaheim_pepper.avif";
 import arugula from "/3D/icons/arugula.avif";
 import basil from "/3D/icons/basil.avif";
@@ -85,6 +86,8 @@ import shaftCoupler from "/3D/models/shaft_coupler.glb";
 import solenoid from "/3D/models/solenoid.glb";
 import xAxisCCMount from "/3D/models/x_axis_cc_mount.glb";
 import gear from "/gear.svg";
+import person1 from "/3D/people/person_1.avif";
+import person1Flipped from "/3D/people/person_1_flipped.avif";
 
 
 export const ASSETS = {
@@ -99,6 +102,7 @@ export const ASSETS = {
     wood,
     soil,
     aluminum,
+    concrete,
   },
   icons: {
     anaheimPepper,
@@ -183,6 +187,10 @@ export const ASSETS = {
   },
   other: {
     gear,
+  },
+  people: {
+    person1,
+    person1Flipped,
   },
 };
 
