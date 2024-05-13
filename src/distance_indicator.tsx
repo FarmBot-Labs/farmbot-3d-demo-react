@@ -26,7 +26,8 @@ export const DistanceIndicator = (props: DistanceIndicatorProps) => {
     <Arrow length={distance / 2} width={25} rotation={[0, 0, Math.PI]} />
     <group rotation={[Math.PI / 6, 0, 0]}>
       <Box
-        args={[300, 100, 75]}>
+        args={[300, 100, 75]}
+        receiveShadow={true}>
         <meshPhongMaterial color={"#c49f7a"} />
       </Box>
       <Text name={"distance-label"}
