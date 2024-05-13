@@ -56,6 +56,7 @@ export interface Config {
   promoInfo: boolean;
   solar: boolean;
   utilitiesPost: boolean;
+  packaging: boolean;
 }
 
 export const INITIAL: Config = {
@@ -116,6 +117,7 @@ export const INITIAL: Config = {
   promoInfo: true,
   solar: true,
   utilitiesPost: true,
+  packaging: false,
 };
 
 export const STRING_KEYS = [
@@ -135,6 +137,7 @@ export const BOOLEAN_KEYS = [
   "tracks", "clouds", "perspective", "bot", "laser", "cableCarriers",
   "viewCube", "stats", "config", "zoom", "pan", "bounds", "threeAxes",
   "xyDimensions", "zDimension", "promoInfo", "solar", "utilitiesPost",
+  "packaging",
 ];
 
 export const PRESETS: Record<string, Config> = {
@@ -241,6 +244,7 @@ export const PRESETS: Record<string, Config> = {
     promoInfo: false,
     solar: false,
     utilitiesPost: false,
+    packaging: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -281,6 +285,7 @@ export const PRESETS: Record<string, Config> = {
     promoInfo: true,
     solar: true,
     utilitiesPost: true,
+    packaging: true,
   },
 };
 
@@ -298,7 +303,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
   "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
-  "solar", "utilitiesPost",
+  "solar", "utilitiesPost", "packaging",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {

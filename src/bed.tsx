@@ -1,14 +1,16 @@
-import { Box, Cylinder, Extrude } from "@react-three/drei";
+import { Box, Extrude } from "@react-three/drei";
 import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
 import { range } from "lodash";
-import { threeSpace, zZero } from "./helpers";
+import { threeSpace, zZero, getColorFromBrightness } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
-import { outletDepth } from "./bot";
+import { FarmBotPackaging } from "./packaging";
+import { Caster } from "./caster";
+import { UtilitiesPost } from "./utilities_post";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -68,24 +70,6 @@ const soilTexture = new TextureLoader()
       texture.repeat.set(.00017, .00034);
     });
 
-const getColorFromBrightness = (value: number) => {
-  const colorMap: { [key: number]: string } = {
-    1: "#444",
-    2: "#555",
-    3: "#666",
-    4: "#777",
-    5: "#888",
-    6: "#999",
-    7: "#aaa",
-    8: "#bbb",
-    9: "#ccc",
-    10: "#ddd",
-    11: "#eee",
-    12: "#fff",
-  };
-  return colorMap[value];
-};
-
 interface BedProps {
   config: Config;
 }
@@ -94,7 +78,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, ccSupportSize, axes, xyDimensions, utilitiesPost,
+    soilHeight, ccSupportSize, axes, xyDimensions,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -119,15 +103,6 @@ export const Bed = (props: BedProps) => {
       bedWidthOuter - legSize / 2 - thickness,
     ];
   const casterHeight = legSize * 1.375;
-  const casterBracket2D = () => {
-    const shape = new Shape();
-    shape.moveTo(0, 0);
-    shape.lineTo(legSize, 0);
-    shape.lineTo(legSize / 3 * 2, -legSize);
-    shape.lineTo(legSize / 3, -legSize);
-    shape.lineTo(0, 0);
-    return shape;
-  }
   return <group>
     <Extrude name={"bed"}
       castShadow={true}
@@ -230,62 +205,11 @@ export const Bed = (props: BedProps) => {
               <meshPhongMaterial map={legWoodTexture} color={bedColor}
                 shininess={100} />
             </Box>
-            <group name={"caster"}
-              position={[
-                -legSize / 2,
-                legSize / 2,
-                (-bedZOffset - (legsFlush ? bedHeight : 0) + casterHeight) / 2
-              ]}
-              rotation={[Math.PI / 2, 0, 0]}>
-              <Extrude name={"caster-bracket"}
-                castShadow={true}
-                receiveShadow={true}
-                args={[
-                  casterBracket2D(),
-                  { steps: 1, depth: legSize, bevelEnabled: false },
-                ]}>
-                <meshPhongMaterial color={"silver"} shininess={100} />
-              </Extrude>
-              <group name={"caster-wheel"}
-                position={[legSize / 2, -legSize * 0.75, legSize / 2]}
-                rotation={[Math.PI / 2, 0, 0]}>
-                <Cylinder name={"wheel"}
-                  castShadow={true}
-                  receiveShadow={true}
-                  args={[legSize * 0.625, legSize * 0.625, legSize / 3]}>
-                  <meshPhongMaterial color={"#434343"} shininess={100} />
-                </Cylinder>
-                <Cylinder name={"axle"}
-                  castShadow={true}
-                  receiveShadow={true}
-                  args={[legSize / 10, legSize / 10, legSize * 1.1]}>
-                  <meshPhongMaterial color={"#434343"} shininess={100} />
-                </Cylinder>
-              </group>
-            </group>
+            <Caster config={props.config} />
           </group>)}
       </group>
     )}
-    <group name={"utilities"}
-      visible={utilitiesPost}
-      position={[
-        threeSpace(bedLengthOuter + 600, bedLengthOuter),
-        threeSpace(legSize / 2, bedWidthOuter),
-        groundZ + 150,
-      ]}>
-      <Box name={"utilities-post"}
-        castShadow={true}
-        args={[legSize, legSize, 300]}>
-        <meshPhongMaterial map={legWoodTexture} color={bedColor}
-          shininess={100} />
-      </Box>
-      <Box name={"electrical-outlet"}
-        castShadow={true}
-        args={[outletDepth, 90, 120]}
-        position={[-legSize / 2 - outletDepth / 2, 0, 85]}>
-        <meshPhongMaterial color={"gray"}
-          shininess={100} />
-      </Box>
-    </group>
+    <UtilitiesPost config={props.config} />
+    <FarmBotPackaging config={props.config} />
   </group>;
 };
