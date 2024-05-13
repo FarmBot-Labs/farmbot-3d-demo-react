@@ -3,14 +3,14 @@ import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
 import { range } from "lodash";
-import { threeSpace, zZero } from "./helpers";
+import { threeSpace, zZero, getColorFromBrightness } from "./helpers";
 import { Config } from "./config";
 import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
-import { outletDepth } from "./bot";
 import { FarmBotPackaging } from "./packaging";
 import { Caster } from "./caster";
+import { UtilitiesPost } from "./utilities_post";
 
 const soil = (
   Type: typeof Path | typeof Shape,
@@ -70,24 +70,6 @@ const soilTexture = new TextureLoader()
       texture.repeat.set(.00017, .00034);
     });
 
-const getColorFromBrightness = (value: number) => {
-  const colorMap: { [key: number]: string } = {
-    1: "#444",
-    2: "#555",
-    3: "#666",
-    4: "#777",
-    5: "#888",
-    6: "#999",
-    7: "#aaa",
-    8: "#bbb",
-    9: "#ccc",
-    10: "#ddd",
-    11: "#eee",
-    12: "#fff",
-  };
-  return colorMap[value];
-};
-
 interface BedProps {
   config: Config;
 }
@@ -96,7 +78,7 @@ export const Bed = (props: BedProps) => {
   const {
     bedWidthOuter, bedLengthOuter, botSizeZ, bedHeight, bedZOffset,
     legSize, legsFlush, extraLegsX, extraLegsY, bedBrightness, soilBrightness,
-    soilHeight, ccSupportSize, axes, xyDimensions, utilitiesPost,
+    soilHeight, ccSupportSize, axes, xyDimensions,
   } = props.config;
   const thickness = props.config.bedWallThickness;
   const botSize = { x: bedLengthOuter, y: bedWidthOuter, z: botSizeZ, thickness };
@@ -227,27 +209,7 @@ export const Bed = (props: BedProps) => {
           </group>)}
       </group>
     )}
-    <group name={"utilities"}
-      visible={utilitiesPost}
-      position={[
-        threeSpace(bedLengthOuter + 600, bedLengthOuter),
-        threeSpace(legSize / 2, bedWidthOuter),
-        groundZ + 150,
-      ]}>
-      <Box name={"utilities-post"}
-        castShadow={true}
-        args={[legSize, legSize, 300]}>
-        <meshPhongMaterial map={legWoodTexture} color={bedColor}
-          shininess={100} />
-      </Box>
-      <Box name={"electrical-outlet"}
-        castShadow={true}
-        args={[outletDepth, 90, 120]}
-        position={[-legSize / 2 - outletDepth / 2, 0, 85]}>
-        <meshPhongMaterial color={"gray"}
-          shininess={100} />
-      </Box>
-    </group>
+    <UtilitiesPost config={props.config} />
     <FarmBotPackaging config={props.config} />
   </group>;
 };
