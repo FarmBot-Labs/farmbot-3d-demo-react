@@ -63,7 +63,7 @@ export interface Config {
 
 export const INITIAL: Config = {
   sizePreset: "Genesis",
-  bedType: "Standard",
+  bedType: "Mobile",
   otherPreset: "Initial",
   label: "FarmBot Genesis v1.7",
   botSizeX: 2720,
@@ -80,12 +80,12 @@ export const INITIAL: Config = {
   zAxisLength: 1000,
   bedXOffset: 140,
   bedYOffset: 60,
-  bedZOffset: 0,
+  bedZOffset: 500,
   zGantryOffset: 140,
   bedWidthOuter: 1360,
   bedLengthOuter: 3000,
   legSize: 100,
-  legsFlush: true,
+  legsFlush: false,
   extraLegsX: 1,
   extraLegsY: 0,
   bedBrightness: 8,
@@ -378,4 +378,16 @@ export const modifyConfigsFromUrlParams = (config: Config) => {
     }
   });
   return newConfig;
+};
+
+type SeasonProperties = {
+  sunIntensity: number;
+  sunColor: string;
+  cloudOpacity: number;
+};
+export const seasonProperties: Record<string, SeasonProperties> = {
+  Winter: { sunIntensity: 4 / 4, sunColor: '#A0C4FF', cloudOpacity: 0.85 },
+  Spring: { sunIntensity: 7 / 4, sunColor: '#BDE0FE', cloudOpacity: 0.2 },
+  Summer: { sunIntensity: 9 / 4, sunColor: '#FFFFFF', cloudOpacity: 0 },
+  Fall: { sunIntensity: 5.5 / 4, sunColor: '#FFD6BC', cloudOpacity: 0.3 },
 };
