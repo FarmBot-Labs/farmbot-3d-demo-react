@@ -16,6 +16,15 @@ export const FarmBotPackaging = (props: PackagingProps) => {
   const extrusionKitLength = 1540;
   const extrusionKitWidth = isXL ? 170 : 100;
   const extrusionKitHeight = 60;
+  const edgeProtectorSize = 20;
+  const edgeProtector = (boxDimension: number) => {
+    const edgeProtectorCenter = edgeProtectorSize / 2 - 1;
+    const boxDimensionMid = boxDimension / 2;
+    return edgeProtectorCenter - boxDimensionMid;
+  };
+  const strapThickness = 4;
+  const strapWidth = 10;
+  const strap = (boxDimension: number) => boxDimension + strapThickness;
   const zGround = -config.bedZOffset - config.bedHeight;
   const boxColor = "#bf8b59";
   const strapColor = "#434343";
@@ -41,40 +50,23 @@ export const FarmBotPackaging = (props: PackagingProps) => {
         rotation={[Math.PI / 2, 0, 0]}>
         {config.label}
       </Text>
-      <Box name={"main-carton-strap"}
-        args={[10, mainCartonWidth + 4, mainCartonHeight + 4]}
-        position={[-450, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"main-carton-strap"}
-        args={[10, mainCartonWidth + 4, mainCartonHeight + 4]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"main-carton-strap"}
-        args={[10, mainCartonWidth + 4, mainCartonHeight + 4]}
-        position={[450, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"main-carton-edge-protector"}
-        args={[mainCartonLength - 2, 20, 20]}
-        position={[0, mainCartonWidth / 2 - 9, mainCartonHeight / 2 - 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"main-carton-edge-protector"}
-        args={[mainCartonLength - 2, 20, 20]}
-        position={[0, -mainCartonWidth / 2 + 9, mainCartonHeight / 2 - 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"main-carton-edge-protector"}
-        args={[mainCartonLength - 2, 20, 20]}
-        position={[0, -mainCartonWidth / 2 + 9, -mainCartonHeight / 2 + 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"main-carton-edge-protector"}
-        args={[mainCartonLength - 2, 20, 20]}
-        position={[0, mainCartonWidth / 2 - 9, -mainCartonHeight / 2 + 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
+      {[-450, 0, 450].map(x =>
+        <Box name={"main-carton-strap"} key={x}
+          args={[strapWidth, strap(mainCartonWidth), strap(mainCartonHeight)]}
+          position={[x, 0, 0]}>
+          <meshPhongMaterial color={strapColor} />
+        </Box>)}
+      {[
+        [-edgeProtector(mainCartonWidth), -edgeProtector(mainCartonHeight)],
+        [-edgeProtector(mainCartonWidth), edgeProtector(mainCartonHeight)],
+        [edgeProtector(mainCartonWidth), -edgeProtector(mainCartonHeight)],
+        [edgeProtector(mainCartonWidth), edgeProtector(mainCartonHeight)],
+      ].map(([y, z], index) =>
+        <Box name={"main-carton-edge-protector"} key={index}
+          args={[mainCartonLength - 2, edgeProtectorSize, edgeProtectorSize]}
+          position={[0, y, z]}>
+          <meshPhongMaterial color={edgeProtectorColor} />
+        </Box>)}
     </group>
     <group name={"extrusion-kit"}
       position={[0, 0, (220 + 60) / 2]}>
@@ -83,50 +75,23 @@ export const FarmBotPackaging = (props: PackagingProps) => {
         args={[extrusionKitLength, extrusionKitWidth, extrusionKitHeight]}>
         <meshPhongMaterial color={boxColor} />
       </Box>
-      <Box name={"extrusion-kit-strap"}
-        args={[10, extrusionKitWidth + 4, extrusionKitHeight + 4]}
-        position={[-600, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"extrusion-kit-strap"}
-        args={[10, extrusionKitWidth + 4, extrusionKitHeight + 4]}
-        position={[-300, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"extrusion-kit-strap"}
-        args={[10, extrusionKitWidth + 4, extrusionKitHeight + 4]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"extrusion-kit-strap"}
-        args={[10, extrusionKitWidth + 4, extrusionKitHeight + 4]}
-        position={[300, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"extrusion-kit-strap"}
-        args={[10, extrusionKitWidth + 4, extrusionKitHeight + 4]}
-        position={[600, 0, 0]}>
-        <meshPhongMaterial color={strapColor} />
-      </Box>
-      <Box name={"extrusion-kit-edge-protector"}
-        args={[extrusionKitLength - 2, 20, 20]}
-        position={[0, extrusionKitWidth / 2 - 9, extrusionKitHeight / 2 - 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"extrusion-kit-edge-protector"}
-        args={[extrusionKitLength - 2, 20, 20]}
-        position={[0, -extrusionKitWidth / 2 + 9, extrusionKitHeight / 2 - 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"extrusion-kit-edge-protector"}
-        args={[extrusionKitLength - 2, 20, 20]}
-        position={[0, -extrusionKitWidth / 2 + 9, -extrusionKitHeight / 2 + 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
-      <Box name={"extrusion-kit-edge-protector"}
-        args={[extrusionKitLength - 2, 20, 20]}
-        position={[0, extrusionKitWidth / 2 - 9, -extrusionKitHeight / 2 + 9]}>
-        <meshPhongMaterial color={edgeProtectorColor} />
-      </Box>
+      {[-600, -300, 0, 300, 600].map(x =>
+        <Box name={"extrusion-kit-strap"} key={x}
+          args={[strapWidth, strap(extrusionKitWidth), strap(extrusionKitHeight)]}
+          position={[x, 0, 0]}>
+          <meshPhongMaterial color={strapColor} />
+        </Box>)}
+      {[
+        [-edgeProtector(extrusionKitWidth), -edgeProtector(extrusionKitHeight)],
+        [-edgeProtector(extrusionKitWidth), edgeProtector(extrusionKitHeight)],
+        [edgeProtector(extrusionKitWidth), -edgeProtector(extrusionKitHeight)],
+        [edgeProtector(extrusionKitWidth), edgeProtector(extrusionKitHeight)],
+      ].map(([y, z], index) =>
+        <Box name={"extrusion-kit-edge-protector"} key={index}
+          args={[extrusionKitLength - 2, edgeProtectorSize, edgeProtectorSize]}
+          position={[0, y, z]}>
+          <meshPhongMaterial color={edgeProtectorColor} />
+        </Box>)}
     </group>
   </group>
 };
