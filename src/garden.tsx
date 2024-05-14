@@ -254,7 +254,7 @@ const Model = (props: ModelProps) => {
         color="#ccc"
         growth={400}
         speed={.1}
-        opacity={seasonProperties[config.plants].cloudOpacity || 0}
+        opacity={(seasonProperties[config.plants] || seasonProperties.Summer).cloudOpacity}
         fade={5000} />
     </Clouds>
     <Bed config={config} />
@@ -340,7 +340,7 @@ const Model = (props: ModelProps) => {
         <Image
           url={ASSETS.people.person1Flipped}
           position={[0, 900, 0]}
-          scale={[900,1800]}
+          scale={[900, 1800]}
           transparent={true}
           opacity={0.4}
           renderOrder={1} />
