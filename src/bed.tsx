@@ -1,11 +1,11 @@
-import { Box, Extrude } from "@react-three/drei";
+import { Box, Detailed, Extrude } from "@react-three/drei";
 import {
   DoubleSide, Path, Shape, TextureLoader, RepeatWrapping,
 } from "three";
 import { range } from "lodash";
 import { threeSpace, zZero, getColorFromBrightness } from "./helpers";
 import { Config } from "./config";
-import { ASSETS } from "./constants";
+import { ASSETS, LEVELS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
 import { FarmBotPackaging } from "./packaging";
@@ -85,7 +85,6 @@ export const Bed = (props: BedProps) => {
   const bedStartZ = bedHeight;
   const bedColor = getColorFromBrightness(bedBrightness);
   const soilColor = getColorFromBrightness(soilBrightness);
-  const soilDepth = bedHeight + zZero(props.config) - soilHeight;
   const groundZ = -bedHeight - bedZOffset;
   const legXPositions = [
     0 + legSize / 2 + thickness,
@@ -103,7 +102,8 @@ export const Bed = (props: BedProps) => {
       bedWidthOuter - legSize / 2 - thickness,
     ];
   const casterHeight = legSize * 1.375;
-  return <group>
+
+  const Bed = ({ children }: { children: React.ReactElement }) =>
     <Extrude name={"bed"}
       castShadow={true}
       receiveShadow={true}
@@ -116,9 +116,38 @@ export const Bed = (props: BedProps) => {
         threeSpace(0, bedWidthOuter),
         -bedStartZ,
       ]}>
-      <meshPhongMaterial map={woodTexture} color={bedColor}
-        shininess={100} side={DoubleSide} />
-    </Extrude>
+      {children}
+    </Extrude>;
+
+  const Soil = ({ children }: { children: React.ReactElement }) => {
+    const soilDepth = bedHeight + zZero(props.config) - soilHeight;
+    return <Extrude name={"soil"}
+      castShadow={true}
+      receiveShadow={true}
+      args={[
+        soil(Shape, botSize) as Shape,
+        { steps: 1, depth: soilDepth, bevelEnabled: false },
+      ]}
+      position={[
+        threeSpace(0, bedLengthOuter),
+        threeSpace(0, bedWidthOuter),
+        -bedStartZ,
+      ]}>
+      {children}
+    </Extrude>;
+  };
+
+  return <group>
+    <Detailed distances={LEVELS}>
+      <Bed>
+        <meshPhongMaterial map={woodTexture} color={bedColor}
+          shininess={100} side={DoubleSide} />
+      </Bed>
+      <Bed>
+        <meshPhongMaterial color={"#ad7039"}
+          shininess={100} side={DoubleSide} />
+      </Bed>
+    </Detailed>
     <group visible={xyDimensions}>
       <DistanceIndicator
         start={{
@@ -170,21 +199,16 @@ export const Bed = (props: BedProps) => {
       <meshPhongMaterial map={legWoodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Box>
-    <Extrude name={"soil"}
-      castShadow={true}
-      receiveShadow={true}
-      args={[
-        soil(Shape, botSize) as Shape,
-        { steps: 1, depth: soilDepth, bevelEnabled: false },
-      ]}
-      position={[
-        threeSpace(0, bedLengthOuter),
-        threeSpace(0, bedWidthOuter),
-        -bedStartZ,
-      ]}>
-      <meshPhongMaterial map={soilTexture} color={soilColor}
-        shininess={0} />
-    </Extrude>
+    <Detailed distances={LEVELS}>
+      <Soil>
+        <meshPhongMaterial map={soilTexture} color={soilColor}
+          shininess={0} />
+      </Soil>
+      <Soil>
+        <meshPhongMaterial color={"#29231e"}
+          shininess={0} />
+      </Soil>
+    </Detailed>
     {legXPositions.map((x, index) =>
       <group key={index}>
         {legYPositions(index).map(y =>

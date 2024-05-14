@@ -5,6 +5,7 @@ import {
   OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
   Box,
+  Detailed,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -12,7 +13,7 @@ import { Bed } from "./bed";
 import { threeSpace, zZero } from "./helpers";
 import { Sky } from "./sky";
 import { Config, INITIAL, modifyConfigsFromUrlParams } from "./config";
-import { ASSETS, GARDENS, PLANTS } from "./constants";
+import { ASSETS, GARDENS, LEVELS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 import { useSpring, animated } from "@react-spring/three";
@@ -185,6 +186,15 @@ const Model = (props: ModelProps) => {
   const wallColor = "#f4f4f4";
   const wallOpacity = 1;
 
+  const Ground = ({ children }: { children: React.ReactElement }) =>
+    <Circle name={"ground"}
+      visible={config.ground}
+      receiveShadow={true}
+      args={[30000, 100]}
+      position={[midPoint.x, midPoint.y, -groundZ]}>
+      {children}
+    </Circle>;
+
   return <group dispose={null}>
     {config.stats && <Stats />}
     <Sky distance={450000}
@@ -218,16 +228,19 @@ const Model = (props: ModelProps) => {
       shadow-normalBias={100} // warning: distorts shadows
       position={sunPosition} />
     <ambientLight intensity={1} />
-    <Circle name={"ground"}
-      visible={config.ground}
-      receiveShadow={true}
-      args={[30000, 100]}
-      position={[midPoint.x, midPoint.y, -groundZ]}>
-      <meshPhongMaterial
-        map={config.lab ? concreteTexture : grassTexture}
-        color={"#ddd"}
-        shininess={0} />
-    </Circle>
+    <Detailed distances={LEVELS}>
+      <Ground>
+        <meshPhongMaterial
+          map={config.lab ? concreteTexture : grassTexture}
+          color={"#ddd"}
+          shininess={0} />
+      </Ground>
+      <Ground>
+        <meshPhongMaterial
+          color={config.lab ? "gray" : "darkgreen"}
+          shininess={0} />
+      </Ground>
+    </Detailed>
     <Grid
       name={"ground-grid"}
       visible={config.grid}
