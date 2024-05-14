@@ -262,4 +262,4 @@ export const GARDENS: Gardens = {
   "Random": sampleSize(Object.keys(PLANTS), 20),
 };
 
-export const LEVELS = [0, 10000];
+export const LEVELS = [0, 15000];
