@@ -83,14 +83,13 @@ export const PublicOverlay = (props: OverlayProps) => {
           "standard": "Standard",
           "mobile": "Mobile",
         }} />
-      {config.config &&
-        <Section
-          title={"Scene"}
-          configKey={"scene"}
-          options={{
-            "outdoor": "Outdoor",
-            "lab": "Lab",
-          }} />}
+      <Section
+        title={"Environment"}
+        configKey={"scene"}
+        options={{
+          "outdoor": "Outdoor",
+          "lab": "Lab",
+        }} />
     </div>
     {config.promoInfo &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}

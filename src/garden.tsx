@@ -4,7 +4,6 @@ import {
   GizmoHelper, GizmoViewcube,
   OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
-  Box,
   Detailed,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
@@ -21,6 +20,7 @@ import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 import { useSpring, animated } from "@react-spring/three";
 import { Solar } from "./solar";
 import { Sun, sunPosition } from "./sun";
+import { LabEnvironment } from "./lab";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -135,7 +135,7 @@ const Model = (props: ModelProps) => {
       )}>
       {labelOnly
         ? <Text visible={alwaysShowLabels || i === hoveredPlant}
-          renderOrder={1}
+          renderOrder={2}
           material-depthTest={false}
           fontSize={40}
           position={[0, plant.size / 2 + 25, 0]}
@@ -147,7 +147,8 @@ const Model = (props: ModelProps) => {
           {plant.label}
         </Text>
         : <Image url={plant.icon} scale={plant.size} name={"" + i}
-          transparent={true} />}
+          transparent={true}
+          renderOrder={1} />}
     </Billboard>;
   };
   const isXL = config.sizePreset == "Genesis XL";
@@ -158,12 +159,6 @@ const Model = (props: ModelProps) => {
       friction: 40,
     },
   });
-
-  const wallHeight = 2500;
-  const wallThickness = 200
-  const wallOffset = 2000;
-  const wallColor = "#f4f4f4";
-  const wallOpacity = 1;
 
   const Ground = ({ children }: { children: React.ReactElement }) =>
     <Circle name={"ground"}
@@ -227,7 +222,7 @@ const Model = (props: ModelProps) => {
       infiniteGrid={true}
       fadeDistance={10000}
       fadeStrength={1} />
-    <Clouds name={"clouds"} visible={config.clouds} renderOrder={1}
+    <Clouds name={"clouds"} visible={config.clouds} renderOrder={2}
       texture={ASSETS.textures.cloud}>
       <Cloud position={[0, 0, 5000]}
         seed={0}
@@ -275,62 +270,7 @@ const Model = (props: ModelProps) => {
       {config.label}
     </Text>
     <Solar config={config} />
-    <group name={"lab-environment"}>
-      <Box name={"back-wall"}
-        visible={config.lab}
-        castShadow={true}
-        receiveShadow={true}
-        args={[
-          wallThickness,
-          config.bedWidthOuter + wallOffset * 2 - wallThickness,
-          wallHeight
-        ]}
-        position={[
-          threeSpace(-wallOffset, config.bedLengthOuter),
-          0,
-          -groundZ + wallHeight / 2
-        ]}>
-        <meshPhongMaterial color={wallColor}
-          opacity={wallOpacity}
-          transparent={true}
-          shininess={100} />
-      </Box>
-      <Box name={"side-wall"}
-        visible={config.lab}
-        castShadow={true}
-        receiveShadow={true}
-        args={[
-          config.bedLengthOuter + wallOffset * 2 + wallThickness,
-          wallThickness,
-          wallHeight
-        ]}
-        position={[
-          0,
-          threeSpace(wallOffset, -config.bedWidthOuter),
-          -groundZ + wallHeight / 2
-        ]}>
-        <meshPhongMaterial color={wallColor}
-          opacity={wallOpacity}
-          transparent={true}
-          shininess={100} />
-      </Box>
-      <Billboard name={"person"}
-        visible={config.people}
-        scale={1}
-        position={[
-          threeSpace(-300, config.bedLengthOuter),
-          threeSpace(-300, config.bedWidthOuter),
-          -groundZ,
-        ]}>
-        <Image
-          url={ASSETS.people.person1Flipped}
-          position={[0, 900, 0]}
-          scale={[900, 1800]}
-          transparent={true}
-          opacity={0.4}
-          renderOrder={1} />
-      </Billboard>
-    </group>
+    <LabEnvironment config={config} />
   </group>;
 };
 

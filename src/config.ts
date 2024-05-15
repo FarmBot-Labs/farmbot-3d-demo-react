@@ -332,6 +332,7 @@ export const modifyConfig = (config: Config, update: Partial<Config>) => {
   if (update.scene) {
     newConfig.lab = update.scene == "Lab";
     newConfig.solar = update.scene != "Lab";
+    newConfig.clouds = update.scene != "Lab";
     newConfig.people = update.scene == "Lab";
     newConfig.bedType =
       (update.scene == "Lab" && newConfig.sizePreset != "Genesis XL")

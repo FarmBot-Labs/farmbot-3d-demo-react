@@ -88,6 +88,8 @@ import xAxisCCMount from "/3D/models/x_axis_cc_mount.glb";
 import gear from "/gear.svg";
 import person1 from "/3D/people/person_1.avif";
 import person1Flipped from "/3D/people/person_1_flipped.avif";
+import person2 from "/3D/people/person_2.avif";
+import person2Flipped from "/3D/people/person_2_flipped.avif";
 
 
 export const ASSETS = {
@@ -191,6 +193,8 @@ export const ASSETS = {
   people: {
     person1,
     person1Flipped,
+    person2,
+    person2Flipped,
   },
 };
 
