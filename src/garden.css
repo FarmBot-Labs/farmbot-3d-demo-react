@@ -91,6 +91,8 @@ body {
       white-space: nowrap;
       color: #222;
 
+      &.outdoor.active,
+      &.lab.active,
       &.genesis.active,
       &.standard.active,
       &.mobile.active {
@@ -279,9 +281,11 @@ body {
     max-width: 40vw;
     margin: 0;
     line-height: 1.7rem;
+
     .short {
       display: none;
     }
+
     .full {
       display: inline;
     }
@@ -342,9 +346,11 @@ body {
       font-size: 1rem;
       max-width: 80vw;
       line-height: 1.5rem;
+
       .short {
         display: inline;
       }
+
       .full {
         display: none;
       }

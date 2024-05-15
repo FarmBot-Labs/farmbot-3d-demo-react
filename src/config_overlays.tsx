@@ -83,6 +83,14 @@ export const PublicOverlay = (props: OverlayProps) => {
           "standard": "Standard",
           "mobile": "Mobile",
         }} />
+      {config.config &&
+        <Section
+          title={"Scene"}
+          configKey={"scene"}
+          options={{
+            "outdoor": "Outdoor",
+            "lab": "Lab",
+          }} />}
     </div>
     {config.promoInfo &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
@@ -296,6 +304,8 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Toggle {...props} configKey={"clouds"} />
       <Toggle {...props} configKey={"solar"} />
       <Toggle {...props} configKey={"lab"} />
+      <Radio {...props} configKey={"scene"}
+        options={["Outdoor", "Lab"]} />
       <Toggle {...props} configKey={"people"} />
       <Slider {...props} configKey={"sunInclination"} min={0} max={180} />
       <Slider {...props} configKey={"sunAzimuth"} min={0} max={360} />

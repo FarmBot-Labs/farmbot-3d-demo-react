@@ -59,6 +59,7 @@ export interface Config {
   packaging: boolean;
   lab: boolean;
   people: boolean;
+  scene: string;
 }
 
 export const INITIAL: Config = {
@@ -122,10 +123,11 @@ export const INITIAL: Config = {
   packaging: false,
   lab: false,
   people: false,
+  scene: "Outdoor",
 };
 
 export const STRING_KEYS = [
-  "sizePreset", "bedType", "otherPreset", "label", "plants", "tool",
+  "sizePreset", "bedType", "otherPreset", "label", "plants", "tool", "scene",
 ];
 
 export const NUMBER_KEYS = [
@@ -251,6 +253,7 @@ export const PRESETS: Record<string, Config> = {
     packaging: false,
     lab: false,
     people: false,
+    scene: "Outdoor",
   },
   "Maximal": {
     ...INITIAL,
@@ -294,6 +297,7 @@ export const PRESETS: Record<string, Config> = {
     packaging: true,
     lab: true,
     people: true,
+    scene: "outdoor",
   },
 };
 
@@ -311,7 +315,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
   "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
-  "solar", "utilitiesPost", "packaging", "lab", "people",
+  "solar", "utilitiesPost", "packaging", "lab", "people", "scene",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {
@@ -325,9 +329,18 @@ export const modifyConfig = (config: Config, update: Partial<Config>) => {
       newConfig.z = 50;
     }
   }
+  if (update.scene) {
+    newConfig.lab = update.scene == "Lab";
+    newConfig.solar = update.scene != "Lab";
+    newConfig.people = update.scene == "Lab";
+    newConfig.bedType =
+      (update.scene == "Lab" && newConfig.sizePreset != "Genesis XL")
+        ? "Mobile"
+        : "Standard";
+  }
   if (update.bedType || (newConfig.bedType != config.bedType)) {
-    newConfig.bedZOffset = update.bedType == "Mobile" ? 500 : 0;
-    newConfig.legsFlush = update.bedType == "Mobile" ? false : true;
+    newConfig.bedZOffset = newConfig.bedType == "Mobile" ? 500 : 0;
+    newConfig.legsFlush = newConfig.bedType == "Mobile" ? false : true;
   }
   if (update.otherPreset) {
     if (update.otherPreset == "Reset all") {
