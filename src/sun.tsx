@@ -28,45 +28,23 @@ export const Sun = (props: SunProps) => {
   const sunDistance = 20000;
   const sunDecay = 0;
   const shadowNormalBias = 100;
+  const offset = 50;
 
-  return (
-    <group>
-      <animated.pointLight
+  return <group name={"sun"}>
+    {[
+      [0, 0],
+      [0, offset],
+      [offset, offset],
+      [offset, 0],
+    ].map(([xOffset, yOffset], index) =>
+      <animated.pointLight key={index}
         intensity={sunIntensity}
         color={sunColor}
         distance={sunDistance}
         decay={sunDecay}
-        castShadow
-        shadow-normalBias={shadowNormalBias}
-        position={[sunPos.x, sunPos.y, sunPos.z]}
-      />
-      <animated.pointLight
-        intensity={sunIntensity}
-        color={sunColor}
-        distance={sunDistance}
-        decay={sunDecay}
-        castShadow
-        shadow-normalBias={shadowNormalBias}
-        position={[sunPos.x + 50, sunPos.y, sunPos.z]}
-      />
-      <animated.pointLight
-        intensity={sunIntensity}
-        color={sunColor}
-        distance={sunDistance}
-        decay={sunDecay}
-        castShadow
-        shadow-normalBias={shadowNormalBias}
-        position={[sunPos.x + 50, sunPos.y + 50, sunPos.z]}
-      />
-      <animated.pointLight
-        intensity={sunIntensity}
-        color={sunColor}
-        distance={sunDistance}
-        decay={sunDecay}
-        castShadow
-        shadow-normalBias={shadowNormalBias}
-        position={[sunPos.x, sunPos.y + 50, sunPos.z]}
-      />
-    </group>
-  );
+        castShadow={true}
+        shadow-normalBias={shadowNormalBias} // warning: distorts shadows
+        position={[sunPos.x + xOffset, sunPos.y + yOffset, sunPos.z]}
+      />)}
+  </group>;
 };
