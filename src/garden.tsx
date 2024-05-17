@@ -137,13 +137,13 @@ const Model = (props: ModelProps) => {
         ? <Text visible={alwaysShowLabels || i === hoveredPlant}
           renderOrder={2}
           material-depthTest={false}
-          fontSize={40}
-          position={[0, plant.size / 2 + 25, 0]}
-          font={ASSETS.fonts.cabin}
+          fontSize={50}
+          position={[0, plant.size / 2 + 40, 0]}
+          font={ASSETS.fonts.cabinBold}
           outlineColor={"black"}
-          outlineWidth={2}
-          outlineBlur={5}
-          outlineOpacity={0.5}>
+          outlineWidth={3}
+          outlineBlur={15}
+          outlineOpacity={0.7}>
           {plant.label}
         </Text>
         : <Image url={plant.icon} scale={plant.size} name={"" + i}

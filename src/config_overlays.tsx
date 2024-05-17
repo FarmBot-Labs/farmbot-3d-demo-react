@@ -294,6 +294,8 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Toggle {...props} configKey={"zoom"} />
       <Toggle {...props} configKey={"pan"} />
       <label>{"Environment"}</label>
+      <Radio {...props} configKey={"scene"}
+        options={["Outdoor", "Lab"]} />
       <Toggle {...props} configKey={"ground"} />
       <Toggle {...props} configKey={"grid"} />
       <Toggle {...props} configKey={"utilitiesPost"} />
@@ -303,8 +305,6 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Toggle {...props} configKey={"clouds"} />
       <Toggle {...props} configKey={"solar"} />
       <Toggle {...props} configKey={"lab"} />
-      <Radio {...props} configKey={"scene"}
-        options={["Outdoor", "Lab"]} />
       <Toggle {...props} configKey={"people"} />
       <Slider {...props} configKey={"sunInclination"} min={0} max={180} />
       <Slider {...props} configKey={"sunAzimuth"} min={0} max={360} />
