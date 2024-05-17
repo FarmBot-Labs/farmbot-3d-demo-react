@@ -94,7 +94,7 @@ export const INITIAL: Config = {
   soilHeight: 500,
   plants: "Spring",
   labels: false,
-  labelsOnHover: false,
+  labelsOnHover: true,
   ground: true,
   grid: true,
   axes: false,
