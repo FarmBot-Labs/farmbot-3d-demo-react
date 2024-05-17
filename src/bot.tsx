@@ -18,6 +18,7 @@ import { SoilSensor, SoilSensorFull } from "./parts/soil_sensor";
 import { SeedTroughAssembly, SeedTroughAssemblyFull } from "./parts/seed_trough_assembly";
 import { SeedTroughHolder, SeedTroughHolderFull } from "./parts/seed_trough_holder";
 import { PowerSupply } from "./power_supply";
+import { XAxisWaterTube } from "./x_axis_water_tube";
 
 const extrusionWidth = 20;
 const utmRadius = 35;
@@ -853,6 +854,7 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[0, 0, Math.PI / 2]}
       scale={1000} />
     <PowerSupply config={config} />
+    <XAxisWaterTube config={config} />
     <Line name={"bounds"}
       visible={bounds}
       color={"white"}
