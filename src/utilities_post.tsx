@@ -1,9 +1,9 @@
-import { Box } from "@react-three/drei";
+import { Box, Cylinder } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping } from "three";
 import { ASSETS } from "./constants";
 import { Config } from "./config";
 import { threeSpace, getColorFromBrightness } from "./helpers";
-import { outletDepth } from "./bot";
+import { outletDepth } from "./power_supply";
 
 interface UtilitiesPostProps {
   config: Config;
@@ -44,5 +44,39 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
       <meshPhongMaterial color={"gray"}
         shininess={100} />
     </Box>
+    <group name={"water-source"}>
+      <Cylinder name={"pipe"}
+        castShadow={true}
+        args={[20, 20, 200]}
+        position={[0, -legSize / 2 - 20, -50]}
+        rotation={[Math.PI / 2, 0, 0]}>
+        <meshPhongMaterial color={"#f4f4f4"}
+          shininess={100} />
+      </Cylinder>
+      <Cylinder name={"faucet-base"}
+        castShadow={true}
+        args={[22, 22, 100]}
+        position={[0, -legSize / 2 - 20, 100]}
+        rotation={[Math.PI / 2, 0, 0]}>
+        <meshPhongMaterial color={"gold"}
+          shininess={100} />
+      </Cylinder>
+      <Cylinder name={"faucet-outlet"}
+        castShadow={true}
+        args={[18, 18, 60]}
+        position={[0, -legSize / 2 - 40, 100]}
+        rotation={[Math.PI / 4, 0, 0]}>
+        <meshPhongMaterial color={"gold"}
+          shininess={100} />
+      </Cylinder>
+      <Cylinder name={"faucet-handle"}
+        castShadow={true}
+        args={[30, 30, 15]}
+        position={[0, -legSize / 2 - 20, 160]}
+        rotation={[Math.PI / 2, 0, 0]}>
+        <meshPhongMaterial color={"#0266b5"}
+          shininess={100} />
+      </Cylinder>
+    </group>
   </group>
 };
