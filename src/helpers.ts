@@ -19,3 +19,4 @@ export const getColorFromBrightness = (value: number) => {
   };
   return colorMap[value];
 };
+export const zDir = -1;

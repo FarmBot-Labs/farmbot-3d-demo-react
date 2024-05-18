@@ -1,5 +1,6 @@
 import React from "react";
 import { Config, modifyConfig } from "./config";
+import { getFocus } from "./zoom_beacons_constants";
 
 export interface ToolTip {
   timeoutId: number;
@@ -11,6 +12,8 @@ interface OverlayProps {
   setConfig(config: Config): void;
   toolTip: ToolTip;
   setToolTip(tooltip: ToolTip): void;
+  activeFocus: string;
+  setActiveFocus(focus: string): void;
 }
 
 interface SectionProps {
@@ -91,8 +94,10 @@ export const PublicOverlay = (props: OverlayProps) => {
           "lab": "Lab",
         }} />
     </div>
-    {config.promoInfo &&
+    {config.promoInfo && !props.activeFocus &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
+    {props.activeFocus &&
+      <ZoomBeaconInfo config={config} activeFocus={props.activeFocus} />}
   </div>;
 };
 
@@ -136,6 +141,22 @@ const PromoInfo = (props: PromoInfoProps) => {
         XL
       </p>
     </a>
+  </div>;
+};
+
+interface ZoomBeaconInfoProps {
+  config: Config;
+  activeFocus: string;
+}
+
+const ZoomBeaconInfo = (props: ZoomBeaconInfoProps) => {
+  const { config, activeFocus } = props;
+  const focus = getFocus(config, activeFocus);
+  return <div className="promo-info">
+    <h2 className="title">{focus.label}</h2>
+    <p className="description">
+      <span>{focus.info}</span>
+    </p>
   </div>;
 };
 

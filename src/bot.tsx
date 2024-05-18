@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
-import { threeSpace, zZero as zZeroFunc } from "./helpers";
+import { threeSpace, zDir, zZero as zZeroFunc } from "./helpers";
 import { Config } from "./config";
 import { GLTF } from "three-stdlib";
 import { ASSETS } from "./constants";
@@ -207,7 +207,6 @@ export const Bot = (props: FarmbotModelProps) => {
     columnLength, zAxisLength, zGantryOffset, bedWallThickness, tool, bedHeight,
     cableCarriers, bounds,
   } = props.config;
-  const zDir = -1;
   const zZero = zZeroFunc(props.config);
   const zero = {
     x: threeSpace(bedXOffset, bedLengthOuter),
