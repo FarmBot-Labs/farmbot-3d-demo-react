@@ -4,8 +4,8 @@ import {
 } from "three";
 import { range } from "lodash";
 import { threeSpace, zZero, getColorFromBrightness } from "./helpers";
-import { Config } from "./config";
-import { ASSETS, LEVELS } from "./constants";
+import { Config, detailLevels } from "./config";
+import { ASSETS } from "./constants";
 import { DistanceIndicator } from "./distance_indicator";
 import { FarmBotAxes } from "./farmbot_axes";
 import { FarmBotPackaging } from "./packaging";
@@ -138,7 +138,7 @@ export const Bed = (props: BedProps) => {
   };
 
   return <group>
-    <Detailed distances={LEVELS}>
+    <Detailed distances={detailLevels(props.config)}>
       <Bed>
         <meshPhongMaterial map={woodTexture} color={bedColor}
           shininess={100} side={DoubleSide} />
@@ -199,7 +199,7 @@ export const Bed = (props: BedProps) => {
       <meshPhongMaterial map={legWoodTexture} color={bedColor}
         shininess={100} side={DoubleSide} />
     </Box>
-    <Detailed distances={LEVELS}>
+    <Detailed distances={detailLevels(props.config)}>
       <Soil>
         <meshPhongMaterial map={soilTexture} color={soilColor}
           shininess={0} />

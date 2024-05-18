@@ -293,6 +293,7 @@ export const PrivateOverlay = (props: OverlayProps) => {
       <Toggle {...props} configKey={"perspective"} />
       <Toggle {...props} configKey={"zoom"} />
       <Toggle {...props} configKey={"pan"} />
+      <Toggle {...props} configKey={"lowDetail"} />
       <label>{"Environment"}</label>
       <Radio {...props} configKey={"scene"}
         options={["Outdoor", "Lab"]} />

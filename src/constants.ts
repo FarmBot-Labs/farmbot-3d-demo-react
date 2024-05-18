@@ -265,5 +265,3 @@ export const GARDENS: Gardens = {
     "rutabaga", "savoyCabbage", "shallot", "turmeric", "celery", "brusselsSprout"],
   "Random": sampleSize(Object.keys(PLANTS), 20),
 };
-
-export const LEVELS = [0, 15000];

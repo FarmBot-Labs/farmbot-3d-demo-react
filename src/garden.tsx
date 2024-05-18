@@ -5,6 +5,7 @@ import {
   OrbitControls, PerspectiveCamera,
   Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
   Detailed,
+  Sphere,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
 import { Bot } from "./bot";
@@ -12,15 +13,16 @@ import { Bed } from "./bed";
 import { threeSpace, zZero } from "./helpers";
 import { Sky } from "./sky";
 import {
-  Config, INITIAL, modifyConfigsFromUrlParams, seasonProperties,
+  Config, INITIAL, detailLevels, modifyConfigsFromUrlParams, seasonProperties,
 } from "./config";
-import { ASSETS, GARDENS, LEVELS, PLANTS } from "./constants";
+import { ASSETS, GARDENS, PLANTS } from "./constants";
 import "./garden.css";
 import { PrivateOverlay, PublicOverlay, ToolTip } from "./config_overlays";
 import { useSpring, animated } from "@react-spring/three";
 import { Solar } from "./solar";
 import { Sun, sunPosition } from "./sun";
 import { LabEnvironment } from "./lab";
+import { findIndex } from "lodash";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -169,8 +171,53 @@ const Model = (props: ModelProps) => {
       {children}
     </Circle>;
 
+  interface Focus {
+    label: string;
+    position: [x: number, y: number, z: number];
+    camera: {
+      position: [x: number, y: number, z: number];
+      target: [x: number, y: number, z: number];
+    };
+  }
+
+  const FOCI: Focus[] = [
+    {
+      label: "electronics box",
+      position: [
+        threeSpace(config.x - 100, config.bedLengthOuter),
+        threeSpace(-100, config.bedWidthOuter),
+        300,
+      ],
+      camera: {
+        position: [
+          threeSpace(config.x, config.bedLengthOuter),
+          threeSpace(-500, config.bedWidthOuter),
+          500,
+        ],
+        target: [
+          threeSpace(config.x, config.bedLengthOuter),
+          threeSpace(0, config.bedWidthOuter),
+          300,
+        ],
+      },
+    }
+  ];
+
+  const [activeFocus, setFocus] = React.useState("");
+
   return <group dispose={null}>
     {config.stats && <Stats />}
+    {config.config &&
+      FOCI.map(focus =>
+        <Sphere
+          onClick={() => setFocus(activeFocus ? "" : focus.label)}
+          receiveShadow={true}
+          args={activeFocus ? [10] : [50]}
+          position={focus.position}>
+          <meshPhongMaterial
+            color={activeFocus ? "red" : "blue"}
+            shininess={100} />
+        </Sphere>)}
     <Sky distance={450000}
       sunPosition={sunPosition(config)}
       mieCoefficient={0.01}
@@ -180,14 +227,18 @@ const Model = (props: ModelProps) => {
     <animated.group scale={scale}>
       <Camera makeDefault={true} name={"camera"}
         fov={40} near={10} far={75000}
-        position={[5000, -2500, 3200]} // Small screens
-        // position={[2200, -3500, 2000]} // Large screens
+        position={activeFocus
+          ? FOCI[findIndex(FOCI, ["label", activeFocus])].camera.position
+          : [5000, -2500, 3200]} // Small screens
+        // : [2200, -3500, 2000]} // Large screens
         rotation={[0, 0, 0]}
         up={[0, 0, 1]} />
     </animated.group>
     <OrbitControls maxPolarAngle={Math.PI / 2}
       enableZoom={config.zoom} enablePan={config.pan} dampingFactor={0.2}
-      target={[0, 0, 0]}
+      target={activeFocus
+        ? FOCI[findIndex(FOCI, ["label", activeFocus])].camera.target
+        : [0, 0, 0]}
       minDistance={500} maxDistance={12000} />
     <axesHelper args={[5000]} visible={config.threeAxes} />
     {config.viewCube && <GizmoHelper>
@@ -195,7 +246,7 @@ const Model = (props: ModelProps) => {
     </GizmoHelper>}
     <Sun config={config} />
     <ambientLight intensity={1} />
-    <Detailed distances={LEVELS}>
+    <Detailed distances={detailLevels(config)}>
       <Ground>
         <meshPhongMaterial
           map={config.lab ? concreteTexture : grassTexture}

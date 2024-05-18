@@ -60,6 +60,7 @@ export interface Config {
   lab: boolean;
   people: boolean;
   scene: string;
+  lowDetail: boolean;
 }
 
 export const INITIAL: Config = {
@@ -124,6 +125,7 @@ export const INITIAL: Config = {
   lab: false,
   people: false,
   scene: "Outdoor",
+  lowDetail: false,
 };
 
 export const STRING_KEYS = [
@@ -143,7 +145,7 @@ export const BOOLEAN_KEYS = [
   "tracks", "clouds", "perspective", "bot", "laser", "cableCarriers",
   "viewCube", "stats", "config", "zoom", "pan", "bounds", "threeAxes",
   "xyDimensions", "zDimension", "promoInfo", "solar", "utilitiesPost",
-  "packaging", "lab", "people",
+  "packaging", "lab", "people", "lowDetail",
 ];
 
 export const PRESETS: Record<string, Config> = {
@@ -254,6 +256,7 @@ export const PRESETS: Record<string, Config> = {
     lab: false,
     people: false,
     scene: "Outdoor",
+    lowDetail: false,
   },
   "Maximal": {
     ...INITIAL,
@@ -298,6 +301,7 @@ export const PRESETS: Record<string, Config> = {
     lab: true,
     people: true,
     scene: "outdoor",
+    lowDetail: false,
   },
 };
 
@@ -315,7 +319,7 @@ const OTHER_CONFIG_KEYS: (keyof Config)[] = [
   "trail", "clouds", "sunInclination", "sunAzimuth", "perspective", "bot", "laser",
   "tool", "cableCarriers", "viewCube", "stats", "config", "zoom", "bounds",
   "threeAxes", "xyDimensions", "zDimension", "labelsOnHover", "promoInfo", "pan",
-  "solar", "utilitiesPost", "packaging", "lab", "people", "scene",
+  "solar", "utilitiesPost", "packaging", "lab", "people", "scene", "lowDetail",
 ];
 
 export const modifyConfig = (config: Config, update: Partial<Config>) => {
@@ -405,3 +409,6 @@ export const seasonProperties: Record<string, SeasonProperties> = {
   Summer: { sunIntensity: 9 / 4, sunColor: '#FFFFFF', cloudOpacity: 0 },
   Fall: { sunIntensity: 5.5 / 4, sunColor: '#FFD6BC', cloudOpacity: 0.3 },
 };
+
+export const detailLevels = (config: Config) =>
+  config.lowDetail ? [0, 0] : [0, 15000];
