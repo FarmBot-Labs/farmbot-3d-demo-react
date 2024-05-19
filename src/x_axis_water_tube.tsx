@@ -1,7 +1,6 @@
 import { Cylinder, Tube } from '@react-three/drei';
-import * as THREE from 'three';
 import { Config } from "./config";
-import { threeSpace } from './helpers';
+import { threeSpace, easyCubicBezierCurve3 } from './helpers';
 
 interface XAxisWaterTubeProps {
   config: Config;
@@ -10,24 +9,14 @@ interface XAxisWaterTubeProps {
 export const XAxisWaterTube = (props: XAxisWaterTubeProps) => {
   const { config } = props;
   const groundZ = -config.bedHeight - config.bedZOffset;
-  const ccX = -20;
-  const ccY = threeSpace(-30, config.bedWidthOuter);
-  const ccZ = -140;
   const barbX = 400;
   const barbY = threeSpace(-50, config.bedWidthOuter);
   const barbZ = groundZ + 20;
-  const midX = (ccX + barbX) / 2
-  const midY = (ccY + barbY) / 2
-  const midZ = (ccZ + barbZ) / 2
-  const tubePoints = [
-    [ccX, ccY, ccZ],
-    [ccX + 100, ccY, ccZ - 10],
-    [midX, midY, midZ],
-    [barbX - 100, barbY, barbZ + 10],
+  const tubePath = easyCubicBezierCurve3(
+    [-20, threeSpace(-30, config.bedWidthOuter), -140],
+    [300, 0, 0],
+    [-300, 0, 0],
     [barbX, barbY, barbZ],
-  ];
-  const tubePath = new THREE.CatmullRomCurve3(
-    tubePoints.map(point => new THREE.Vector3(...point))
   );
 
   return (
