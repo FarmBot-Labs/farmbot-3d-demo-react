@@ -1,6 +1,5 @@
 import React from "react";
 import { Config, modifyConfig } from "./config";
-import { getFocus } from "./zoom_beacons_constants";
 
 export interface ToolTip {
   timeoutId: number;
@@ -96,8 +95,6 @@ export const PublicOverlay = (props: OverlayProps) => {
     </div>
     {config.promoInfo && !props.activeFocus &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
-    {props.activeFocus &&
-      <ZoomBeaconInfo config={config} activeFocus={props.activeFocus} />}
   </div>;
 };
 
@@ -110,26 +107,32 @@ const PromoInfo = (props: PromoInfoProps) => {
   return <div className="promo-info">
     <h2 className="title">Explore our models</h2>
     {isGenesis ? (
-      <p className="description">
-        <span className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</span>
-        <span className="full">
+      <div className="description">
+        <p className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</p>
+        <p className="full">
           FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
-          our most advanced technology, features, and options. Coming 90% pre-assembled
+          our most advanced technology, features, and options.
+        </p>
+        <p>
+          Coming 90% pre-assembled
           in the box, Genesis can be installed on an existing raised bed in an afternoon.
           It is suitable for fixed or mobile raised beds in classrooms, research labs,
           and backyards.
-        </span>
-      </p>
+        </p>
+      </div>
     ) : (
-      <p className="description">
-        <span className="short">Covering 400% the area, Genesis XL can grow enough veggies for a family of four.</span>
-        <span className="full">
-          Covering 400% the area of Genesis, FarmBot Genesis XL can grow enough veggies
-          for a family of four, provides ample room for student agronomy competitions,
-          and can take research experiments to new scale. Suitable for fixed installations
-          at home, farm to fork restaurants, universities, and commercial facilities.
-        </span>
-      </p>
+      <div className="description">
+        <p className="short">Covering 400% the area, Genesis XL can grow enough veggies for a family of four.</p>
+        <p className="full">
+          Covering 400% the area, FarmBot Genesis XL can grow enough veggies
+          for a family of four, provides ample room for student competitions,
+          and can take research experiments to new scale.
+        </p>
+        <p>
+          Suitable for fixed installations
+          at home, farm to fork restaurants, schools and universities, and commercial research facilities.
+        </p>
+      </div>
     )}
     <a className="buy-button"
       target="_top"
@@ -141,22 +144,6 @@ const PromoInfo = (props: PromoInfoProps) => {
         XL
       </p>
     </a>
-  </div>;
-};
-
-interface ZoomBeaconInfoProps {
-  config: Config;
-  activeFocus: string;
-}
-
-const ZoomBeaconInfo = (props: ZoomBeaconInfoProps) => {
-  const { config, activeFocus } = props;
-  const focus = getFocus(config, activeFocus);
-  return <div className="promo-info">
-    <h2 className="title">{focus.label}</h2>
-    <p className="description">
-      <span>{focus.info}</span>
-    </p>
   </div>;
 };
 
