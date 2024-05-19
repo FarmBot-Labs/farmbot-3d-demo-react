@@ -105,18 +105,18 @@ export const FOCI = (config: Config): Focus[] => [
     position: [
       threeSpace(config.bedLengthOuter + 700, config.bedLengthOuter),
       threeSpace(0, config.bedWidthOuter),
-      200 - config.bedZOffset - config.bedHeight,
+      300 - config.bedZOffset - config.bedHeight,
     ],
     camera: {
       position: [
-        -100,
+        -500,
         -700,
-        200,
+        250,
       ],
       target: [
         -100,
         0,
-        0,],
+        -125,],
     },
   },
 ];
