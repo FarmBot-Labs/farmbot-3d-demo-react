@@ -765,8 +765,8 @@ export const Bot = (props: FarmbotModelProps) => {
         geometry={farmduino.nodes[PartName.farmduino].geometry}
         material={farmduino.materials.PaletteMaterial001} />
       <mesh name={"pi"}
-        position={[-20, -10, 40]}
-        rotation={[Math.PI / 2, 0, 0]}
+        position={[-15, -10, 40]}
+        rotation={[Math.PI / 2, 0, Math.PI]}
         scale={1000}
         geometry={pi.nodes[PartName.pi].geometry}
         material={pi.materials.PaletteMaterial001} />
