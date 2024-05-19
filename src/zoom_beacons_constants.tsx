@@ -21,18 +21,18 @@ export const FOCI = (config: Config): Focus[] => [
     position: [
       threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
       threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
-      100,
+      150,
     ],
     camera: {
       position: [
-        100,
-        -200,
-        700,
+        0,
+        0,
+        config.sizePreset == "Genesis XL" ? 6000 : 3000,
       ],
       target: [
         0,
         0,
-        -100,
+        0,
       ],
     },
   },
@@ -46,14 +46,14 @@ export const FOCI = (config: Config): Focus[] => [
     ],
     camera: {
       position: [
-        600,
-        0,
-        100,
+        450,
+        -450,
+        125,
       ],
       target: [
         0,
         0,
-        -100,
+        -125,
       ],
     },
   },
@@ -62,19 +62,19 @@ export const FOCI = (config: Config): Focus[] => [
     info: "UTM",
     position: [
       threeSpace(config.x, config.bedLengthOuter) + config.bedXOffset,
-      threeSpace(config.y, config.bedWidthOuter) + config.bedYOffset,
-      zZero(config) + zDir * config.z + 100,
+      threeSpace(config.y + 150, config.bedWidthOuter) + config.bedYOffset,
+      zZero(config) + zDir * config.z,
     ],
     camera: {
       position: [
-        50,
-        0,
+        200,
         -100,
+        0,
       ],
       target: [
         0,
-        0,
-        -100,
+        -150,
+        -25,
       ],
     },
   },
@@ -82,20 +82,20 @@ export const FOCI = (config: Config): Focus[] => [
     label: "Electronics",
     info: "Farmduino and Raspberry Pi",
     position: [
-      threeSpace(config.x, config.bedLengthOuter) + config.bedXOffset - 200,
-      threeSpace(-100, config.bedWidthOuter),
-      config.columnLength - 200,
+      threeSpace(config.x, config.bedLengthOuter) + config.bedXOffset - 50,
+      threeSpace(-200, config.bedWidthOuter),
+      config.columnLength - 150,
     ],
     camera: {
       position: [
-        400,
-        -600,
-        0,
+        75,
+        -150,
+        125,
       ],
       target: [
-        150,
-        -50,
         0,
+        100,
+        -25,
       ],
     },
   },
@@ -104,19 +104,19 @@ export const FOCI = (config: Config): Focus[] => [
     info: "Internet, water, and power",
     position: [
       threeSpace(config.bedLengthOuter + 700, config.bedLengthOuter),
-      threeSpace(0, config.bedWidthOuter),
-      200 - config.bedZOffset - config.bedHeight,
+      threeSpace(config.legSize / 2, config.bedWidthOuter),
+      250 - config.bedZOffset - config.bedHeight,
     ],
     camera: {
       position: [
-        -100,
+        -500,
         -700,
-        200,
+        300,
       ],
       target: [
         -100,
         0,
-        0,],
+        -75,],
     },
   },
 ];
