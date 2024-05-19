@@ -183,11 +183,10 @@ const Model = (props: ModelProps) => {
 
   return <group dispose={null}>
     {config.stats && <Stats />}
-    {config.config &&
-      <ZoomBeacons
-        config={config}
-        activeFocus={props.activeFocus}
-        setActiveFocus={props.setActiveFocus} />}
+    <ZoomBeacons
+      config={config}
+      activeFocus={props.activeFocus}
+      setActiveFocus={props.setActiveFocus} />
     <Sky distance={450000}
       sunPosition={sunPosition(config)}
       mieCoefficient={0.01}
