@@ -1,7 +1,8 @@
 import { TextureLoader, RepeatWrapping } from "three";
-import { Line, Box, CubicBezierLine } from "@react-three/drei";
+import * as THREE from "three";
+import { Box, Tube } from "@react-three/drei";
 import { ASSETS } from "./constants";
-import { threeSpace } from "./helpers";
+import { threeSpace, easyCubicBezierCurve3 } from "./helpers";
 import { Config } from "./config";
 
 interface PowerSupplyProps {
@@ -34,6 +35,59 @@ export const PowerSupply = (props: PowerSupplyProps) => {
     legSize, ccSupportSize, bedZOffset
   } = props.config;
   const zGround = -bedHeight - bedZOffset;
+
+  const combinedCablePath = new THREE.CurvePath<THREE.Vector3>();
+
+  const powerCableInCC = new THREE.LineCurve3(
+    new THREE.Vector3(threeSpace(botSizeX / 2, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)),
+    new THREE.Vector3(threeSpace(bedLengthOuter / 2, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)),
+  );
+  combinedCablePath.add(powerCableInCC);
+
+  const powerCableFromSupplyToCC = easyCubicBezierCurve3(
+    [threeSpace(bedLengthOuter / 2 + 0, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)],
+    [100, 0, 0],
+    [-100, 0, 0],
+    [threeSpace(bedLengthOuter / 2 + 300 - (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize],
+  );
+  combinedCablePath.add(powerCableFromSupplyToCC);
+
+  const powerCableFromGroundToSupply = easyCubicBezierCurve3(
+    [threeSpace(bedLengthOuter / 2 + 300 + (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize],
+    [100, 0, 0],
+    [-100, 0, 0],
+    [threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10],
+  );
+  combinedCablePath.add(powerCableFromGroundToSupply);
+
+  const powerCableFromBedEndToSupply = new THREE.LineCurve3(
+    new THREE.Vector3(threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10),
+    new THREE.Vector3(threeSpace(bedLengthOuter - 150, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10),
+  );
+  combinedCablePath.add(powerCableFromBedEndToSupply);
+
+  const powerCableFromGroundToBedEnd = easyCubicBezierCurve3(
+    [threeSpace(bedLengthOuter - 150, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10],
+    [100, 0, 0],
+    [-100, 0, 0],
+    [threeSpace(bedLengthOuter - 50, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10],
+  );
+
+  combinedCablePath.add(powerCableFromGroundToBedEnd);
+  const powerCableFromPostToBedEnd = new THREE.LineCurve3(
+    new THREE.Vector3(threeSpace(bedLengthOuter - 50, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10),
+    new THREE.Vector3(threeSpace(bedLengthOuter + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10),
+  );
+  combinedCablePath.add(powerCableFromPostToBedEnd);
+
+  const powerCableFromOutletToGround = easyCubicBezierCurve3(
+    [threeSpace(bedLengthOuter + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10],
+    [100, 0, 0],
+    [-100, 0, 0],
+    [threeSpace(bedLengthOuter + 550 - legSize / 2, bedLengthOuter), threeSpace(legSize / 2, bedWidthOuter), zGround + 250],
+  );
+  combinedCablePath.add(powerCableFromOutletToGround);
+
   return (
     <group name={"powerSupplyGroup"}>
       <Box name={"powerSupply"}
@@ -48,90 +102,21 @@ export const PowerSupply = (props: PowerSupplyProps) => {
         <meshPhongMaterial map={aluminumTexture} color={"white"}
           shininess={100} />
       </Box>
-      <group name={"powerCableGroup"}>
-        <Line name={"powerCableInCC"}
-          points={[
-            [
-              threeSpace(botSizeX / 2, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              10 - Math.min(150, bedHeight / 2),
-            ],
-            [
-              threeSpace(bedLengthOuter / 2, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              10 - Math.min(150, bedHeight / 2),
-            ]
-          ]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <CubicBezierLine name={"powerCableFromSupplyToCC"}
-          start={[threeSpace(bedLengthOuter / 2 + 0, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
-          midA={[threeSpace(bedLengthOuter / 2 + 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), 10 - Math.min(150, bedHeight / 2)]}
-          midB={[threeSpace(bedLengthOuter / 2 + 200 - (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-          end={[threeSpace(bedLengthOuter / 2 + 300 - (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <CubicBezierLine name={"powerCableFromGroundToSupply"}
-          start={[threeSpace(bedLengthOuter / 2 + 300 + (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-          midA={[threeSpace(bedLengthOuter / 2 + 400 + (163 / 2), bedLengthOuter), threeSpace(-20, bedWidthOuter), -90 - ccSupportSize]}
-          midB={[threeSpace(bedLengthOuter / 2 + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-          end={[threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <Line name={"powerCableFromBedEndToSupply"}
-          points={[
-            [
-              threeSpace(bedLengthOuter / 2 + 500, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              -bedHeight + 10,
-            ],
-            [
-              threeSpace(bedLengthOuter - 150, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              -bedHeight + 10,
-            ]
-          ]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <CubicBezierLine name={"powerCableFromGroundToBedEnd"}
-          start={[threeSpace(bedLengthOuter - 150, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-          midA={[threeSpace(bedLengthOuter - 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), -bedHeight + 10]}
-          midB={[threeSpace(bedLengthOuter - 100, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
-          end={[threeSpace(bedLengthOuter - 50, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <Line name={"powerCableFromPostToBedEnd"}
-          points={[
-            [
-              threeSpace(bedLengthOuter - 50, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              zGround + 10,
-            ],
-            [
-              threeSpace(bedLengthOuter + 400, bedLengthOuter),
-              threeSpace(-20, bedWidthOuter),
-              zGround + 10,
-            ]
-          ]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <CubicBezierLine name={"powerCableFromOutletToGround"}
-          start={[threeSpace(bedLengthOuter + 400, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
-          midA={[threeSpace(bedLengthOuter + 450, bedLengthOuter), threeSpace(-20, bedWidthOuter), zGround + 10]}
-          midB={[threeSpace(bedLengthOuter + 450, bedLengthOuter), threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
-          end={[threeSpace(bedLengthOuter + 550 - legSize / 2, bedLengthOuter), threeSpace(legSize / 2, bedWidthOuter), zGround + 250]}
-          color={cableColor()}
-          lineWidth={2.5} />
-        <Box name={"powerPlug"}
-          args={[plugDepth, 30, 30]}
-          position={[
-            threeSpace(bedLengthOuter + 600 - plugDepth / 2 - outletDepth - legSize / 2, bedLengthOuter),
-            threeSpace(legSize / 2, bedWidthOuter),
-            zGround + 250,
-          ]}>
-          <meshPhongMaterial color={cableColor()} />
-        </Box>
-      </group>
+      <Tube name={"powerCable"}
+        castShadow={true}
+        receiveShadow={true}
+        args={[combinedCablePath, 200, 4, 8]}>
+        <meshPhongMaterial color={cableColor()} />
+      </Tube>
+      <Box name={"powerPlug"}
+        args={[plugDepth, 30, 30]}
+        position={[
+          threeSpace(bedLengthOuter + 600 - plugDepth / 2 - outletDepth - legSize / 2, bedLengthOuter),
+          threeSpace(legSize / 2, bedWidthOuter),
+          zGround + 250,
+        ]}>
+        <meshPhongMaterial color={cableColor()} />
+      </Box>
     </group>
   );
 };
