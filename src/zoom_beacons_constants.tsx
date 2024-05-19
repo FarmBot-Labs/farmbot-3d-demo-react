@@ -27,7 +27,7 @@ export const FOCI = (config: Config): Focus[] => [
       position: [
         0,
         0,
-        3000,
+        config.sizePreset == "Genesis XL" ? 6000 : 3000,
       ],
       target: [
         0,
