@@ -3,6 +3,7 @@ import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
 import { ASSETS } from "./constants";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
+import { Desk } from "./desk";
 
 interface LabProps {
   config: Config;
@@ -22,11 +23,6 @@ const wallThickness = 200
 const wallOffset = 2000;
 const wallColor = "#f4f4f4";
 const shelfThickness = 50;
-const deskWidth = 1000;
-const deskDepth = 500;
-const deskHeight = 550;
-const deskOffset = 800;
-const deskLegWidth = 50;
 
 const wallStructure2D = () => {
   const shape = new Shape();
@@ -83,45 +79,7 @@ export const LabEnvironment = (props: LabProps) => {
           </Box>
         ))}
       </group>
-      <group
-        name={"desk"}
-        position={[
-          threeSpace(deskOffset, -config.bedLengthOuter),
-          0,
-          groundZ,
-        ]}>
-        <Box
-          name={"desk-top"}
-          castShadow={true}
-          receiveShadow={true}
-          args={[deskDepth, deskWidth, 50]}
-          position={[0, 0, deskHeight + 25]}>
-          <meshPhongMaterial
-            map={woodTexture}
-            color={"#555"}
-            side={DoubleSide} />
-        </Box>
-        <group name={"desk-legs"}>
-          {[
-            [(-deskDepth + deskLegWidth) / 2, (-deskWidth + deskLegWidth) / 2],
-            [(-deskDepth + deskLegWidth) / 2, (deskWidth - deskLegWidth) / 2],
-            [(deskDepth - deskLegWidth) / 2, (-deskWidth + deskLegWidth) / 2],
-            [(deskDepth - deskLegWidth) / 2, (deskWidth - deskLegWidth) / 2],
-          ].map(([xOffset, yOffset], index) =>
-            <Box
-            name={"desk-top"}
-            key={index}
-            castShadow={true}
-            receiveShadow={true}
-            args={[50, 50, deskHeight]}
-            position={[xOffset, yOffset, deskHeight / 2]}>
-            <meshPhongMaterial
-              map={woodTexture}
-              color={"#555"}
-              side={DoubleSide} />
-          </Box>)}
-        </group>
-      </group>
+      <Desk config={config} />
       <group name={"people"}
         visible={config.people}>
         <Billboard
