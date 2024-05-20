@@ -61,6 +61,7 @@ export const PublicOverlay = (props: OverlayProps) => {
   };
 
   return <div className={"overlay"}>
+    {!props.activeFocus &&
     <div className={"settings-bar"}>
       <Section
         title={"FarmBot"}
@@ -92,7 +93,7 @@ export const PublicOverlay = (props: OverlayProps) => {
           "outdoor": "Outdoor",
           "lab": "Lab",
         }} />
-    </div>
+    </div>}
     {config.promoInfo && !props.activeFocus &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
   </div>;
@@ -113,7 +114,7 @@ const PromoInfo = (props: PromoInfoProps) => {
           FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
           our most advanced technology, features, and options.
         </p>
-        <p>
+        <p className="full">
           Coming 90% pre-assembled
           in the box, Genesis can be installed on an existing raised bed in an afternoon.
           It is suitable for fixed or mobile raised beds in classrooms, research labs,
@@ -128,7 +129,7 @@ const PromoInfo = (props: PromoInfoProps) => {
           for a family of four, provides ample room for student competitions,
           and can take research experiments to new scale.
         </p>
-        <p>
+        <p className="full">
           Suitable for fixed installations
           at home, farm to fork restaurants, schools and universities, and commercial research facilities.
         </p>
