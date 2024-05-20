@@ -2,7 +2,7 @@ import { Box, Cylinder, RoundedBox, Tube } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping } from "three";
 import { ASSETS } from "./constants";
 import { Config } from "./config";
-import { threeSpace, getColorFromBrightness } from "./helpers";
+import { threeSpace, getColorFromBrightness, easyCubicBezierCurve3 } from "./helpers";
 import { outletDepth } from "./power_supply";
 import * as THREE from 'three';
 
@@ -31,15 +31,17 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
   const barbX = -bedLengthOuter / 2 - 200;
   const barbY = -100
   const barbZ = -130;
-  const hosePoints = [
+
+  const hosePathCurved = easyCubicBezierCurve3(
     [faucetX, faucetY, faucetZ],
-    [faucetX, faucetY - 30, faucetZ - 35],
-    [faucetX - 50, barbY - 50, barbZ + 20],
-    [faucetX - 200, barbY, barbZ],
-    [barbX, barbY, barbZ],
-  ];
-  const hosePath = new THREE.CatmullRomCurve3(
-    hosePoints.map(point => new THREE.Vector3(...point))
+    [0, -60, -65],
+    [200, 0, 0],
+    [faucetX - 205, barbY, barbZ],
+  );
+
+  const hosePathStraight = new THREE.LineCurve3(
+    new THREE.Vector3(faucetX - 200, barbY, barbZ),
+    new THREE.Vector3(barbX, barbY, barbZ),
   );
 
   return <group name={"utilities"}
@@ -149,10 +151,16 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
           <meshPhongMaterial color={"#434343"} />
         </Cylinder>
       </group>
-      <Tube name={"garden-hose"}
+      <Tube name={"garden-hose-curved"}
         castShadow={true}
         receiveShadow={true}
-        args={[hosePath, 100, 15, 8]}>
+        args={[hosePathCurved, 10, 15, 8]}>
+        <meshPhongMaterial color="darkgreen" />
+      </Tube>
+      <Tube name={"garden-hose-staight"}
+        castShadow={true}
+        receiveShadow={true}
+        args={[hosePathStraight, 1, 15, 8]}>
         <meshPhongMaterial color="darkgreen" />
       </Tube>
     </group>
