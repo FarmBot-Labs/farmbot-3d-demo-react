@@ -112,10 +112,7 @@ const PromoInfo = (props: PromoInfoProps) => {
         <p className="short">FarmBot Genesis is our flagship kit for prosumers and enthusiasts.</p>
         <p className="full">
           FarmBot Genesis is our flagship kit for prosumers and enthusiasts featuring
-          our most advanced technology, features, and options.
-        </p>
-        <p className="full">
-          Coming 90% pre-assembled
+          our most advanced technology, features, and options. Coming 90% pre-assembled
           in the box, Genesis can be installed on an existing raised bed in an afternoon.
           It is suitable for fixed or mobile raised beds in classrooms, research labs,
           and backyards.
@@ -127,10 +124,7 @@ const PromoInfo = (props: PromoInfoProps) => {
         <p className="full">
           Covering 400% the area, FarmBot Genesis XL can grow enough veggies
           for a family of four, provides ample room for student competitions,
-          and can take research experiments to new scale.
-        </p>
-        <p className="full">
-          Suitable for fixed installations
+          and can take research experiments to new scale. Suitable for fixed installations
           at home, farm to fork restaurants, schools and universities, and commercial research facilities.
         </p>
       </div>
