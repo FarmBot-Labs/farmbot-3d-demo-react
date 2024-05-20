@@ -236,7 +236,7 @@ export const FOCI = (config: Config): Focus[] => [
     label: "Planter bed",
     info: {
       description: `<p>
-      All FarmBots must be mounted to a <a href="http://bed.farm.bot/">raised
+      All FarmBots must be mounted to a <a href="http://bed.farm.bot/" target="_blank">raised
       bed</a> or similar infrastructure. Neither materials for the bed nor
       soil are included with the kits because every installation will be
       different, and shipping lumber and soil would be prohibitively expensive.
