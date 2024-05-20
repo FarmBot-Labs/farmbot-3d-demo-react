@@ -3,10 +3,10 @@ import { Canvas, ThreeEvent } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube,
   OrbitControls, PerspectiveCamera,
-  Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
-  Detailed,
+  Circle, Stats, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
+  Detailed, Sphere,
 } from "@react-three/drei";
-import { TextureLoader, RepeatWrapping, Vector3 } from "three";
+import { TextureLoader, RepeatWrapping, Vector3, BackSide } from "three";
 import { Bot } from "./bot";
 import { Bed } from "./bed";
 import { threeSpace, zZero } from "./helpers";
@@ -58,10 +58,6 @@ interface Plant {
 const Model = (props: ModelProps) => {
   const { config } = props;
   const groundZ = config.bedZOffset + config.bedHeight;
-  const midPoint = {
-    x: threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
-    y: threeSpace(config.bedWidthOuter / 2, config.bedWidthOuter),
-  };
   const Camera = config.perspective ? PerspectiveCamera : OrthographicCamera;
 
   const gardenPlants = GARDENS[config.plants] || [];
@@ -168,8 +164,8 @@ const Model = (props: ModelProps) => {
     <Circle name={"ground"}
       visible={config.ground}
       receiveShadow={true}
-      args={[30000, 100]}
-      position={[midPoint.x, midPoint.y, -groundZ]}>
+      args={[30000, 16]}
+      position={[0, 0, -groundZ]}>
       {children}
     </Circle>;
 
@@ -193,6 +189,9 @@ const Model = (props: ModelProps) => {
       mieDirectionalG={0.9}
       rayleigh={3}
       turbidity={5} />
+    <Sphere args={[30000, 8, 16]}>
+      <meshBasicMaterial color={"#59d8ff"} side={BackSide} />
+    </Sphere>
     <animated.group scale={props.activeFocus ? 1 : scale}>
       <Camera makeDefault={true} name={"camera"}
         fov={40} near={10} far={75000}
@@ -223,20 +222,6 @@ const Model = (props: ModelProps) => {
           shininess={0} />
       </Ground>
     </Detailed>
-    <Grid
-      name={"ground-grid"}
-      visible={config.grid}
-      position={[midPoint.x, midPoint.y, -groundZ + 5]}
-      rotation={[Math.PI / 2, 0, 0]}
-      cellSize={100}
-      cellThickness={1.5}
-      cellColor={"#eee"}
-      sectionSize={1000}
-      sectionThickness={3}
-      sectionColor={"#333"}
-      infiniteGrid={true}
-      fadeDistance={10000}
-      fadeStrength={1} />
     <Clouds name={"clouds"} visible={config.clouds} renderOrder={2}
       texture={ASSETS.textures.cloud}>
       <Cloud position={[0, 0, 5000]}
@@ -277,7 +262,7 @@ const Model = (props: ModelProps) => {
       outlineBlur={20}
       outlineOpacity={0.75}
       position={[
-        midPoint.x,
+        0,
         threeSpace(-500, config.bedWidthOuter),
         -groundZ + 100,
       ]}

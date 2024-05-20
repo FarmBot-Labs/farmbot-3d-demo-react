@@ -29,7 +29,7 @@ const BeaconPulse = () => {
 
   return (
     <animated.mesh scale={scale}>
-      <Sphere args={[beaconSize]}
+      <Sphere args={[beaconSize, 12, 12]}
         renderOrder={1}>
         <animated.meshPhongMaterial
           color={beaconColor}
@@ -79,11 +79,11 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
           visible={activeFocus ? false : true}
           args={[beaconSize
             * (hoveredFocus == focus.label ? 1.5 : 1)
-            * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1)
+            * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1),
+          12,
+          12
           ]}>
-          <meshPhongMaterial
-            color={beaconColor}
-            shininess={100} />
+          <meshPhongMaterial color={beaconColor} />
         </Sphere>
         {!activeFocus &&
           <BeaconPulse />

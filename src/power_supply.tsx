@@ -99,13 +99,12 @@ export const PowerSupply = (props: PowerSupplyProps) => {
           threeSpace(-21, bedWidthOuter),
           -90 - ccSupportSize
         ]}>
-        <meshPhongMaterial map={aluminumTexture} color={"white"}
-          shininess={100} />
+        <meshPhongMaterial map={aluminumTexture} color={"white"} />
       </Box>
       <Tube name={"powerCable"}
         castShadow={true}
         receiveShadow={true}
-        args={[combinedCablePath, 200, 4, 8]}>
+        args={[combinedCablePath, 150, 4, 8]}>
         <meshPhongMaterial color={cableColor()} />
       </Tube>
       <Box name={"powerPlug"}

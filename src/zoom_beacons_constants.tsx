@@ -232,6 +232,39 @@ export const FOCI = (config: Config): Focus[] => [
         -100,],
     },
   },
+  {
+    label: "Planter bed",
+    info: {
+      description: `<p>
+      All FarmBots must be mounted to a <a href="http://bed.farm.bot/">raised
+      bed</a> or similar infrastructure. Neither materials for the bed nor
+      soil are included with the kits because every installation will be
+      different, and shipping lumber and soil would be prohibitively expensive.
+      </p>`,
+      position: [
+        0,
+        -config.bedWidthOuter / 2,
+        config.sizePreset == "Genesis XL" ? 600 : 400,
+      ],
+      scale: config.sizePreset == "Genesis XL" ? 3000 : 1500,
+    },
+    position: [
+      threeSpace(config.bedLengthOuter + 50, config.bedLengthOuter),
+      0,
+      -config.bedHeight / 2,
+    ],
+    camera: {
+      position: [
+        config.sizePreset == "Genesis XL" ? 4500 : 2500,
+        config.sizePreset == "Genesis XL" ? -4500 : -1500 - config.bedWidthOuter / 2,
+        1500,
+      ],
+      target: [
+        0,
+        -config.bedWidthOuter / 2,
+        500,],
+    },
+  },
 ];
 
 // eslint-disable-next-line react-refresh/only-export-components

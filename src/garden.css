@@ -293,18 +293,18 @@ body {
 
   .buy-button {
     pointer-events: all;
-    background: rgba(255, 255, 255, 0.6);
+    background: #00a579e0;
     border-radius: 7px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px;
     backdrop-filter: blur(5px);
     font-size: 1.5rem;
     line-height: 4rem;
-    padding: 0 1.25rem;
+    padding: 0 1.75rem;
     text-shadow: none;
     font-family: 'Cabin';
     text-transform: uppercase;
     text-decoration: none;
-    color: #222;
+    color: #f4f4f4;
     display: flex;
     gap: 0.4rem;
     align-items: center;
@@ -315,6 +315,7 @@ body {
 
     .genesis-xl {
       background: linear-gradient(315deg, #22a36d, #4ea3ed);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
       color: #f4f4f4;
       border-radius: 50%;
       height: 2.5rem;
@@ -326,7 +327,7 @@ body {
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.7);
+      background: #00bb89e5;
     }
   }
 }

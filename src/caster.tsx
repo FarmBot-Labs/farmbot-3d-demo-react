@@ -34,7 +34,7 @@ export const Caster = (props: CasterProps) => {
       casterBracket2D(),
       { steps: 1, depth: legSize, bevelEnabled: false },
     ]}>
-    <meshPhongMaterial color={"silver"} shininess={100} />
+    <meshPhongMaterial color={"silver"} />
   </Extrude>
   <group name={"caster-wheel"}
     position={[legSize / 2, -legSize * 0.75, legSize / 2]}
@@ -43,13 +43,13 @@ export const Caster = (props: CasterProps) => {
       castShadow={true}
       receiveShadow={true}
       args={[legSize * 0.625, legSize * 0.625, legSize / 3]}>
-      <meshPhongMaterial color={"#434343"} shininess={100} />
+      <meshPhongMaterial color={"#434343"} />
     </Cylinder>
     <Cylinder name={"axle"}
       castShadow={true}
       receiveShadow={true}
       args={[legSize / 10, legSize / 10, legSize * 1.1]}>
-      <meshPhongMaterial color={"#434343"} shininess={100} />
+      <meshPhongMaterial color={"#434343"} />
     </Cylinder>
   </group>
 </group>

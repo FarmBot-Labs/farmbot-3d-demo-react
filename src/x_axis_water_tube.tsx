@@ -24,7 +24,7 @@ export const XAxisWaterTube = (props: XAxisWaterTubeProps) => {
       <Tube name={"x-axis-water-tube"}
         castShadow={true}
         receiveShadow={true}
-        args={[tubePath, 50, 5, 8]}>
+        args={[tubePath, 20, 5, 8]}>
         <meshPhongMaterial
           color="white"
           transparent={true}
@@ -36,16 +36,14 @@ export const XAxisWaterTube = (props: XAxisWaterTubeProps) => {
         args={[3.5, 3.5, 20]}
         position={[barbX - 10, barbY, barbZ]}
         rotation={[0, 0, Math.PI / 2]}>
-        <meshPhongMaterial color={"gold"}
-          shininess={100} />
+        <meshPhongMaterial color={"gold"} />
       </Cylinder>
       <Cylinder name={"adapter-base"}
         receiveShadow={true}
         args={[18, 18, 20]}
         position={[barbX + 10, barbY, barbZ]}
         rotation={[0, 0, Math.PI / 2]}>
-        <meshPhongMaterial color={"gold"}
-          shininess={100} />
+        <meshPhongMaterial color={"gold"} />
       </Cylinder>
     </group>
   );
