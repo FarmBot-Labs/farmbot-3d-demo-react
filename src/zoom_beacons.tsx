@@ -1,4 +1,4 @@
-import { Sphere } from "@react-three/drei";
+import { Sphere, Html } from "@react-three/drei";
 import React from "react";
 import { Config } from "./config";
 import { FOCI } from "./zoom_beacons_constants";
@@ -76,16 +76,32 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
             }
           }}
           receiveShadow={true}
-          args={[(activeFocus ? 15 : beaconSize)
+          visible={activeFocus ? false : true}
+          args={[beaconSize
             * (hoveredFocus == focus.label ? 1.5 : 1)
             * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1)
           ]}>
           <meshPhongMaterial
-            color={activeFocus ? "red" : beaconColor}
+            color={beaconColor}
             shininess={100} />
         </Sphere>
         {!activeFocus &&
           <BeaconPulse />
+        }
+        {activeFocus == focus.label &&
+          <Html center
+            rotation={[Math.PI / 2, 0, 0]}
+            position={focus.info.position}
+            distanceFactor={focus.info.scale}>
+            <div className="beacon-info">
+              <div className="exit-beacon-button"
+                onClick={() => setActiveFocus("")}>
+                ❌
+              </div>
+              <h2>{focus.label}</h2>
+              <p dangerouslySetInnerHTML={{ __html: focus.info.description }} />
+            </div>
+          </Html>
         }
       </group>)}
   </group>;
