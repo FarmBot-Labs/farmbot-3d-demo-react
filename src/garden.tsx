@@ -3,7 +3,7 @@ import { Canvas, ThreeEvent } from "@react-three/fiber";
 import {
   GizmoHelper, GizmoViewcube,
   OrbitControls, PerspectiveCamera,
-  Circle, Stats, Grid, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
+  Circle, Stats, Billboard, Text, Image, Clouds, Cloud, OrthographicCamera,
   Detailed,
 } from "@react-three/drei";
 import { TextureLoader, RepeatWrapping, Vector3 } from "three";
@@ -223,20 +223,6 @@ const Model = (props: ModelProps) => {
           shininess={0} />
       </Ground>
     </Detailed>
-    <Grid
-      name={"ground-grid"}
-      visible={config.grid}
-      position={[midPoint.x, midPoint.y, -groundZ + 5]}
-      rotation={[Math.PI / 2, 0, 0]}
-      cellSize={100}
-      cellThickness={1.5}
-      cellColor={"#eee"}
-      sectionSize={1000}
-      sectionThickness={3}
-      sectionColor={"#333"}
-      infiniteGrid={true}
-      fadeDistance={10000}
-      fadeStrength={1} />
     <Clouds name={"clouds"} visible={config.clouds} renderOrder={2}
       texture={ASSETS.textures.cloud}>
       <Cloud position={[0, 0, 5000]}

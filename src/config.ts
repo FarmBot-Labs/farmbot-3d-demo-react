@@ -97,7 +97,7 @@ export const INITIAL: Config = {
   labels: false,
   labelsOnHover: true,
   ground: true,
-  grid: true,
+  grid: false,
   axes: false,
   trail: false,
   tracks: true,
