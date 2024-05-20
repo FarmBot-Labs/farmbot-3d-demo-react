@@ -89,16 +89,20 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
           <BeaconPulse />
         }
         {activeFocus == focus.label &&
-          <Html center
+          <Html name={focus.label}
+            wrapperClass="beacon-info-wrapper"
+            center
             rotation={[Math.PI / 2, 0, 0]}
             position={focus.info.position}
             distanceFactor={focus.info.scale}>
             <div className="beacon-info">
-              <div className="exit-beacon-button"
-                onClick={() => setActiveFocus("")}>
-                ❌
+              <div className="header">
+                <h2>{focus.label}</h2>
+                <div className="exit-button"
+                  onClick={() => setActiveFocus("")}>
+                  ❌
+                </div>
               </div>
-              <h2>{focus.label}</h2>
               <p dangerouslySetInnerHTML={{ __html: focus.info.description }} />
             </div>
           </Html>
