@@ -52,8 +52,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
     <Box name={"utilities-post"}
       castShadow={true}
       args={[legSize, legSize, 300]}>
-      <meshPhongMaterial map={WoodTexture} color={postColor}
-        shininess={100} />
+      <meshPhongMaterial map={WoodTexture} color={postColor} />
     </Box>
     <Cylinder name={"pipe"}
       castShadow={true}
@@ -61,15 +60,13 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
       args={[outletDepth / 2, outletDepth / 2, 200]}
       position={[-legSize / 2 - outletDepth / 2, 0, -50]}
       rotation={[Math.PI / 2, 0, 0]}>
-      <meshPhongMaterial color={"gray"}
-        shininess={100} />
+      <meshPhongMaterial color={"gray"} />
     </Cylinder>
     <Box name={"electrical-outlet"}
       castShadow={true}
       args={[outletDepth, 75, 110]}
       position={[-legSize / 2 - outletDepth / 2, 0, 85]}>
-      <meshPhongMaterial color={"gray"}
-        shininess={100} />
+      <meshPhongMaterial color={"gray"} />
     </Box>
     <group name={"wifi-router"}
       position={[0, 0, 165]}>
@@ -78,8 +75,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         receiveShadow={true}
         radius={8}
         args={[legSize, 60, 30]}>
-        <meshPhongMaterial color={"lightgray"}
-          shininess={100} />
+        <meshPhongMaterial color={"lightgray"} />
       </RoundedBox>
       <Cylinder name={"antenna-1"}
         castShadow={true}
@@ -87,8 +83,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         args={[3.5, 3.5, 60]}
         position={[-30, 0, 35]}
         rotation={[Math.PI / 2, 0, Math.PI / 8]}>
-        <meshPhongMaterial color={"gray"}
-          shininess={100} />
+        <meshPhongMaterial color={"gray"} />
       </Cylinder>
       <Cylinder name={"antenna-2"}
         castShadow={true}
@@ -96,24 +91,21 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         args={[3.5, 3.5, 60]}
         position={[30, 0, 35]}
         rotation={[Math.PI / 2, 0, -Math.PI / 8]}>
-        <meshPhongMaterial color={"gray"}
-          shininess={100} />
+        <meshPhongMaterial color={"gray"} />
       </Cylinder>
       <Cylinder name={"led-light-1"}
         castShadow={true}
         receiveShadow={true}
         args={[2, 2, 61]}
         position={[-40, 0, 5]}>
-        <meshPhongMaterial color={"green"}
-          shininess={100} />
+        <meshPhongMaterial color={"green"} />
       </Cylinder>
       <Cylinder name={"led-light-2"}
         castShadow={true}
         receiveShadow={true}
         args={[2, 2, 61]}
         position={[-30, 0, 5]}>
-        <meshPhongMaterial color={"blue"}
-          shininess={100} />
+        <meshPhongMaterial color={"blue"} />
       </Cylinder>
     </group>
     <group name={"water-source"}>
@@ -123,8 +115,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         args={[18, 18, 200]}
         position={[0, -legSize / 2 - 20, -50]}
         rotation={[Math.PI / 2, 0, 0]}>
-        <meshPhongMaterial color={"#f4f4f4"}
-          shininess={100} />
+        <meshPhongMaterial color={"#f4f4f4"} />
       </Cylinder>
       <Cylinder name={"faucet-base"}
         castShadow={true}
@@ -132,8 +123,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         args={[20, 20, 80]}
         position={[0, -legSize / 2 - 20, 90]}
         rotation={[Math.PI / 2, 0, 0]}>
-        <meshPhongMaterial color={"gold"}
-          shininess={100} />
+        <meshPhongMaterial color={"gold"} />
       </Cylinder>
       <Cylinder name={"faucet-outlet"}
         castShadow={true}
@@ -141,8 +131,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
         args={[18, 18, 70]}
         position={[0, -legSize / 2 - 45, 90]}
         rotation={[Math.PI / 4, 0, 0]}>
-        <meshPhongMaterial color={"gold"}
-          shininess={100} />
+        <meshPhongMaterial color={"gold"} />
       </Cylinder>
       <group name={"faucet-handle"}
         position={[0, -legSize / 2 - 65, 105]}
@@ -151,15 +140,13 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
           castShadow={true}
           receiveShadow={true}
           args={[25, 25, 10]}>
-          <meshPhongMaterial color={"#0266b5"}
-            shininess={100} />
+          <meshPhongMaterial color={"#0266b5"} />
         </Cylinder>
         <Cylinder name={"pin"}
           castShadow={true}
           receiveShadow={true}
           args={[4, 4, 15]}>
-          <meshPhongMaterial color={"#434343"}
-            shininess={100} />
+          <meshPhongMaterial color={"#434343"} />
         </Cylinder>
       </group>
       <Tube name={"garden-hose"}

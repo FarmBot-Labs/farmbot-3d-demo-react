@@ -140,12 +140,10 @@ export const Bed = (props: BedProps) => {
   return <group>
     <Detailed distances={detailLevels(props.config)}>
       <Bed>
-        <meshPhongMaterial map={woodTexture} color={bedColor}
-          shininess={100} side={DoubleSide} />
+        <meshPhongMaterial map={woodTexture} color={bedColor} side={DoubleSide} />
       </Bed>
       <Bed>
-        <meshPhongMaterial color={"#ad7039"}
-          shininess={100} side={DoubleSide} />
+        <meshPhongMaterial color={"#ad7039"} side={DoubleSide} />
       </Bed>
     </Detailed>
     <group visible={xyDimensions}>
@@ -184,8 +182,7 @@ export const Bed = (props: BedProps) => {
         threeSpace(-ccSupportSize / 2, bedWidthOuter),
         -Math.min(150, bedHeight / 2) - ccSupportSize / 2,
       ]}>
-      <meshPhongMaterial map={legWoodTexture} color={bedColor}
-        shininess={100} side={DoubleSide} />
+      <meshPhongMaterial map={legWoodTexture} color={bedColor} side={DoubleSide} />
     </Box>
     <Box name={"upper-cc-support"}
       castShadow={true}
@@ -196,8 +193,7 @@ export const Bed = (props: BedProps) => {
         threeSpace(-ccSupportSize / 2, bedWidthOuter),
         -50 - ccSupportSize / 2,
       ]}>
-      <meshPhongMaterial map={legWoodTexture} color={bedColor}
-        shininess={100} side={DoubleSide} />
+      <meshPhongMaterial map={legWoodTexture} color={bedColor} side={DoubleSide} />
     </Box>
     <Detailed distances={detailLevels(props.config)}>
       <Soil>
@@ -226,8 +222,7 @@ export const Bed = (props: BedProps) => {
                 legSize,
                 bedZOffset + (legsFlush ? bedHeight : 0) - casterHeight
               ]}>
-              <meshPhongMaterial map={legWoodTexture} color={bedColor}
-                shininess={100} />
+              <meshPhongMaterial map={legWoodTexture} color={bedColor} />
             </Box>
             <Caster config={props.config} />
           </group>)}

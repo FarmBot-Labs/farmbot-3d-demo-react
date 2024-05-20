@@ -79,8 +79,7 @@ export const LabEnvironment = (props: LabProps) => {
             <meshPhongMaterial
               map={woodTexture}
               color={"#999"}
-              side={DoubleSide}
-              shininess={100}/>
+              side={DoubleSide} />
           </Box>
         ))}
       </group>
@@ -100,8 +99,7 @@ export const LabEnvironment = (props: LabProps) => {
           <meshPhongMaterial
             map={woodTexture}
             color={"#555"}
-            side={DoubleSide}
-            shininess={100}/>
+            side={DoubleSide} />
         </Box>
         <group name={"desk-legs"}>
           {[
@@ -120,8 +118,7 @@ export const LabEnvironment = (props: LabProps) => {
             <meshPhongMaterial
               map={woodTexture}
               color={"#555"}
-              side={DoubleSide}
-              shininess={100}/>
+              side={DoubleSide} />
           </Box>)}
         </group>
       </group>

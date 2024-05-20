@@ -81,9 +81,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
             * (hoveredFocus == focus.label ? 1.5 : 1)
             * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1)
           ]}>
-          <meshPhongMaterial
-            color={beaconColor}
-            shininess={100} />
+          <meshPhongMaterial color={beaconColor} />
         </Sphere>
         {!activeFocus &&
           <BeaconPulse />
