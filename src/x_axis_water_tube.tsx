@@ -24,7 +24,7 @@ export const XAxisWaterTube = (props: XAxisWaterTubeProps) => {
       <Tube name={"x-axis-water-tube"}
         castShadow={true}
         receiveShadow={true}
-        args={[tubePath, 50, 5, 8]}>
+        args={[tubePath, 20, 5, 8]}>
         <meshPhongMaterial
           color="white"
           transparent={true}

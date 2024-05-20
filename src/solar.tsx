@@ -1,4 +1,4 @@
-import { TextureLoader, RepeatWrapping, Shape } from "three";
+import { Shape } from "three";
 import { Extrude, Text, Line } from "@react-three/drei";
 import { ASSETS } from "./constants";
 import { threeSpace } from "./helpers";
@@ -10,14 +10,6 @@ interface SolarProps {
 
 const panelWidth = 540;
 const panelLength = 1040;
-
-const aluminumTexture = new TextureLoader()
-  .load(ASSETS.textures.aluminum,
-    texture => {
-      texture.wrapS = RepeatWrapping;
-      texture.wrapT = RepeatWrapping;
-      texture.repeat.set(.8, .3);
-    });
 
 const cell2D = () => {
   const cellSize = 95;
@@ -61,7 +53,7 @@ const SolarPanel = () => {
     <group rotation={[0, Math.PI / 6, 0]}>
       <mesh>
         <boxGeometry args={[panelWidth, panelLength, 30]} />
-        <meshPhongMaterial color={"white"} map={aluminumTexture} />
+        <meshPhongMaterial color={"silver"} />
       </mesh>
       {cellArray()}
     </group>
@@ -102,8 +94,8 @@ export const Solar = (props: SolarProps) => {
       <Line name={"solar-wiring"}
         points={[
           [
-            threeSpace(config.bedLengthOuter + 600, config.bedLengthOuter),
-            threeSpace(0, config.bedWidthOuter),
+            threeSpace(config.bedLengthOuter + 587.5 - config.legSize / 2, config.bedLengthOuter),
+            threeSpace(config.legSize / 2, config.bedWidthOuter),
             zGround + 20,
           ],
           [

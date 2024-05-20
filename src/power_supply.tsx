@@ -104,7 +104,7 @@ export const PowerSupply = (props: PowerSupplyProps) => {
       <Tube name={"powerCable"}
         castShadow={true}
         receiveShadow={true}
-        args={[combinedCablePath, 200, 4, 8]}>
+        args={[combinedCablePath, 150, 4, 8]}>
         <meshPhongMaterial color={cableColor()} />
       </Tube>
       <Box name={"powerPlug"}
