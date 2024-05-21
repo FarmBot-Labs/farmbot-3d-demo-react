@@ -80,8 +80,8 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
           args={[beaconSize
             * (hoveredFocus == focus.label ? 1.5 : 1)
             * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1),
-          12,
-          12
+            12,
+            12
           ]}>
           <meshPhongMaterial color={beaconColor} />
         </Sphere>
@@ -103,7 +103,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
                   ❌
                 </div>
               </div>
-              <p dangerouslySetInnerHTML={{ __html: focus.info.description }} />
+              {focus.info.description}
             </div>
           </Html>
         }
