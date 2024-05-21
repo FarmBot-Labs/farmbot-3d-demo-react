@@ -1,4 +1,4 @@
-import { Sphere, Html } from "@react-three/drei";
+import { Sphere, Html, Line } from "@react-three/drei";
 import React from "react";
 import { Config } from "./config";
 import { FOCI } from "./zoom_beacons_constants";
@@ -18,6 +18,7 @@ const BeaconPulse = () => {
   const { scale, opacity } = useSpring({
     from: { scale: 1, opacity: 0.75 },
     to: async (next) => {
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         await next({ scale: 2.5, opacity: 0 });
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -50,11 +51,14 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
       <group name={"zoom-beacon"} key={focus.label}
         position={focus.position}>
         {DEBUG &&
-          <Sphere args={[30]} position={focus.camera.position}
-            material-color={"cyan"} />}
-        {DEBUG &&
-          <Sphere args={[30]} position={focus.camera.target}
-            material-color={"orange"} />}
+          <group name={"debug-group"}>
+            <Sphere args={[30]} position={focus.camera.position}
+              material-color={"cyan"} />
+            <Line points={[focus.camera.position, focus.camera.target]}
+              color={"yellow"} lineWidth={2} />
+            <Sphere args={[30]} position={focus.camera.target}
+              material-color={"orange"} />
+          </group>}
         <Sphere
           onClick={() => {
             setActiveFocus(activeFocus ? "" : focus.label);
