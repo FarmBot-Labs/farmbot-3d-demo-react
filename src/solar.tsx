@@ -1,5 +1,5 @@
 import { Shape } from "three";
-import { Extrude, Text, Line } from "@react-three/drei";
+import { Extrude, Line } from "@react-three/drei";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
 
