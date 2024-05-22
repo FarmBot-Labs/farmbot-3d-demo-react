@@ -296,14 +296,14 @@ export const FOCI = (config: Config): Focus[] => [
     camera: {
       narrow: {
         position: [
-          -1000,
+          -700,
           -1200,
           600,
         ],
         target: [
-          0,
-          150,
-          -400,
+          -150,
+          -150,
+          -200,
         ],
       },
       wide: {
