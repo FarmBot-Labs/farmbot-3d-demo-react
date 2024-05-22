@@ -72,6 +72,7 @@ const soilTexture = new TextureLoader()
 
 interface BedProps {
   config: Config;
+  activeFocus: string;
 }
 
 export const Bed = (props: BedProps) => {
@@ -146,7 +147,7 @@ export const Bed = (props: BedProps) => {
         <meshPhongMaterial color={"#ad7039"} side={DoubleSide} />
       </Bed>
     </Detailed>
-    <group visible={xyDimensions}>
+    <group visible={xyDimensions || props.activeFocus == "Planter bed"}>
       <DistanceIndicator
         start={{
           x: threeSpace(0, bedLengthOuter),

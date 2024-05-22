@@ -237,7 +237,7 @@ const Model = (props: ModelProps) => {
         opacity={(seasonProperties[config.plants] || seasonProperties.Summer).cloudOpacity}
         fade={5000} />
     </Clouds>
-    <Bed config={config} />
+    <Bed config={config} activeFocus={props.activeFocus} />
     <Bot config={config} />
     <group name={"plant-icon-preload"} visible={false}>
       {Object.values(PLANTS).map((plant, i) =>

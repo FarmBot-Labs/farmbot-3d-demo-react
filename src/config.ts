@@ -116,7 +116,7 @@ export const INITIAL: Config = {
   pan: false,
   bounds: false,
   threeAxes: false,
-  xyDimensions: true,
+  xyDimensions: false,
   zDimension: false,
   promoInfo: true,
   solar: true,
