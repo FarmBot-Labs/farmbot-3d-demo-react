@@ -65,7 +65,7 @@ export interface Config {
 
 export const INITIAL: Config = {
   sizePreset: "Genesis",
-  bedType: "Mobile",
+  bedType: "Standard",
   otherPreset: "Initial",
   label: "FarmBot Genesis v1.7",
   botSizeX: 2720,
@@ -82,12 +82,12 @@ export const INITIAL: Config = {
   zAxisLength: 1000,
   bedXOffset: 140,
   bedYOffset: 60,
-  bedZOffset: 500,
+  bedZOffset: 0,
   zGantryOffset: 140,
   bedWidthOuter: 1360,
   bedLengthOuter: 3000,
   legSize: 100,
-  legsFlush: false,
+  legsFlush: true,
   extraLegsX: 1,
   extraLegsY: 0,
   bedBrightness: 8,
