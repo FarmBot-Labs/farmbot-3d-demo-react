@@ -87,13 +87,12 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
             * (hoveredFocus == focus.label ? 1.5 : 1)
             * ((!activeFocus && props.config.sizePreset == "Genesis XL") ? 1.5 : 1),
             12,
-            12
+            12,
           ]}>
           <meshPhongMaterial color={beaconColor} />
         </Sphere>
         {!activeFocus &&
-          <BeaconPulse />
-        }
+          <BeaconPulse />}
         {activeFocus == focus.label &&
           <Html name={focus.label}
             wrapperClass="beacon-info-wrapper"
@@ -101,7 +100,9 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
             rotation={[Math.PI / 2, 0, 0]}
             position={focus.info.position}
             distanceFactor={focus.info.scale}>
-            <div className="beacon-info">
+            <div className="beacon-info"
+              onPointerDown={e => e.stopPropagation()}
+              onPointerMove={e => e.stopPropagation()}>
               <div className="header">
                 <h2>{focus.label}</h2>
                 <div className="exit-button"
@@ -114,8 +115,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
               </div>
               {focus.info.description}
             </div>
-          </Html>
-        }
+          </Html>}
       </group>;
     })}
   </group>;
