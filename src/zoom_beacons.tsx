@@ -6,7 +6,7 @@ import { useSpring, animated } from "@react-spring/three";
 
 const DEBUG = false;
 const beaconColor = "#0266b5";
-const beaconSize = 40;
+const beaconSize = window.innerWidth > 768 ? 40 : 60;
 
 interface ZoomBeaconsProps {
   config: Config;
