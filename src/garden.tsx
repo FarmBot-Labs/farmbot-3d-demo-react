@@ -22,7 +22,10 @@ import { Solar } from "./solar";
 import { Sun, sunPosition } from "./sun";
 import { LabEnvironment } from "./lab";
 import { ZoomBeacons } from "./zoom_beacons";
-import { VectorXyz, getCamera } from "./zoom_beacons_constants";
+import {
+  VectorXyz, getCamera, getFocusFromUrlParams,
+
+} from "./zoom_beacons_constants";
 
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
@@ -281,6 +284,7 @@ export const Garden = () => {
 
   React.useEffect(() => {
     setConfig(modifyConfigsFromUrlParams(config));
+    setActiveFocus(getFocusFromUrlParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally empty dependency array
 

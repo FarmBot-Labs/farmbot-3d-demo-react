@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { findIndex } from "lodash";
 import { Config } from "./config";
 import { threeSpace, zDir, zZero } from "./helpers";
@@ -372,17 +373,14 @@ export const FOCI = (config: Config): Focus[] => [
   },
 ];
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const getFocus = (config: Config, activeFocus: string) =>
   FOCI(config)[findIndex(FOCI(config), ["label", activeFocus])];
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const getCameraOffset = (focus: Focus) =>
   window.innerWidth > 768
     ? focus.camera.wide
     : focus.camera.narrow;
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const getCamera = (
   config: Config,
   activeFocus: string,
@@ -403,4 +401,19 @@ export const getCamera = (
       focus.position[2] + camera.target[2],
     ]
   };
+};
+
+export const setUrlFocusParam = (value: string) => {
+  const url = new URL(window.location.href);
+  if (value) {
+    url.searchParams.set("focus", value);
+  } else {
+    url.searchParams.delete("focus");
+  }
+  window.history.replaceState({}, "", url.toString());
+};
+
+export const getFocusFromUrlParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("focus") || "";
 };
