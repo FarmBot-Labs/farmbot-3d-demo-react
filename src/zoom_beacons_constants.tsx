@@ -4,6 +4,11 @@ import { threeSpace, zDir, zZero } from "./helpers";
 
 export type VectorXyz = [x: number, y: number, z: number];
 
+interface Camera {
+  position: VectorXyz;
+  target: VectorXyz;
+}
+
 interface Focus {
   label: string;
   info: {
@@ -13,8 +18,8 @@ interface Focus {
   };
   position: VectorXyz;
   camera: {
-    position: VectorXyz;
-    target: VectorXyz;
+    narrow: Camera;
+    wide: Camera;
   };
 }
 
@@ -49,16 +54,30 @@ export const FOCI = (config: Config): Focus[] => [
       150,
     ],
     camera: {
-      position: [
-        0,
-        0,
-        config.sizePreset == "Genesis XL" ? 10000 : 5000,
-      ],
-      target: [
-        0,
-        0,
-        0,
-      ],
+      narrow: {
+        position: [
+          0,
+          -1000,
+          config.sizePreset == "Genesis XL" ? 15000 : 7000,
+        ],
+        target: [
+          0,
+          -1000,
+          0,
+        ],
+      },
+      wide: {
+        position: [
+          0,
+          0,
+          config.sizePreset == "Genesis XL" ? 10000 : 5000,
+        ],
+        target: [
+          0,
+          0,
+          0,
+        ],
+      },
     },
   },
   {
@@ -95,16 +114,30 @@ export const FOCI = (config: Config): Focus[] => [
       100,
     ],
     camera: {
-      position: [
-        650,
-        -650,
-        300,
-      ],
-      target: [
-        0,
-        0,
-        -125,
-      ],
+      narrow: {
+        position: [
+          1100,
+          -1150,
+          500,
+        ],
+        target: [
+          0,
+          0,
+          -325,
+        ],
+      },
+      wide: {
+        position: [
+          650,
+          -650,
+          300,
+        ],
+        target: [
+          0,
+          0,
+          -125,
+        ],
+      },
     },
   },
   {
@@ -144,16 +177,30 @@ export const FOCI = (config: Config): Focus[] => [
       zZero(config) + zDir * config.z,
     ],
     camera: {
-      position: [
-        500,
-        -300,
-        225,
-      ],
-      target: [
-        0,
-        -75,
-        -25,
-      ],
+      narrow: {
+        position: [
+          500,
+          -300,
+          225,
+        ],
+        target: [
+          0,
+          -150,
+          -100,
+        ],
+      },
+      wide: {
+        position: [
+          500,
+          -300,
+          225,
+        ],
+        target: [
+          0,
+          -75,
+          -25,
+        ],
+      },
     },
   },
   {
@@ -184,16 +231,30 @@ export const FOCI = (config: Config): Focus[] => [
       config.columnLength - 150,
     ],
     camera: {
-      position: [
-        150,
-        -550,
-        400,
-      ],
-      target: [
-        0,
-        100,
-        100,
-      ],
+      narrow: {
+        position: [
+          150,
+          -550,
+          400,
+        ],
+        target: [
+          0,
+          100,
+          -150,
+        ],
+      },
+      wide: {
+        position: [
+          150,
+          -550,
+          400,
+        ],
+        target: [
+          0,
+          100,
+          100,
+        ],
+      },
     },
   },
   {
@@ -232,15 +293,30 @@ export const FOCI = (config: Config): Focus[] => [
       250 - config.bedZOffset - config.bedHeight,
     ],
     camera: {
-      position: [
-        -1000,
-        -1200,
-        600,
-      ],
-      target: [
-        0,
-        -150,
-        -100,],
+      narrow: {
+        position: [
+          -1000,
+          -1200,
+          600,
+        ],
+        target: [
+          0,
+          150,
+          -400,
+        ],
+      },
+      wide: {
+        position: [
+          -1000,
+          -1200,
+          600,
+        ],
+        target: [
+          0,
+          -150,
+          -100,
+        ],
+      },
     },
   },
   {
@@ -268,15 +344,30 @@ export const FOCI = (config: Config): Focus[] => [
       -config.bedHeight / 2,
     ],
     camera: {
-      position: [
-        config.sizePreset == "Genesis XL" ? 4500 : 2500,
-        config.sizePreset == "Genesis XL" ? -4500 : -1500 - config.bedWidthOuter / 2,
-        1500,
-      ],
-      target: [
-        0,
-        -config.bedWidthOuter / 2,
-        500,],
+      narrow: {
+        position: [
+          config.sizePreset == "Genesis XL" ? 9000 : 4500,
+          config.sizePreset == "Genesis XL" ? -7000 : -2500 - config.bedWidthOuter / 2,
+          1500,
+        ],
+        target: [
+          0,
+          -config.bedWidthOuter / 2,
+          0,
+        ],
+      },
+      wide: {
+        position: [
+          config.sizePreset == "Genesis XL" ? 4500 : 2500,
+          config.sizePreset == "Genesis XL" ? -4500 : -1500 - config.bedWidthOuter / 2,
+          1500,
+        ],
+        target: [
+          0,
+          -config.bedWidthOuter / 2,
+          500,
+        ],
+      },
     },
   },
 ];
@@ -286,24 +377,30 @@ export const getFocus = (config: Config, activeFocus: string) =>
   FOCI(config)[findIndex(FOCI(config), ["label", activeFocus])];
 
 // eslint-disable-next-line react-refresh/only-export-components
+export const getCameraOffset = (focus: Focus) =>
+  window.innerWidth > 768
+    ? focus.camera.wide
+    : focus.camera.narrow;
+
+// eslint-disable-next-line react-refresh/only-export-components
 export const getCamera = (
   config: Config,
   activeFocus: string,
   fallback: { position: VectorXyz, target: VectorXyz },
 ): { position: VectorXyz, target: VectorXyz } => {
   const focus = getFocus(config, activeFocus);
-  return focus
-    ? {
-      position: [
-        focus.position[0] + focus.camera.position[0],
-        focus.position[1] + focus.camera.position[1],
-        focus.position[2] + focus.camera.position[2],
-      ],
-      target: [
-        focus.position[0] + focus.camera.target[0],
-        focus.position[1] + focus.camera.target[1],
-        focus.position[2] + focus.camera.target[2],
-      ]
-    }
-    : fallback;
+  if (!focus) { return fallback; }
+  const camera = getCameraOffset(focus);
+  return {
+    position: [
+      focus.position[0] + camera.position[0],
+      focus.position[1] + camera.position[1],
+      focus.position[2] + camera.position[2],
+    ],
+    target: [
+      focus.position[0] + camera.target[0],
+      focus.position[1] + camera.target[1],
+      focus.position[2] + camera.target[2],
+    ]
+  };
 };

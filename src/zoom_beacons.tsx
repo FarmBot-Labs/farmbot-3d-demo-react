@@ -1,7 +1,7 @@
 import { Sphere, Html, Line } from "@react-three/drei";
 import React from "react";
 import { Config } from "./config";
-import { FOCI } from "./zoom_beacons_constants";
+import { FOCI, getCameraOffset } from "./zoom_beacons_constants";
 import { useSpring, animated } from "@react-spring/three";
 
 const DEBUG = false;
@@ -47,16 +47,17 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
   const gardenBedDiv = document.querySelector('.garden-bed-3d-model') as HTMLElement | null;
 
   return <group name={"zoom-beacons"}>
-    {FOCI(props.config).map(focus =>
-      <group name={"zoom-beacon"} key={focus.label}
+    {FOCI(props.config).map(focus => {
+      const camera = getCameraOffset(focus);
+      return <group name={"zoom-beacon"} key={focus.label}
         position={focus.position}>
         {DEBUG &&
           <group name={"debug-group"}>
-            <Sphere args={[30]} position={focus.camera.position}
+            <Sphere args={[30]} position={camera.position}
               material-color={"cyan"} />
-            <Line points={[focus.camera.position, focus.camera.target]}
+            <Line points={[camera.position, camera.target]}
               color={"yellow"} lineWidth={2} />
-            <Sphere args={[30]} position={focus.camera.target}
+            <Sphere args={[30]} position={camera.target}
               material-color={"orange"} />
           </group>}
         <Sphere
@@ -111,6 +112,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
             </div>
           </Html>
         }
-      </group>)}
+      </group>;
+    })}
   </group>;
 };
