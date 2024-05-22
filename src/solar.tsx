@@ -1,11 +1,11 @@
 import { Shape } from "three";
-import { Extrude, Text, Line } from "@react-three/drei";
-import { ASSETS } from "./constants";
+import { Extrude, Line } from "@react-three/drei";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
 
 interface SolarProps {
   config: Config;
+  activeFocus: string;
 }
 
 const panelWidth = 540;
@@ -65,31 +65,20 @@ export const Solar = (props: SolarProps) => {
   const zGround = -config.bedZOffset - config.bedHeight;
   return (
     <group name={"solar"}
-      visible={config.solar}>
+      visible={config.solar || props.activeFocus == "What you need to provide"}>
       <group name={"solar-array"}
         position={[
-          threeSpace(-2000, config.bedLengthOuter),
-          threeSpace(-1500, config.bedWidthOuter),
-          zGround + 200,
-        ]}>
+          threeSpace(2000, -config.bedLengthOuter),
+          threeSpace(750, config.bedWidthOuter),
+          zGround + 150,
+        ]}
+        rotation={[0, 0, Math.PI]}>
         <group position={[0, -525, 0]}>
           <SolarPanel />
         </group>
         <group position={[0, 525, 0]}>
           <SolarPanel />
         </group>
-        <Text name={"solar-disclaimer"}
-          fontSize={60}
-          font={ASSETS.fonts.inknut}
-          color={"white"}
-          outlineColor={"black"}
-          outlineWidth={0}
-          outlineBlur={20}
-          outlineOpacity={0.75}
-          position={[-200, 0, 200]}
-          rotation={[0, Math.PI / 3, Math.PI / 2]}>
-          Solar array not included
-        </Text>
       </group>
       <Line name={"solar-wiring"}
         points={[
@@ -100,12 +89,12 @@ export const Solar = (props: SolarProps) => {
           ],
           [
             threeSpace(config.bedLengthOuter + 600, config.bedLengthOuter),
-            threeSpace(-1500, config.bedWidthOuter),
+            threeSpace(750, config.bedWidthOuter),
             zGround + 20,
           ],
           [
-            threeSpace(-2000, config.bedLengthOuter),
-            threeSpace(-1500, config.bedWidthOuter),
+            threeSpace(2500, -config.bedLengthOuter),
+            threeSpace(750, config.bedWidthOuter),
             zGround + 20,
           ]]}
         color={"yellow"}

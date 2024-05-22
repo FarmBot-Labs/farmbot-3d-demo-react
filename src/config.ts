@@ -119,7 +119,7 @@ export const INITIAL: Config = {
   xyDimensions: false,
   zDimension: false,
   promoInfo: true,
-  solar: true,
+  solar: false,
   utilitiesPost: true,
   packaging: false,
   lab: false,
@@ -335,7 +335,6 @@ export const modifyConfig = (config: Config, update: Partial<Config>) => {
   }
   if (update.scene) {
     newConfig.lab = update.scene == "Lab";
-    newConfig.solar = update.scene != "Lab";
     newConfig.clouds = update.scene != "Lab";
     newConfig.people = update.scene == "Lab";
     newConfig.bedType =

@@ -272,7 +272,7 @@ const Model = (props: ModelProps) => {
       rotation={[Math.PI / 4, 0, 0]}>
       {config.label}
     </Text>
-    <Solar config={config} />
+    <Solar config={config} activeFocus={props.activeFocus} />
     <LabEnvironment config={config} />
   </group>;
 };
