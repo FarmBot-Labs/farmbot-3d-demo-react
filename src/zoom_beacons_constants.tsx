@@ -47,7 +47,7 @@ export const FOCI = (config: Config): Focus[] => [
         config.bedWidthOuter * .8,
         300,
       ],
-      scale: config.sizePreset == "Genesis XL" ? 7000 : 3500,
+      scale: config.sizePreset == "Genesis XL" ? 6000 : 3000,
     },
     position: [
       threeSpace(config.bedLengthOuter / 2, config.bedLengthOuter),
@@ -59,7 +59,7 @@ export const FOCI = (config: Config): Focus[] => [
         position: [
           0,
           -1000,
-          config.sizePreset == "Genesis XL" ? 15000 : 7000,
+          config.sizePreset == "Genesis XL" ? 16000 : 8000,
         ],
         target: [
           0,
@@ -104,10 +104,10 @@ export const FOCI = (config: Config): Focus[] => [
       </div>,
       position: [
         0,
-        0,
-        75,
+        -300,
+        175,
       ],
-      scale: 600,
+      scale: 550,
     },
     position: [
       threeSpace(0, config.bedLengthOuter),
@@ -129,14 +129,14 @@ export const FOCI = (config: Config): Focus[] => [
       },
       wide: {
         position: [
-          650,
+          850,
           -650,
-          300,
+          350,
         ],
         target: [
           0,
           0,
-          -125,
+          0,
         ],
       },
     },
@@ -167,7 +167,7 @@ export const FOCI = (config: Config): Focus[] => [
       </div>,
       position: [
         0,
-        25,
+        75,
         0,
       ],
       scale: 400,
@@ -222,9 +222,9 @@ export const FOCI = (config: Config): Focus[] => [
       position: [
         0,
         200,
-        175,
+        200,
       ],
-      scale: 600,
+      scale: 550,
     },
     position: [
       threeSpace(config.x, config.bedLengthOuter) + config.bedXOffset - 50,
@@ -234,7 +234,7 @@ export const FOCI = (config: Config): Focus[] => [
     camera: {
       narrow: {
         position: [
-          150,
+          -200,
           -550,
           400,
         ],
@@ -246,7 +246,7 @@ export const FOCI = (config: Config): Focus[] => [
       },
       wide: {
         position: [
-          150,
+          -200,
           -550,
           400,
         ],
@@ -263,10 +263,15 @@ export const FOCI = (config: Config): Focus[] => [
     info: {
       description: <div className={"description-wrapper"}>
         <p>
-          FarmBot must be plugged into a 110 or 220V outlet.
-          The 30cm (1ft) power cord comes with a standard US 3-prong plug.
-          You must connect this to your own extension cord if needed.
-          Customers outside the US: you must provide a plug adapter if needed.
+          FarmBot must be plugged into a standard 110-220V AC outlet.
+          The power cable comes with a standard US 3-prong plug (NEMA 5-15P), which
+          can be used with a plug adapter for installations outside the US.
+        </p>
+        <p>
+          FarmBot can optionally be powered by
+          a <a href="https://solar.farm.bot" target="_blank">solar
+          system</a> with the appropriate battery and inverter. These
+          components may be purchased from a 3rd party.
         </p>
         <p>
           FarmBot's water system has a 3/4″ female Garden Hose Thread (GHT)
@@ -275,15 +280,14 @@ export const FOCI = (config: Config): Focus[] => [
           the appropriate length.
         </p>
         <p>
-          FarmBot can only be controlled using the web app, so an internet
-          connection is required. The Raspberry Pi has built-in WiFi, though
-          you may need to reposition your WiFi router or install a repeater
-          to ensure a reliable connection.
+          FarmBot requires an internet connection and supports both WiFi
+          and Ethernet. You may need to reposition your WiFi router or
+          install a repeater to ensure a reliable connection.
         </p>
       </div>,
       position: [
-        200,
-        -200,
+        300,
+        -300,
         0,
       ],
       scale: 1000,
@@ -296,26 +300,26 @@ export const FOCI = (config: Config): Focus[] => [
     camera: {
       narrow: {
         position: [
-          -700,
           -1200,
-          600,
+          -1000,
+          450,
         ],
         target: [
           -150,
           -150,
-          -200,
+          -150,
         ],
       },
       wide: {
         position: [
           -1000,
-          -1200,
+          -800,
           600,
         ],
         target: [
           0,
           -150,
-          -100,
+          0,
         ],
       },
     },
