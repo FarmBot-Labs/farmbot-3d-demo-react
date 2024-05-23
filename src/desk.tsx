@@ -1,5 +1,5 @@
-import { TextureLoader, RepeatWrapping } from "three";
-import { Box } from "@react-three/drei";
+import { RepeatWrapping } from "three";
+import { Box, useTexture } from "@react-three/drei";
 import { ASSETS } from "./constants";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
@@ -15,18 +15,16 @@ const deskOffset = 800;
 const deskLegWidth = 50;
 const deskWoodDarkness = "#666";
 
-const woodTexture = new TextureLoader()
-  .load(ASSETS.textures.wood,
-    texture => {
-      texture.wrapS = RepeatWrapping;
-      texture.wrapT = RepeatWrapping;
-      texture.repeat.set(0.3, 0.3);
-    }
-  );
-
 export const Desk = (props: DeskProps) => {
   const { config } = props;
   const zGround = -config.bedZOffset - config.bedHeight;
+  const woodTexture = useTexture(ASSETS.textures.wood);
+  woodTexture.wrapS = RepeatWrapping;
+  woodTexture.wrapT = RepeatWrapping;
+  woodTexture.repeat.set(0.3, 0.3);
+  const screenTexture = useTexture(ASSETS.textures.screen);
+  screenTexture.rotation = Math.PI / 2;
+  screenTexture.wrapT = RepeatWrapping;
   return (
     <group name={"desk"}
       position={[
@@ -101,7 +99,7 @@ export const Desk = (props: DeskProps) => {
             receiveShadow={true}
             args={[140, 260, 10]}
             position={[-10, 0, 1]}>
-            <meshPhongMaterial color={"#888"} />
+            <meshPhongMaterial map={screenTexture} color={"#888"} />
           </Box>
         </group>
       </group>

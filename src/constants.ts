@@ -10,6 +10,7 @@ import wood from "/3D/textures/wood.avif";
 import soil from "/3D/textures/soil.avif";
 import aluminum from "/3D/textures/aluminum.avif";
 import concrete from "/3D/textures/concrete.avif";
+import screen from "/3D/textures/screen.avif";
 import anaheimPepper from "/3D/icons/anaheim_pepper.avif";
 import arugula from "/3D/icons/arugula.avif";
 import basil from "/3D/icons/basil.avif";
@@ -105,6 +106,7 @@ export const ASSETS = {
     soil,
     aluminum,
     concrete,
+    screen,
   },
   icons: {
     anaheimPepper,
