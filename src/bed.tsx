@@ -230,7 +230,7 @@ export const Bed = (props: BedProps) => {
           </group>)}
       </group>
     )}
-    <UtilitiesPost config={props.config} />
+    <UtilitiesPost config={props.config} activeFocus={props.activeFocus} />
     <FarmBotPackaging config={props.config} />
   </group>;
 };

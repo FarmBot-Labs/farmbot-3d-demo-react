@@ -244,7 +244,7 @@ const Model = (props: ModelProps) => {
         fade={5000} />
     </Clouds>
     <Bed config={config} activeFocus={props.activeFocus} />
-    <Bot config={config} />
+    <Bot config={config} activeFocus={props.activeFocus} />
     <group name={"plant-icon-preload"} visible={false}>
       {Object.values(PLANTS).map((plant, i) =>
         <Image key={i} url={plant.icon} />)}
@@ -254,6 +254,7 @@ const Model = (props: ModelProps) => {
         <Plant key={i} i={i} plant={plant} labelOnly={true} />)}
     </group>
     <group name={"plants"}
+      visible={props.activeFocus != "Planter bed"}
       onPointerEnter={setHover(true)}
       onPointerMove={setHover(true)}
       onPointerLeave={setHover(false)}>
@@ -276,7 +277,7 @@ const Model = (props: ModelProps) => {
       {config.label}
     </Text>
     <Solar config={config} activeFocus={props.activeFocus} />
-    <LabEnvironment config={config} />
+    <LabEnvironment config={config} activeFocus={props.activeFocus} />
   </group>;
 };
 

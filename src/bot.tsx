@@ -189,6 +189,7 @@ const ccPath =
 
 interface FarmbotModelProps {
   config: Config;
+  activeFocus: string;
 }
 
 const aluminumTexture = new TextureLoader()
@@ -326,7 +327,8 @@ export const Bot = (props: FarmbotModelProps) => {
   const distanceToSoil = soilHeight + zDir * z;
   const bedCCSupportHeight = Math.min(150, bedHeight / 2);
   const isJr = props.config.sizePreset == "Jr";
-  return <group name={"bot"} visible={props.config.bot}>
+  return <group name={"bot"}
+    visible={props.config.bot && props.activeFocus != "Planter bed"}>
     {[0 - extrusionWidth, bedWidthOuter].map((y, index) => {
       const bedColumnYOffset = (tracks ? 0 : extrusionWidth) * (index == 0 ? 1 : -1);
       return <group key={y}>

@@ -6,6 +6,7 @@ import { Config } from "./config";
 
 interface DeskProps {
   config: Config;
+  activeFocus: string;
 }
 
 const deskWidth = 1000;
@@ -27,6 +28,7 @@ export const Desk = (props: DeskProps) => {
   screenTexture.wrapT = RepeatWrapping;
   return (
     <group name={"desk"}
+      visible={props.activeFocus == ""}
       position={[
         threeSpace(deskOffset, -config.bedLengthOuter),
         0,

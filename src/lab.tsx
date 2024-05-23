@@ -7,6 +7,7 @@ import { Desk } from "./desk";
 
 interface LabProps {
   config: Config;
+  activeFocus: string;
 }
 
 const woodTexture = new TextureLoader()
@@ -79,9 +80,9 @@ export const LabEnvironment = (props: LabProps) => {
           </Box>
         ))}
       </group>
-      <Desk config={config} />
+      <Desk config={config} activeFocus={props.activeFocus} />
       <group name={"people"}
-        visible={config.people}>
+        visible={config.people && props.activeFocus==""}>
         <Billboard
           position={[
             threeSpace(-300, config.bedLengthOuter),
