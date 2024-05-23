@@ -339,9 +339,9 @@ export const FOCI = (config: Config): Focus[] => [
       position: [
         0,
         -config.bedWidthOuter / 2,
-        config.sizePreset == "Genesis XL" ? 600 : 400,
+        config.sizePreset == "Genesis XL" ? 1000 : 800,
       ],
-      scale: config.sizePreset == "Genesis XL" ? 3000 : 1500,
+      scale: 1500,
     },
     position: [
       threeSpace(config.bedLengthOuter + 50, config.bedLengthOuter),
@@ -363,14 +363,14 @@ export const FOCI = (config: Config): Focus[] => [
       },
       wide: {
         position: [
-          config.sizePreset == "Genesis XL" ? 4500 : 2500,
-          config.sizePreset == "Genesis XL" ? -4500 : -1500 - config.bedWidthOuter / 2,
-          1500,
+          2000,
+          config.sizePreset == "Genesis XL" ? -3000 : -2000,
+          800,
         ],
         target: [
           0,
           -config.bedWidthOuter / 2,
-          500,
+          500 - config.bedZOffset / 2,
         ],
       },
     },

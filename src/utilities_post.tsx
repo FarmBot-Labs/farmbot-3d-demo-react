@@ -8,6 +8,7 @@ import * as THREE from 'three';
 
 interface UtilitiesPostProps {
   config: Config;
+  activeFocus: string;
 }
 
 const WoodTexture = new TextureLoader()
@@ -45,7 +46,7 @@ export const UtilitiesPost = (props: UtilitiesPostProps) => {
   );
 
   return <group name={"utilities"}
-    visible={utilitiesPost}
+    visible={utilitiesPost && props.activeFocus != "Planter bed"}
     position={[
       threeSpace(600, -bedLengthOuter),
       threeSpace(legSize / 2, bedWidthOuter),
