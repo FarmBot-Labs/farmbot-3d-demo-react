@@ -27,6 +27,8 @@ import {
 
 } from "./zoom_beacons_constants";
 
+const EVENT_DEBUG = false;
+
 const grassTexture = new TextureLoader()
   .load(ASSETS.textures.grass,
     texture => {
@@ -113,10 +115,10 @@ const Model = (props: ModelProps) => {
     e.buttons ? -1 : parseInt(e.intersections[0].object.name);
 
   const setHover = (active: boolean) => {
-    return (active && config.labelsOnHover)
+    return config.labelsOnHover
       ? (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
-        setHoveredPlant(getI(e));
+        setHoveredPlant(active ? getI(e) : undefined);
       }
       : undefined;
   };
@@ -178,7 +180,10 @@ const Model = (props: ModelProps) => {
   };
   const camera = getCamera(config, props.activeFocus, initCamera);
 
-  return <group dispose={null}>
+  return <group dispose={null}
+    onPointerMove={EVENT_DEBUG
+      ? e => console.log(e.intersections.map(x => x.object.name))
+      : undefined}>
     {config.stats && <Stats />}
     <ZoomBeacons
       config={config}

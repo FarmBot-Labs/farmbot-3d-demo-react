@@ -138,7 +138,7 @@ export const Bed = (props: BedProps) => {
     </Extrude>;
   };
 
-  return <group>
+  return <group name={"bed-group"}>
     <Detailed distances={detailLevels(props.config)}>
       <Bed>
         <meshPhongMaterial map={woodTexture} color={bedColor} side={DoubleSide} />
@@ -147,7 +147,8 @@ export const Bed = (props: BedProps) => {
         <meshPhongMaterial color={"#ad7039"} side={DoubleSide} />
       </Bed>
     </Detailed>
-    <group visible={xyDimensions || props.activeFocus == "Planter bed"}>
+    <group name={"distance-indicator-group"}
+      visible={xyDimensions || props.activeFocus == "Planter bed"}>
       <DistanceIndicator
         start={{
           x: threeSpace(0, bedLengthOuter),
@@ -171,7 +172,7 @@ export const Bed = (props: BedProps) => {
           z: groundZ,
         }} />
     </group>
-    <group visible={axes}>
+    <group name={"axes-group"} visible={axes}>
       <FarmBotAxes config={props.config} />
     </group>
     <Box name={"lower-cc-support"}
