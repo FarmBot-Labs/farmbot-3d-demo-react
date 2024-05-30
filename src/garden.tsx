@@ -261,21 +261,6 @@ const Model = (props: ModelProps) => {
       {plants.map((plant, i) =>
         <Plant key={i} i={i} plant={plant} />)}
     </group>
-    <Text fontSize={200} visible={config.labels}
-      font={ASSETS.fonts.inknut}
-      color={"white"}
-      outlineColor={"black"}
-      outlineWidth={0}
-      outlineBlur={20}
-      outlineOpacity={0.75}
-      position={[
-        0,
-        threeSpace(-500, config.bedWidthOuter),
-        -groundZ + 100,
-      ]}
-      rotation={[Math.PI / 4, 0, 0]}>
-      {config.label}
-    </Text>
     <Solar config={config} activeFocus={props.activeFocus} />
     <LabEnvironment config={config} activeFocus={props.activeFocus} />
   </group>;

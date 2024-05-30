@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { sampleSize } from "lodash";
-import cabin from "/3D/fonts/Cabin.ttf";
+// import cabin from "/3D/fonts/Cabin.ttf";
 import cabinBold from "/3D/fonts/Cabin_Bold.ttf";
-import inknut from "/3D/fonts/InknutAntiqua-Bold.ttf";
+// import inknut from "/3D/fonts/InknutAntiqua-Bold.ttf";
 import cloud from "/3D/textures/cloud.avif";
 import grass from "/3D/textures/grass.avif";
 import wood from "/3D/textures/wood.avif";
@@ -95,9 +95,9 @@ import person2Flipped from "/3D/people/person_2_flipped.avif";
 
 export const ASSETS = {
   fonts: {
-    cabin,
+    // cabin,
     cabinBold,
-    inknut,
+    // inknut,
   },
   textures: {
     cloud,

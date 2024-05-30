@@ -67,7 +67,7 @@ const soilTexture = new TextureLoader()
     texture => {
       texture.wrapS = RepeatWrapping;
       texture.wrapT = RepeatWrapping;
-      texture.repeat.set(.00017, .00034);
+      texture.repeat.set(.00034, .00068);
     });
 
 interface BedProps {

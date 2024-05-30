@@ -1,7 +1,7 @@
 import { Box, Text } from "@react-three/drei";
 import { threeSpace } from "./helpers";
 import { Config } from "./config";
-import { ASSETS } from "./constants";
+// import { ASSETS } from "./constants";
 
 interface PackagingProps {
   config: Config;
@@ -44,7 +44,7 @@ export const FarmBotPackaging = (props: PackagingProps) => {
         <meshPhongMaterial color={boxColor} />
       </Box>
       <Text fontSize={55}
-        font={ASSETS.fonts.inknut}
+        // font={ASSETS.fonts.inknut}
         color={"black"}
         position={[0, -mainCartonWidth / 2 - 1, 0]}
         rotation={[Math.PI / 2, 0, 0]}>
