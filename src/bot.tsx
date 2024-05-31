@@ -1,7 +1,10 @@
 import * as THREE from "three";
-import { Cylinder, Extrude, Line, Trail, useGLTF } from "@react-three/drei";
+import { Cylinder, Extrude, Line, Trail, Tube, useGLTF } from "@react-three/drei";
 import { DoubleSide, Shape, TextureLoader, RepeatWrapping } from "three";
-import { threeSpace, zDir, zZero as zZeroFunc } from "./helpers";
+import {
+  easyCubicBezierCurve3, threeSpace, zDir, zZero as zZeroFunc,
+
+} from "./helpers";
 import { Config } from "./config";
 import { GLTF } from "three-stdlib";
 import { ASSETS } from "./constants";
@@ -32,15 +35,17 @@ enum PartName {
   leftBracket = "Left_Gantry_Corner_Bracket",
   rightBracket = "Right_Gantry_Corner_Bracket",
   crossSlide = "Cross-Slide_Plate",
-  zMotorMount = "Z-Axis_Motor_Mount",
+  // zMotorMount = "Z-Axis_Motor_Mount",
   zStop = "Z-Axis_Hardstop",
   beltClip = "Belt_Clip_-_Slim",
   utm = "M5_Barb",
   ccHorizontal = "60mm_Horizontal_Cable_Carrier_Support",
   ccVertical = "60mm_Vertical_Cable_Carrier_Support",
   housingVertical = "80mm_Vertical_Motor_Housing",
-  motorHorizontal = "M3_x_12mm_Screw",
-  motorVertical = "M5_x_10mm_Screw",
+  // motorHorizontal = "M3_x_12mm_Screw",
+  // motorVertical = "M5_x_10mm_Screw",
+  horizontalMotorHousing = "75mm_Horizontal_Motor_Housing",
+  zAxisMotorMount = "Z-Axis_Motor_Mount",
   toolbay3 = "mesh0_mesh",
   toolbay3Logo = "mesh0_mesh_1",
   seeder = "Seeder_Brass_Insert",
@@ -51,8 +56,8 @@ enum PartName {
   cameraMountHalf = "Camera_Mount_Half",
   pi = "Raspberry_Pi_4B",
   farmduino = "Farmduino",
-  shaftCoupler1 = "M3_x_12mm_Socket_Head_Screw",
-  shaftCoupler2 = "5mm_to_8mm_Shaft_Coupler",
+  // shaftCoupler1 = "M3_x_12mm_Socket_Head_Screw",
+  // shaftCoupler2 = "5mm_to_8mm_Shaft_Coupler",
   solenoid = "200mm_Zip_Tie",
   xAxisCCMount = "X-Axis_CC_Mount",
 }
@@ -97,12 +102,20 @@ type HousingVertical = GLTF & {
   nodes: { [PartName.housingVertical]: THREE.Mesh };
   materials: never;
 }
-type MotorHorizontal = GLTF & {
-  nodes: { [PartName.motorHorizontal]: THREE.Mesh };
+// type MotorHorizontal = GLTF & {
+//   nodes: { [PartName.motorHorizontal]: THREE.Mesh };
+//   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+// }
+// type MotorVertical = GLTF & {
+//   nodes: { [PartName.motorVertical]: THREE.Mesh };
+//   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+// }
+type HorizontalMotorHousing = GLTF & {
+  nodes: { [PartName.horizontalMotorHousing]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
 }
-type MotorVertical = GLTF & {
-  nodes: { [PartName.motorVertical]: THREE.Mesh };
+type ZAxisMotorMount = GLTF & {
+  nodes: { [PartName.zAxisMotorMount]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
 }
 type Toolbay3 = GLTF & {
@@ -112,10 +125,10 @@ type Toolbay3 = GLTF & {
   };
   materials: never;
 }
-type VacuumPump = GLTF & {
-  nodes: { [PartName.vacuumPump]: THREE.Mesh };
-  materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
-}
+// type VacuumPump = GLTF & {
+//   nodes: { [PartName.vacuumPump]: THREE.Mesh };
+//   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
+// }
 type WateringNozzle = GLTF & {
   nodes: { [PartName.wateringNozzle]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
@@ -140,13 +153,13 @@ type Farmduino = GLTF & {
   nodes: { [PartName.farmduino]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
 }
-type ShaftCoupler = GLTF & {
-  nodes: {
-    [PartName.shaftCoupler1]: THREE.Mesh;
-    [PartName.shaftCoupler2]: THREE.Mesh;
-  };
-  materials: never;
-}
+// type ShaftCoupler = GLTF & {
+//   nodes: {
+//     [PartName.shaftCoupler1]: THREE.Mesh;
+//     [PartName.shaftCoupler2]: THREE.Mesh;
+//   };
+//   materials: never;
+// }
 type Solenoid = GLTF & {
   nodes: { [PartName.solenoid]: THREE.Mesh };
   materials: { PaletteMaterial001: THREE.MeshStandardMaterial };
@@ -237,12 +250,14 @@ export const Bot = (props: FarmbotModelProps) => {
   const ccHorizontal = useGLTF(ASSETS.models.ccHorizontal, LIB_DIR) as CCHorizontal;
   const ccVertical = useGLTF(ASSETS.models.ccVertical, LIB_DIR) as CCVertical;
   const housingVertical = useGLTF(ASSETS.models.housingVertical, LIB_DIR) as HousingVertical;
-  const motorHorizontal = useGLTF(ASSETS.models.motorHorizontal, LIB_DIR) as MotorHorizontal;
-  const motorVertical = useGLTF(ASSETS.models.motorVertical, LIB_DIR) as MotorVertical;
+  // const motorHorizontal = useGLTF(ASSETS.models.motorHorizontal, LIB_DIR) as MotorHorizontal;
+  // const motorVertical = useGLTF(ASSETS.models.motorVertical, LIB_DIR) as MotorVertical;
+  const horizontalMotorHousing = useGLTF(ASSETS.models.horizontalMotorHousing, LIB_DIR) as HorizontalMotorHousing;
+  const zAxisMotorMount = useGLTF(ASSETS.models.zAxisMotorMount, LIB_DIR) as ZAxisMotorMount;
   const toolbay3 = useGLTF(ASSETS.models.toolbay3, LIB_DIR) as Toolbay3;
   const rotaryTool = useGLTF(ASSETS.models.rotaryTool, LIB_DIR) as RotaryToolFull;
   const RotaryToolComponent = RotaryTool(rotaryTool);
-  const vacuumPump = useGLTF(ASSETS.models.vacuumPump, LIB_DIR) as VacuumPump;
+  // const vacuumPump = useGLTF(ASSETS.models.vacuumPump, LIB_DIR) as VacuumPump;
   const vacuumPumpCover = useGLTF(ASSETS.models.vacuumPumpCover, LIB_DIR) as VacuumPumpCoverFull;
   const VacuumPumpCoverComponent = VacuumPumpCover(vacuumPumpCover);
   const seedBin = useGLTF(ASSETS.models.seedBin, LIB_DIR) as SeedBin;
@@ -257,7 +272,7 @@ export const Bot = (props: FarmbotModelProps) => {
   const cameraMountHalf = useGLTF(ASSETS.models.cameraMountHalf, LIB_DIR) as CameraMountHalf;
   const pi = useGLTF(ASSETS.models.pi, LIB_DIR) as Pi;
   const farmduino = useGLTF(ASSETS.models.farmduino, LIB_DIR) as Farmduino;
-  const shaftCoupler = useGLTF(ASSETS.models.shaftCoupler, LIB_DIR) as ShaftCoupler;
+  // const shaftCoupler = useGLTF(ASSETS.models.shaftCoupler, LIB_DIR) as ShaftCoupler;
   const solenoid = useGLTF(ASSETS.models.solenoid, LIB_DIR) as Solenoid;
   const xAxisCCMount = useGLTF(ASSETS.models.xAxisCCMount, LIB_DIR) as XAxisCCMount;
   const [trackShape, setTrackShape] = useState<Shape>();
@@ -359,7 +374,7 @@ export const Bot = (props: FarmbotModelProps) => {
             : rightBracket.nodes[PartName.rightBracket].geometry}>
           <meshPhongMaterial color={"silver"} side={DoubleSide} />
         </mesh>
-        <mesh name={index == 0 ? "leftMotor" : "rightMotor"}
+        {/* <mesh name={index == 0 ? "leftMotor" : "rightMotor"}
           position={[
             threeSpace(x - (index == 0 ? 47 : 77), bedLengthOuter) + bedXOffset,
             threeSpace(y - (index == 0 ? 0 : -20) + bedColumnYOffset, bedWidthOuter),
@@ -368,7 +383,28 @@ export const Bot = (props: FarmbotModelProps) => {
           rotation={[Math.PI / 2, (index == 0 ? Math.PI : 0), Math.PI / 2]}
           scale={1000}
           geometry={motorHorizontal.nodes[PartName.motorHorizontal].geometry}
-          material={motorHorizontal.materials.PaletteMaterial001} />
+          material={motorHorizontal.materials.PaletteMaterial001} /> */}
+        <mesh name={index == 0 ? "leftMotor" : "rightMotor"}
+          position={[
+            threeSpace(x - 68, bedLengthOuter) + bedXOffset,
+            threeSpace(y - (index == 0 ? 5 : -25) + bedColumnYOffset, bedWidthOuter),
+            columnLength + 80,
+          ]}
+          rotation={[0, Math.PI, (index == 0 ? 0 : Math.PI)]}
+          scale={1000}
+          geometry={horizontalMotorHousing.nodes[PartName.horizontalMotorHousing].geometry}>
+          <meshPhongMaterial color={"silver"} side={DoubleSide} />
+        </mesh>
+        <Cylinder name={"motorPulley"}
+          args={[8, 8, 40]}
+          position={[
+            threeSpace(x - 63, bedLengthOuter) + bedXOffset,
+            threeSpace(y - (index == 0 ? 5 : -25) + bedColumnYOffset, bedWidthOuter),
+            columnLength + 55,
+          ]}
+          rotation={[0, 0, 0]}>
+          <meshPhongMaterial color={"#999"} />
+        </Cylinder>
         <Extrude name={"tracks"} visible={tracks}
           castShadow={true}
           args={[
@@ -492,7 +528,7 @@ export const Bot = (props: FarmbotModelProps) => {
         geometry={housingVertical.nodes[PartName.housingVertical].geometry}>
         <meshPhongMaterial color={"silver"} />
       </mesh>
-      <mesh name={"zMotor"}
+      {/* <mesh name={"zMotor"}
         position={[
           threeSpace(x + 10, bedLengthOuter) + bedXOffset,
           threeSpace(y + utmRadius - 5, bedWidthOuter) + bedYOffset,
@@ -501,9 +537,30 @@ export const Bot = (props: FarmbotModelProps) => {
         rotation={[Math.PI / 2, 0, 0]}
         scale={1000}
         geometry={motorVertical.nodes[PartName.motorVertical].geometry}
-        material={motorVertical.materials.PaletteMaterial001} />
+        material={motorVertical.materials.PaletteMaterial001} /> */}
+      <mesh name={"zMotorMount"}
+        position={[
+          threeSpace(x + 5, bedLengthOuter) + bedXOffset,
+          threeSpace(y + utmRadius - 65, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + zAxisLength - 80,
+        ]}
+        rotation={[0, 0, Math.PI]}
+        scale={1000}
+        geometry={zAxisMotorMount.nodes[PartName.zAxisMotorMount].geometry}>
+        <meshPhongMaterial color={"silver"} side={DoubleSide} />
+      </mesh>
+      <Cylinder name={"motorShaft"}
+        args={[2.5, 2.5, 40]}
+        position={[
+          threeSpace(x + 5, bedLengthOuter) + bedXOffset,
+          threeSpace(y + utmRadius - 65, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + zAxisLength - 80,
+        ]}
+        rotation={[Math.PI / 2, 0, 0]}>
+        <meshPhongMaterial color={"#999"} />
+      </Cylinder>
     </group>
-    <mesh name={"shaftCoupler"}
+    {/* <mesh name={"shaftCoupler"}
       position={[
         threeSpace(x + 5, bedLengthOuter) + bedXOffset,
         threeSpace(y - 30, bedWidthOuter) + bedYOffset,
@@ -513,8 +570,18 @@ export const Bot = (props: FarmbotModelProps) => {
       scale={1000}
       geometry={shaftCoupler.nodes[PartName.shaftCoupler2].geometry}>
       <meshPhongMaterial color={"silver"} />
-    </mesh>
-    <Cylinder
+    </mesh> */}
+    <Cylinder name={"shaftCoupler"}
+      args={[10, 10, 25]}
+      position={[
+        threeSpace(x + 5, bedLengthOuter) + bedXOffset,
+        threeSpace(y - 30, bedWidthOuter) + bedYOffset,
+        zZero + zDir * z + zAxisLength - 120 + 25 / 2,
+      ]}
+      rotation={[Math.PI / 2, 0, 0]}>
+      <meshPhongMaterial color={"silver"} />
+    </Cylinder>
+    <Cylinder name={"leadscrew"}
       material-color={"#555"}
       args={[4, 4, zAxisLength - 200]}
       position={[
@@ -573,7 +640,7 @@ export const Bot = (props: FarmbotModelProps) => {
       geometry={zStop.nodes[PartName.zStop].geometry}>
       <meshPhongMaterial color={"silver"} />
     </mesh>
-    <mesh name={"vacuumPump"}
+    {/* <mesh name={"vacuumPump"}
       position={[
         threeSpace(x + 28, bedLengthOuter) + bedXOffset,
         threeSpace(y, bedWidthOuter) + bedYOffset,
@@ -582,7 +649,30 @@ export const Bot = (props: FarmbotModelProps) => {
       rotation={[0, 0, Math.PI / 2]}
       scale={1000}
       geometry={vacuumPump.nodes[PartName.vacuumPump].geometry}
-      material={vacuumPump.materials.PaletteMaterial001} />
+      material={vacuumPump.materials.PaletteMaterial001} /> */}
+    <Tube name={"air-tube"}
+      castShadow={true}
+      receiveShadow={true}
+      args={[easyCubicBezierCurve3(
+        [
+          threeSpace(x + 28, bedLengthOuter) + bedXOffset,
+          threeSpace(y, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + 40,
+        ],
+        [0, 0, 100],
+        [0, 0, -200],
+        [
+          threeSpace(x + 80, bedLengthOuter) + bedXOffset,
+          threeSpace(y + 100, bedWidthOuter) + bedYOffset,
+          zZero + zDir * z + 245,
+        ],
+      ), 20, 5, 8]}>
+      <meshPhongMaterial
+        color={"white"}
+        transparent={true}
+        opacity={0.75}
+      />
+    </Tube>
     <VacuumPumpCoverComponent
       rotation={[0, 0, Math.PI / 2]}
       scale={1000}
