@@ -90,7 +90,7 @@ export const FOCI = (config: Config): Focus[] => [
           the Seed Injector, Watering Nozzle, Soil Sensor, and Rotary Tool.
         </p>
         <p>
-          Also included are the seed bin, seed tray, seed troughs, and the camera
+          Also included are the Seed Bin, Seed Tray, Seed Troughs, and the Camera
           which remains permanently mounted to the Z-axis.
         </p>
         <iframe width="560" height="315"
@@ -263,7 +263,7 @@ export const FOCI = (config: Config): Focus[] => [
     info: {
       description: <div className={"description-wrapper"}>
         <p>
-          FarmBot must be plugged into a standard 110-220V AC outlet.
+          FarmBot must be plugged into a standard 100-265V AC outlet.
           The power cable comes with a standard US 3-prong plug (NEMA 5-15P), which
           can be used with a plug adapter for installations outside the US.
         </p>
