@@ -1,7 +1,7 @@
 import { Sphere, Html, Line } from "@react-three/drei";
 import React from "react";
 import { Config } from "./config";
-import { FOCI, getCameraOffset, setUrlFocusParam } from "./zoom_beacons_constants";
+import { FOCI, getCameraOffset, setUrlParam } from "./zoom_beacons_constants";
 import { useSpring, animated } from "@react-spring/three";
 
 const DEBUG = false;
@@ -63,7 +63,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
         <Sphere
           onClick={() => {
             setActiveFocus(activeFocus ? "" : focus.label);
-            setUrlFocusParam(focus.label);
+            setUrlParam("focus", focus.label);
             setHoveredFocus("");
             if (gardenBedDiv) {
               gardenBedDiv.style.cursor = "";
@@ -108,7 +108,7 @@ export const ZoomBeacons = (props: ZoomBeaconsProps) => {
                 <div className="exit-button"
                   onClick={() => {
                     setActiveFocus("");
-                    setUrlFocusParam("");
+                    setUrlParam("focus", "");
                   }}>
                   ❌
                 </div>

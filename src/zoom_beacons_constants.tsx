@@ -270,7 +270,7 @@ export const FOCI = (config: Config): Focus[] => [
         <p>
           FarmBot can optionally be powered by
           a <a href="https://solar.farm.bot" target="_blank">solar
-          system</a> with the appropriate battery and inverter. These
+            system</a> with the appropriate battery and inverter. These
           components may be purchased from a 3rd party.
         </p>
         <p>
@@ -407,12 +407,12 @@ export const getCamera = (
   };
 };
 
-export const setUrlFocusParam = (value: string) => {
+export const setUrlParam = (key: string, value: string) => {
   const url = new URL(window.location.href);
   if (value) {
-    url.searchParams.set("focus", value);
+    url.searchParams.set(key, value);
   } else {
-    url.searchParams.delete("focus");
+    url.searchParams.delete(key);
   }
   window.history.replaceState({}, "", url.toString());
 };

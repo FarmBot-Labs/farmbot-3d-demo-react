@@ -1,5 +1,6 @@
 import React from "react";
 import { Config, modifyConfig } from "./config";
+import { setUrlParam } from "./zoom_beacons_constants";
 
 export interface ToolTip {
   timeoutId: number;
@@ -62,38 +63,38 @@ export const PublicOverlay = (props: OverlayProps) => {
 
   return <div className={"overlay"}>
     {!props.activeFocus &&
-    <div className={"settings-bar"}>
-      <Section
-        title={"FarmBot"}
-        configKey={"sizePreset"}
-        options={{
-          "genesis": "Genesis",
-          "genesis-xl": "Genesis XL",
-        }} />
-      <Section
-        title={"Season"}
-        configKey={"plants"}
-        options={{
-          "winter": "Winter",
-          "spring": "Spring",
-          "summer": "Summer",
-          "fall": "Fall",
-        }} />
-      <Section
-        title={"Bed Type"}
-        configKey={"bedType"}
-        options={{
-          "standard": "Standard",
-          "mobile": "Mobile",
-        }} />
-      <Section
-        title={"Environment"}
-        configKey={"scene"}
-        options={{
-          "outdoor": "Outdoor",
-          "lab": "Lab",
-        }} />
-    </div>}
+      <div className={"settings-bar"}>
+        <Section
+          title={"FarmBot"}
+          configKey={"sizePreset"}
+          options={{
+            "genesis": "Genesis",
+            "genesis-xl": "Genesis XL",
+          }} />
+        <Section
+          title={"Season"}
+          configKey={"plants"}
+          options={{
+            "winter": "Winter",
+            "spring": "Spring",
+            "summer": "Summer",
+            "fall": "Fall",
+          }} />
+        <Section
+          title={"Bed Type"}
+          configKey={"bedType"}
+          options={{
+            "standard": "Standard",
+            "mobile": "Mobile",
+          }} />
+        <Section
+          title={"Environment"}
+          configKey={"scene"}
+          options={{
+            "outdoor": "Outdoor",
+            "lab": "Lab",
+          }} />
+      </div>}
     {config.promoInfo && !props.activeFocus &&
       <PromoInfo isGenesis={config.sizePreset == "Genesis"} />}
   </div>;
@@ -159,6 +160,7 @@ interface SliderProps extends OverlayProps {
   configKey: keyof Config;
   min: number;
   max: number;
+  paramAdd: boolean;
 }
 
 const Slider = (props: SliderProps) => {
@@ -168,6 +170,7 @@ const Slider = (props: SliderProps) => {
     if (isNaN(newValue)) { return; }
     const update = { [configKey]: newValue };
     setConfig(modifyConfig(config, update));
+    props.paramAdd && setUrlParam(configKey, "" + newValue);
   };
   const value = config[configKey] as number;
   return <ConfigRow configKey={configKey}>
@@ -184,6 +187,7 @@ const Slider = (props: SliderProps) => {
 
 interface ToggleProps extends OverlayProps {
   configKey: keyof Config;
+  paramAdd: boolean;
 }
 
 const Toggle = (props: ToggleProps) => {
@@ -196,6 +200,7 @@ const Toggle = (props: ToggleProps) => {
         const newValue = e.currentTarget.checked;
         const update = { [configKey]: newValue };
         setConfig(modifyConfig(config, update));
+        props.paramAdd && setUrlParam(configKey, "" + newValue);
       }}
     />
   </ConfigRow>;
@@ -204,6 +209,7 @@ const Toggle = (props: ToggleProps) => {
 interface RadioProps extends OverlayProps {
   configKey: keyof Config;
   options: string[];
+  paramAdd: boolean;
 }
 
 const Radio = (props: RadioProps) => {
@@ -212,6 +218,7 @@ const Radio = (props: RadioProps) => {
     const newValue = e.currentTarget.value;
     const update = { [configKey]: newValue };
     setConfig(modifyConfig(config, update));
+    props.paramAdd && setUrlParam(configKey, "" + newValue);
   };
   return <ConfigRow configKey={configKey}>
     <div className={"options"}>
@@ -233,6 +240,8 @@ const Radio = (props: RadioProps) => {
 export const PrivateOverlay = (props: OverlayProps) => {
   const bedMin = props.config.bedWallThickness * 2;
   const { config, setConfig } = props;
+  const [paramAdd, setParamAdd] = React.useState(false);
+  const common = { ...props, paramAdd };
   return <div className={"all-configs"}>
     <details>
       <summary>
@@ -243,80 +252,86 @@ export const PrivateOverlay = (props: OverlayProps) => {
         </p>
       </summary>
       <div className={"spacer"} />
-      <Toggle {...props} configKey={"promoInfo"} />
+      <div className={"config-row"}>
+        <span className={"config-key"}>{"auto-add to URL"}</span>
+        <input
+          type={"checkbox"}
+          checked={paramAdd}
+          onChange={e => setParamAdd(e.currentTarget.checked)} />
+      </div>
+      <Toggle {...common} configKey={"promoInfo"} />
       <label>{"Presets"}</label>
-      <Radio {...props} configKey={"sizePreset"}
+      <Radio {...common} configKey={"sizePreset"}
         options={["Jr", "Genesis", "Genesis XL"]} />
-      <Radio {...props} configKey={"bedType"}
+      <Radio {...common} configKey={"bedType"}
         options={["Standard", "Mobile"]} />
-      <Radio {...props} configKey={"otherPreset"}
+      <Radio {...common} configKey={"otherPreset"}
         options={["Initial", "Minimal", "Maximal", "Reset all"]} />
       <label>{"Bot Position"}</label>
-      <Slider {...props} configKey={"x"} min={0} max={props.config.botSizeX} />
-      <Slider {...props} configKey={"y"} min={0} max={props.config.botSizeY} />
-      <Slider {...props} configKey={"z"} min={0} max={props.config.botSizeZ} />
-      <Radio {...props} configKey={"tool"} options={["rotaryTool", "None"]} />
-      <Toggle {...props} configKey={"trail"} />
-      <Toggle {...props} configKey={"laser"} />
+      <Slider {...common} configKey={"x"} min={0} max={props.config.botSizeX} />
+      <Slider {...common} configKey={"y"} min={0} max={props.config.botSizeY} />
+      <Slider {...common} configKey={"z"} min={0} max={props.config.botSizeZ} />
+      <Radio {...common} configKey={"tool"} options={["rotaryTool", "None"]} />
+      <Toggle {...common} configKey={"trail"} />
+      <Toggle {...common} configKey={"laser"} />
       <label>{"Bot Dimensions"}</label>
-      <Slider {...props} configKey={"botSizeX"} min={0} max={6000} />
-      <Slider {...props} configKey={"botSizeY"} min={0} max={4000} />
-      <Slider {...props} configKey={"botSizeZ"} min={0} max={1000} />
-      <Toggle {...props} configKey={"bounds"} />
-      <Toggle {...props} configKey={"xyDimensions"} />
-      <Toggle {...props} configKey={"zDimension"} />
-      <Toggle {...props} configKey={"axes"} />
-      <Slider {...props} configKey={"beamLength"} min={0} max={4000} />
-      <Slider {...props} configKey={"columnLength"} min={0} max={1000} />
-      <Slider {...props} configKey={"zAxisLength"} min={0} max={2000} />
-      <Slider {...props} configKey={"bedXOffset"} min={-500} max={500} />
-      <Slider {...props} configKey={"bedYOffset"} min={-1500} max={1500} />
-      <Slider {...props} configKey={"zGantryOffset"} min={0} max={500} />
-      <Toggle {...props} configKey={"tracks"} />
-      <Toggle {...props} configKey={"cableCarriers"} />
-      <Toggle {...props} configKey={"bot"} />
+      <Slider {...common} configKey={"botSizeX"} min={0} max={6000} />
+      <Slider {...common} configKey={"botSizeY"} min={0} max={4000} />
+      <Slider {...common} configKey={"botSizeZ"} min={0} max={1000} />
+      <Toggle {...common} configKey={"bounds"} />
+      <Toggle {...common} configKey={"xyDimensions"} />
+      <Toggle {...common} configKey={"zDimension"} />
+      <Toggle {...common} configKey={"axes"} />
+      <Slider {...common} configKey={"beamLength"} min={0} max={4000} />
+      <Slider {...common} configKey={"columnLength"} min={0} max={1000} />
+      <Slider {...common} configKey={"zAxisLength"} min={0} max={2000} />
+      <Slider {...common} configKey={"bedXOffset"} min={-500} max={500} />
+      <Slider {...common} configKey={"bedYOffset"} min={-1500} max={1500} />
+      <Slider {...common} configKey={"zGantryOffset"} min={0} max={500} />
+      <Toggle {...common} configKey={"tracks"} />
+      <Toggle {...common} configKey={"cableCarriers"} />
+      <Toggle {...common} configKey={"bot"} />
       <label>{"Bed Properties"}</label>
-      <Slider {...props} configKey={"bedWallThickness"} min={0} max={200} />
-      <Slider {...props} configKey={"bedHeight"} min={0} max={1000} />
-      <Slider {...props} configKey={"ccSupportSize"} min={0} max={200} />
-      <Slider {...props} configKey={"bedWidthOuter"} min={bedMin} max={3100} />
-      <Slider {...props} configKey={"bedLengthOuter"} min={bedMin} max={6100} />
-      <Slider {...props} configKey={"bedZOffset"} min={0} max={1000} />
-      <Slider {...props} configKey={"legSize"} min={0} max={200} />
-      <Toggle {...props} configKey={"legsFlush"} />
-      <Slider {...props} configKey={"extraLegsX"} min={0} max={10} />
-      <Slider {...props} configKey={"extraLegsY"} min={0} max={10} />
-      <Slider {...props} configKey={"bedBrightness"} min={1} max={12} />
-      <Slider {...props} configKey={"soilBrightness"} min={1} max={12} />
-      <Slider {...props} configKey={"soilHeight"} min={0} max={1000} />
-      <label>{"Garden"}</label>
-      <Radio {...props} configKey={"plants"}
+      <Slider {...common} configKey={"bedWallThickness"} min={0} max={200} />
+      <Slider {...common} configKey={"bedHeight"} min={0} max={1000} />
+      <Slider {...common} configKey={"ccSupportSize"} min={0} max={200} />
+      <Slider {...common} configKey={"bedWidthOuter"} min={bedMin} max={3100} />
+      <Slider {...common} configKey={"bedLengthOuter"} min={bedMin} max={6100} />
+      <Slider {...common} configKey={"bedZOffset"} min={0} max={1000} />
+      <Slider {...common} configKey={"legSize"} min={0} max={200} />
+      <Toggle {...common} configKey={"legsFlush"} />
+      <Slider {...common} configKey={"extraLegsX"} min={0} max={10} />
+      <Slider {...common} configKey={"extraLegsY"} min={0} max={10} />
+      <Slider {...common} configKey={"bedBrightness"} min={1} max={12} />
+      <Slider {...common} configKey={"soilBrightness"} min={1} max={12} />
+      <Slider {...common} configKey={"soilHeight"} min={0} max={1000} />
+      <Radio {...common} configKey={"plants"}
         options={["Winter", "Spring", "Summer", "Fall", "Random", "None"]} />
       <label>{"Camera"}</label>
-      <Toggle {...props} configKey={"perspective"} />
-      <Toggle {...props} configKey={"zoom"} />
-      <Toggle {...props} configKey={"pan"} />
-      <Toggle {...props} configKey={"lowDetail"} />
+      <Toggle {...common} configKey={"perspective"} />
+      <Toggle {...common} configKey={"zoom"} />
+      <Toggle {...common} configKey={"pan"} />
+      <Toggle {...common} configKey={"lowDetail"} />
       <label>{"Environment"}</label>
-      <Radio {...props} configKey={"scene"}
+      <Radio {...common} configKey={"scene"}
         options={["Outdoor", "Lab"]} />
-      <Toggle {...props} configKey={"ground"} />
-      <Toggle {...props} configKey={"grid"} />
-      <Toggle {...props} configKey={"utilitiesPost"} />
-      <Toggle {...props} configKey={"packaging"} />
-      <Toggle {...props} configKey={"labels"} />
-      <Toggle {...props} configKey={"labelsOnHover"} />
-      <Toggle {...props} configKey={"clouds"} />
-      <Toggle {...props} configKey={"solar"} />
-      <Toggle {...props} configKey={"lab"} />
-      <Toggle {...props} configKey={"people"} />
-      <Slider {...props} configKey={"sunInclination"} min={0} max={180} />
-      <Slider {...props} configKey={"sunAzimuth"} min={0} max={360} />
+      <Toggle {...common} configKey={"ground"} />
+      <Toggle {...common} configKey={"grid"} />
+      <Toggle {...common} configKey={"utilitiesPost"} />
+      <Toggle {...common} configKey={"packaging"} />
+      <Toggle {...common} configKey={"labels"} />
+      <Toggle {...common} configKey={"labelsOnHover"} />
+      <Toggle {...common} configKey={"clouds"} />
+      <Toggle {...common} configKey={"solar"} />
+      <Toggle {...common} configKey={"lab"} />
+      <Toggle {...common} configKey={"people"} />
+      <Slider {...common} configKey={"sunInclination"} min={0} max={180} />
+      <Slider {...common} configKey={"sunAzimuth"} min={0} max={360} />
       <label>{"Dev"}</label>
-      <Toggle {...props} configKey={"threeAxes"} />
-      <Toggle {...props} configKey={"stats"} />
-      <Toggle {...props} configKey={"viewCube"} />
-      <Toggle {...props} configKey={"config"} />
+      <Toggle {...common} configKey={"threeAxes"} />
+      <Toggle {...common} configKey={"stats"} />
+      <Toggle {...common} configKey={"viewCube"} />
+      <Toggle {...common} configKey={"config"} />
     </details>
   </div>;
 };
